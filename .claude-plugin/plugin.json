@@ -1,0 +1,60 @@
+{
+  "name": "hello-claude-config",
+  "version": "1.0.0",
+  "description": "개인 맞춤형 Claude Code 설정 - 헛소리 방지, 컨텍스트 고정, 자동 빌드/테스트",
+  "author": "",
+  "license": "MIT",
+  "repository": "",
+  "keywords": [
+    "claude-code",
+    "productivity",
+    "developer-tools",
+    "ai-agents",
+    "code-quality"
+  ],
+  "components": {
+    "rules": [
+      "rules/00-anti-hallucination.md",
+      "rules/01-mandatory-checklist.md",
+      "rules/02-context-anchoring.md",
+      "rules/03-core-principles.md",
+      "rules/04-communication.md",
+      "rules/05-security.md",
+      "rules/06-coding-style.md",
+      "rules/07-testing.md",
+      "rules/08-git-workflow.md"
+    ],
+    "agents": [
+      "agents/planner.md",
+      "agents/architect.md",
+      "agents/code-reviewer.md",
+      "agents/security-reviewer.md",
+      "agents/refactorer.md",
+      "agents/tdd-guide.md"
+    ],
+    "skills": [
+      "skills/tool-usage/tool-autonomy.md",
+      "skills/tool-usage/web-search.md",
+      "skills/code-workflow/quality-checklist.md"
+    ],
+    "commands": [
+      "commands/plan.md",
+      "commands/review.md",
+      "commands/tdd.md"
+    ],
+    "hooks": "hooks/hooks.json",
+    "contexts": [
+      "contexts/dev.md",
+      "contexts/review.md",
+      "contexts/research.md"
+    ]
+  },
+  "dependencies": {
+    "node": ">=18.0.0"
+  },
+  "config": {
+    "defaultContext": "dev",
+    "autoHooks": true,
+    "buildTestOnEdit": true
+  }
+}
