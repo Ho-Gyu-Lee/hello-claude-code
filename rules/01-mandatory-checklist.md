@@ -6,10 +6,11 @@
 
 - **YES** → 코드 구조 확인 필수
   - 코드 분석 도구로 대상/영향 범위 파악
-  - 상세 프로토콜은 `skills/code-workflow/analysis-protocol.md` 참고
+  - 기존 코드 패턴 확인 (네이밍, 구조, 에러 처리)
+  - 영향받는 파일/모듈 목록화
 - **NO** → 다음 단계
 
-**폴백 체인**: 코드 분석 실패 시 → file_search → grep_search → semantic_search → read_file → 사용자에게 추가 정보 요청
+**폴백 체인**: 코드 분석 실패 시 → Glob → Grep → Read → 사용자에게 추가 정보 요청
 
 ## B. 사실/버전/날짜/수치가 포함되는가?
 
