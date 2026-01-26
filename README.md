@@ -1,4 +1,4 @@
-# Hello Claude Config
+# Hello Claude Code
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
@@ -22,7 +22,7 @@ C/C++, Go, Rust, C#, Python 개발 환경에 최적화된 설정입니다.
 ## 프로젝트 구조
 
 ```
-hello-claude-config/
+hello-claude-code/
 ├── rules/           # 핵심 규칙 (10개) - 항상 적용
 ├── agents/          # 서브에이전트 (6개) - 위임 작업용
 ├── commands/        # 슬래시 명령어 (3개)
@@ -39,8 +39,8 @@ hello-claude-config/
 ### 1. 레포지토리 클론
 
 ```bash
-git clone https://github.com/[your-username]/hello-claude-config.git
-cd hello-claude-config
+git clone https://github.com/[your-username]/hello-claude-code.git
+cd hello-claude-code
 ```
 
 ### 2. 파일 복사 (선택)
