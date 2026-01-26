@@ -10,50 +10,6 @@
           "command": "node hooks/build-test/post-edit.js \"$file_path\""
         }
       ]
-    },
-    {
-      "name": "session-start",
-      "description": "세션 시작 시 이전 컨텍스트 로드",
-      "matcher": "event == 'session_start'",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "node hooks/memory-persistence/session-start.js"
-        }
-      ]
-    },
-    {
-      "name": "session-end",
-      "description": "세션 종료 시 상태 저장",
-      "matcher": "event == 'session_end'",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "node hooks/memory-persistence/session-end.js"
-        }
-      ]
-    },
-    {
-      "name": "pre-compact",
-      "description": "컴팩션 전 상태 저장",
-      "matcher": "event == 'pre_compact'",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "node hooks/strategic-compact/pre-compact.js"
-        }
-      ]
-    },
-    {
-      "name": "suggest-compact",
-      "description": "컨텍스트가 커지면 컴팩션 제안",
-      "matcher": "context_tokens > 100000",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "node hooks/strategic-compact/suggest-compact.js"
-        }
-      ]
     }
   ]
 }
