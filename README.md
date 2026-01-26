@@ -28,7 +28,7 @@ hello-claude-config/
 ├── commands/        # 슬래시 명령어 (3개)
 ├── contexts/        # 컨텍스트 모드 (3개)
 ├── skills/          # 워크플로우 가이드
-├── hooks/           # 자동 트리거
+├── templates/       # 템플릿 파일
 └── examples/        # 예시 (CLAUDE.md)
 ```
 
@@ -56,26 +56,6 @@ cp agents/*.md ~/.claude/agents/
 
 # 명령어도 사용
 cp commands/*.md ~/.claude/commands/
-```
-
-### 3. Hooks 설정 (선택)
-
-`~/.claude/settings.json`에 hooks 설정 추가:
-
-```json
-{
-  "hooks": [
-    {
-      "name": "build-test-after-edit",
-      "description": "코드 편집 후 자동 빌드/테스트",
-      "matcher": "tool == 'Edit' || tool == 'Write'",
-      "hooks": [{
-        "type": "command",
-        "command": "node /path/to/hooks/build-test/post-edit.js \"$file_path\""
-      }]
-    }
-  ]
-}
 ```
 
 ---
@@ -135,25 +115,6 @@ Claude Code에서 슬래시 명령어로 사용:
 | `dev` | 코드 작성/수정 | 품질 → 테스트 → 유지보수 |
 | `review` | 코드 리뷰, PR 검토 | 보안 → 버그 → 성능 → 스타일 |
 | `research` | 기술 조사, 비교 | 정확성 → 최신성 → 관련성 |
-
-### Hooks (자동 트리거)
-
-코드 편집 후 자동 실행:
-
-```
-Edit/Write → 프로젝트 타입 감지 → lint → build → test
-```
-
-**지원 빌드 시스템:**
-
-| 언어 | 빌드 시스템 | 감지 파일 | 실행 명령 |
-|------|-------------|-----------|----------|
-| Rust | Cargo | `Cargo.toml` | `cargo clippy && cargo build && cargo test` |
-| Go | go modules | `go.mod` | `go vet && go build && go test` |
-| C/C++ | CMake | `CMakeLists.txt` | `cmake --build && ctest` |
-| C/C++ | Make | `Makefile` | `make && make test` |
-| C# | .NET | `*.csproj` | `dotnet build && dotnet test` |
-| Python | pytest | `pyproject.toml` | `pytest` |
 
 ---
 
@@ -217,18 +178,6 @@ tools: Read, Grep, Glob
 ...
 ```
 
-### Hooks 비활성화
-
-`hooks/hooks.json`에서 원하는 훅 제거:
-
-```json
-{
-  "hooks": [
-    // 원하는 훅만 유지
-  ]
-}
-```
-
 ---
 
 ## 파일 목록
@@ -269,15 +218,6 @@ commands/tdd.md
 skills/tool-usage/tool-autonomy.md
 skills/tool-usage/web-search.md
 skills/code-workflow/quality-checklist.md
-```
-
-### Hooks (5개)
-```
-hooks/build-test/post-edit.js
-hooks/memory-persistence/session-start.js
-hooks/memory-persistence/session-end.js
-hooks/strategic-compact/pre-compact.js
-hooks/strategic-compact/suggest-compact.js
 ```
 
 ---
