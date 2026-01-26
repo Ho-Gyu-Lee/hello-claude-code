@@ -28,8 +28,7 @@ hello-claude-code/
 ├── commands/        # 슬래시 명령어 (3개)
 ├── contexts/        # 컨텍스트 모드 (3개)
 ├── skills/          # 워크플로우 가이드
-├── templates/       # 템플릿 파일
-└── examples/        # 예시 (CLAUDE.md)
+└── templates/       # 템플릿 파일
 ```
 
 ---
