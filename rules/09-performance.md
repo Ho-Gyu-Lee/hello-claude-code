@@ -166,31 +166,13 @@ items = db.query_items_batch(player_ids)  # 1번 쿼리
 
 ## 프로파일링 도구
 
-### C/C++
-- Valgrind (Callgrind)
-- perf (Linux)
-- Intel VTune
-- Tracy Profiler
+현재 프로젝트의 언어/환경에 맞는 프로파일링 도구를 사용하세요.
 
-### Go
-- `go tool pprof`
-- `go tool trace`
-- `runtime/metrics`
-
-### Rust
-- `cargo flamegraph`
-- `perf` + `inferno`
-- `criterion` (벤치마크)
-
-### C#
-- dotTrace
-- PerfView
-- BenchmarkDotNet
-
-### Python
-- `cProfile` / `py-spy`
-- `memory_profiler`
-- `line_profiler`
+**공통 접근법**:
+- CPU 프로파일러: 핫 패스 식별
+- 메모리 프로파일러: 할당/누수 탐지
+- 트레이서: 실행 흐름 분석
+- 벤치마크 도구: 성능 측정 및 비교
 
 ## 리뷰 체크리스트
 
