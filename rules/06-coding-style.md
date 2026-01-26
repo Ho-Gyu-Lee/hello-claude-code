@@ -18,8 +18,8 @@
 
 ### 적용 순서
 
-1. **프로젝트 기존 패턴** ← 최우선 (기존 코드 분석)
-2. **표준 컨벤션** ← 기본적인 코드 컨벤션
+1. **표준 컨벤션** ← 최우선
+2. **프로젝트 기존 패턴** ← 기존 코드 분석
 3. **일반 원칙** ← 언어별 표준 컨벤션
 
 ### 표준 컨벤션
@@ -34,6 +34,11 @@
 | 상수 | SCREAMING_SNAKE_CASE | `MAX_PLAYERS`, `BUFFER_SIZE` |
 | 인터페이스 | `I` + PascalCase | `ISessionHandler`, `IPacketProcessor` |
 
+**서버 개발 특화 네이밍**:
+- 패킷/메시지: `XxxPacket`, `XxxMessage`
+- 핸들러: `XxxHandler`, `XxxProcessor`
+- 매니저: `XxxManager` (Singleton 고려)
+- 세션: `XxxSession`, `XxxConnection`
 
 ### 프로젝트 패턴 분석
 

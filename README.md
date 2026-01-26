@@ -23,7 +23,7 @@ C/C++, Go, Rust, C#, Python 개발 환경에 최적화된 설정입니다.
 
 ```
 hello-claude-code/
-├── rules/           # 핵심 규칙 (10개) - 항상 적용
+├── rules/           # 핵심 규칙 (9개) - 항상 적용
 ├── agents/          # 서브에이전트 (6개) - 위임 작업용
 ├── commands/        # 슬래시 명령어 (3개)
 ├── contexts/        # 컨텍스트 모드 (3개)
@@ -75,8 +75,7 @@ cp commands/*.md ~/.claude/commands/
 | `05-security.md` | 보안 규칙, 즉시 경고 항목 |
 | `06-coding-style.md` | 간결성 원칙, 언어별 컨벤션 |
 | `07-testing.md` | 테스트 규칙, 빌드/린트 |
-| `08-git-workflow.md` | Git 커밋/브랜치 규칙 |
-| `09-performance.md` | 서버 성능 최적화 |
+| `08-performance.md` | 서버 성능 최적화 |
 
 ### Commands (명령어)
 
@@ -117,23 +116,9 @@ Claude Code에서 슬래시 명령어로 사용:
 
 ---
 
-## 언어별 코딩 스타일
-
-각 언어의 표준 컨벤션을 따릅니다 (프로젝트 기존 패턴 우선):
-
-| 언어 | 함수/메서드 | 변수 | 상수 |
-|------|-------------|------|------|
-| C/C++ | `snake_case` / `PascalCase` | `snake_case` | `SCREAMING_SNAKE` |
-| Go | `PascalCase` (exported) | `camelCase` | `PascalCase` |
-| Rust | `snake_case` | `snake_case` | `SCREAMING_SNAKE` |
-| C# | `PascalCase` | `camelCase` | `PascalCase` |
-| Python | `snake_case` | `snake_case` | `SCREAMING_SNAKE` |
-
----
-
 ## 서버 특화 기능
 
-### 성능 규칙 (`09-performance.md`)
+### 성능 규칙 (`08-performance.md`)
 
 - **메모리 관리**: 풀링, 프리얼로케이션, GC 최소화
 - **동시성**: Lock-free 선호, 락 범위 최소화
@@ -181,7 +166,7 @@ tools: Read, Grep, Glob
 
 ## 파일 목록
 
-### Rules (10개)
+### Rules (9개)
 ```
 rules/00-anti-hallucination.md
 rules/01-mandatory-checklist.md
@@ -191,8 +176,7 @@ rules/04-communication.md
 rules/05-security.md
 rules/06-coding-style.md
 rules/07-testing.md
-rules/08-git-workflow.md
-rules/09-performance.md
+rules/08-performance.md
 ```
 
 ### Agents (6개)

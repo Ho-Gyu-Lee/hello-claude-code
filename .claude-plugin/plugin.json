@@ -25,8 +25,7 @@
       "rules/05-security.md",
       "rules/06-coding-style.md",
       "rules/07-testing.md",
-      "rules/08-git-workflow.md",
-      "rules/09-performance.md"
+      "rules/08-performance.md"
     ],
     "agents": [
       "agents/planner.md",
