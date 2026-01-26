@@ -2,164 +2,209 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**개인 맞춤형 Claude Code 설정 컬렉션**
+**게임 서버 개발자를 위한 Claude Code 설정**
 
-헛소리 방지, 컨텍스트 고정, 자동 빌드/테스트 등 실전에서 검증된 설정들을 모았습니다.
+C/C++, Go, Rust, C#, Python 개발 환경에 최적화된 설정입니다.
 
 ---
 
 ## 핵심 철학
 
-1. **헛소리 방지**: 확실한 정보만 답변, 추측은 명시
-2. **컨텍스트 고정**: 원래 질문에 집중, 주제 이탈 방지
-3. **자동화**: 코드 변경 후 자동 lint → build → test
-4. **간결함**: 필요한 정보만, 과잉 설명 금지
+| 원칙 | 설명 |
+|------|------|
+| **헛소리 방지** | 확실한 정보만 답변, 추측은 "추측:" 명시 |
+| **컨텍스트 고정** | 원래 질문에 집중, 주제 이탈 방지 |
+| **자동화** | 코드 변경 후 자동 lint → build → test |
+| **간결함** | Over-engineering 금지, 최소 변경 |
 
 ---
 
-## 구조
+## 프로젝트 구조
 
 ```
 hello-claude-config/
-├── rules/                # 항상 적용되는 규칙
-│   ├── 00-anti-hallucination.md   # 헛소리 방지
-│   ├── 01-mandatory-checklist.md  # 필수 체크리스트
-│   ├── 02-context-anchoring.md    # 컨텍스트 고정
-│   └── ...
-│
-├── agents/               # 위임용 서브에이전트
-│   ├── planner.md        # 구현 계획
-│   ├── code-reviewer.md  # 코드 리뷰
-│   └── ...
-│
-├── skills/               # 워크플로우/도메인 지식
-│   ├── tool-usage/       # 도구 사용 가이드
-│   └── code-workflow/    # 코드 작업 프로토콜
-│
-├── commands/             # 슬래시 명령어
-│   ├── /plan             # 구현 계획
-│   ├── /review           # 코드 리뷰
-│   └── /tdd              # TDD 시작
-│
-├── hooks/                # 자동 트리거
-│   └── build-test/       # 코드 편집 후 자동 빌드/테스트
-│
-└── templates/            # 응답 템플릿
+├── rules/           # 핵심 규칙 (10개) - 항상 적용
+├── agents/          # 서브에이전트 (6개) - 위임 작업용
+├── commands/        # 슬래시 명령어 (3개)
+├── contexts/        # 컨텍스트 모드 (3개)
+├── skills/          # 워크플로우 가이드
+├── hooks/           # 자동 트리거
+└── examples/        # 예시 (CLAUDE.md)
 ```
 
 ---
 
-## 설치
+## 설치 방법
 
-### 옵션 1: 플러그인으로 설치 (권장)
-
-```bash
-# 마켓플레이스 추가
-/plugin marketplace add [your-github-username]/hello-claude-config
-
-# 플러그인 설치
-/plugin install hello-claude-config@hello-claude-config
-```
-
-### 옵션 2: 수동 설치
+### 1. 레포지토리 클론
 
 ```bash
-# 레포지토리 클론
 git clone https://github.com/[your-username]/hello-claude-config.git
-
-# rules 복사
-cp hello-claude-config/rules/*.md ~/.claude/rules/
-
-# agents 복사
-cp hello-claude-config/agents/*.md ~/.claude/agents/
-
-# commands 복사
-cp hello-claude-config/commands/*.md ~/.claude/commands/
+cd hello-claude-config
 ```
 
-### Hooks 설정
+### 2. 파일 복사 (선택)
 
-`hooks/hooks.json` 내용을 `~/.claude/settings.json`에 추가:
+원하는 구성 요소만 복사:
+
+```bash
+# 규칙만 사용
+cp rules/*.md ~/.claude/rules/
+
+# 에이전트도 사용
+cp agents/*.md ~/.claude/agents/
+
+# 명령어도 사용
+cp commands/*.md ~/.claude/commands/
+```
+
+### 3. Hooks 설정 (선택)
+
+`~/.claude/settings.json`에 hooks 설정 추가:
 
 ```json
 {
   "hooks": [
-    // hooks/hooks.json 내용 복사
+    {
+      "name": "build-test-after-edit",
+      "description": "코드 편집 후 자동 빌드/테스트",
+      "matcher": "tool == 'Edit' || tool == 'Write'",
+      "hooks": [{
+        "type": "command",
+        "command": "node /path/to/hooks/build-test/post-edit.js \"$file_path\""
+      }]
+    }
   ]
 }
 ```
 
 ---
 
-## 주요 기능
+## 사용 방법
 
-### 1. 헛소리 방지 (Anti-Hallucination)
+### Rules (규칙)
+
+**자동 적용** - Claude Code가 항상 참조합니다.
+
+| 파일 | 용도 |
+|------|------|
+| `00-anti-hallucination.md` | 헛소리 방지, 정확도 라벨링 |
+| `01-mandatory-checklist.md` | 응답 전 필수 체크리스트 |
+| `02-context-anchoring.md` | 컨텍스트 고정, 범위 제한 |
+| `03-core-principles.md` | 핵심 원칙, 금지 표현 |
+| `04-communication.md` | 커뮤니케이션 스타일 |
+| `05-security.md` | 보안 체크리스트 |
+| `06-coding-style.md` | 언어별 코딩 컨벤션 |
+| `07-testing.md` | 테스트 규칙 (TDD) |
+| `08-git-workflow.md` | Git 커밋/브랜치 규칙 |
+| `09-performance.md` | 성능 최적화 (게임 서버) |
+
+### Commands (명령어)
+
+Claude Code에서 슬래시 명령어로 사용:
 
 ```
-✅ 확실한 정보만 답변
-✅ 모르면 "정보 없음" / "확인 불가" 명시
-✅ 추측 시 "추측:" 선언
-
-❌ 애매한 부분 그럴싸하게 채우기 금지
-❌ 근거 없는 단정 금지
+/plan 사용자 인증 시스템 구현
 ```
 
-### 2. 컨텍스트 고정 (Context Anchoring)
+| 명령어 | 용도 | 예시 |
+|--------|------|------|
+| `/plan` | 구현 계획 수립 | `/plan 매칭 시스템 구현` |
+| `/review` | 코드 리뷰 | `/review src/server/session.go` |
+| `/tdd` | TDD 시작 | `/tdd 패킷 파서 함수` |
 
-```
-모든 응답 전:
-1. 원래 요청 핵심 확인
-2. 기대 결과물 형태 확인
-3. 이전 확정 사항 확인
+### Agents (에이전트)
 
-→ 주제 이탈 방지
-```
+복잡한 작업을 위임할 때 사용:
 
-### 3. 자동 빌드/테스트 (Build-Test Hook)
+| 에이전트 | 역할 |
+|----------|------|
+| `planner` | 구현 계획 수립, 작업 분해 |
+| `architect` | 시스템 설계, 아키텍처 결정 |
+| `code-reviewer` | 코드 품질/보안/유지보수성 리뷰 |
+| `security-reviewer` | 보안 취약점 전문 분석 |
+| `refactorer` | 코드 리팩토링 |
+| `tdd-guide` | TDD 가이드 |
+
+### Contexts (컨텍스트)
+
+작업 모드에 따라 우선순위 조정:
+
+| 컨텍스트 | 언제 사용 | 우선순위 |
+|----------|----------|----------|
+| `dev` | 코드 작성/수정 | 품질 → 테스트 → 유지보수 |
+| `review` | 코드 리뷰, PR 검토 | 보안 → 버그 → 성능 → 스타일 |
+| `research` | 기술 조사, 비교 | 정확성 → 최신성 → 관련성 |
+
+### Hooks (자동 트리거)
 
 코드 편집 후 자동 실행:
+
 ```
-Edit/Write → lint → build → test
+Edit/Write → 프로젝트 타입 감지 → lint → build → test
 ```
 
-지원 빌드 시스템:
-- Makefile
-- Taskfile
-- npm/pnpm/yarn/bun
+**지원 빌드 시스템:**
 
-### 4. 슬래시 명령어
+| 언어 | 빌드 시스템 | 감지 파일 | 실행 명령 |
+|------|-------------|-----------|----------|
+| Rust | Cargo | `Cargo.toml` | `cargo clippy && cargo build && cargo test` |
+| Go | go modules | `go.mod` | `go vet && go build && go test` |
+| C/C++ | CMake | `CMakeLists.txt` | `cmake --build && ctest` |
+| C/C++ | Make | `Makefile` | `make && make test` |
+| C# | .NET | `*.csproj` | `dotnet build && dotnet test` |
+| Python | pytest | `pyproject.toml` | `pytest` |
 
-| 명령어 | 설명 |
-|--------|------|
-| `/plan` | 구현 계획 수립 |
-| `/review` | 코드 리뷰 |
-| `/tdd` | TDD 시작 |
+---
+
+## 언어별 코딩 스타일
+
+각 언어의 표준 컨벤션을 따릅니다 (프로젝트 기존 패턴 우선):
+
+| 언어 | 함수/메서드 | 변수 | 상수 |
+|------|-------------|------|------|
+| C/C++ | `snake_case` / `PascalCase` | `snake_case` | `SCREAMING_SNAKE` |
+| Go | `PascalCase` (exported) | `camelCase` | `PascalCase` |
+| Rust | `snake_case` | `snake_case` | `SCREAMING_SNAKE` |
+| C# | `PascalCase` | `camelCase` | `PascalCase` |
+| Python | `snake_case` | `snake_case` | `SCREAMING_SNAKE` |
+
+---
+
+## 게임 서버 특화 기능
+
+### 성능 규칙 (`09-performance.md`)
+
+- **메모리 관리**: 풀링, 프리얼로케이션, GC 최소화
+- **동시성**: Lock-free 선호, 락 범위 최소화
+- **네트워크 I/O**: 버퍼 재사용, 비동기 처리
+- **프로파일링 도구**: 언어별 도구 안내
+
+### 코드 품질 체크리스트
+
+`skills/code-workflow/quality-checklist.md`에 언어별 예시 포함:
+- Go: context + 에러 래핑
+- Rust: Result + 명시적 에러 처리
+- C++: RAII + optional
+- C#: async/await + CancellationToken
+- Python: 타입 힌트 + 컨텍스트 매니저
 
 ---
 
 ## 커스터마이징
 
-### 빌드 명령어 설정
+### 규칙 수정
 
-`hooks/build-test/config.json` 수정:
+`rules/` 폴더에서 직접 수정:
 
-```json
-{
-  "commands": {
-    "lint": ["lint", "eslint", "check"],
-    "build": ["build", "compile"],
-    "test": ["test", "spec"]
-  }
-}
+```bash
+# 예: 코딩 스타일 수정
+vim rules/06-coding-style.md
 ```
-
-### 규칙 추가/수정
-
-`rules/` 폴더에 새 `.md` 파일 추가 또는 기존 파일 수정
 
 ### 에이전트 추가
 
-`agents/` 폴더에 새 에이전트 정의:
+`agents/` 폴더에 새 파일 생성:
 
 ```markdown
 ---
@@ -169,20 +214,80 @@ tools: Read, Grep, Glob
 ---
 
 # 에이전트 내용
+...
+```
+
+### Hooks 비활성화
+
+`hooks/hooks.json`에서 원하는 훅 제거:
+
+```json
+{
+  "hooks": [
+    // 원하는 훅만 유지
+  ]
+}
+```
+
+---
+
+## 파일 목록
+
+### Rules (10개)
+```
+rules/00-anti-hallucination.md
+rules/01-mandatory-checklist.md
+rules/02-context-anchoring.md
+rules/03-core-principles.md
+rules/04-communication.md
+rules/05-security.md
+rules/06-coding-style.md
+rules/07-testing.md
+rules/08-git-workflow.md
+rules/09-performance.md
+```
+
+### Agents (6개)
+```
+agents/planner.md
+agents/architect.md
+agents/code-reviewer.md
+agents/security-reviewer.md
+agents/refactorer.md
+agents/tdd-guide.md
+```
+
+### Commands (3개)
+```
+commands/plan.md
+commands/review.md
+commands/tdd.md
+```
+
+### Skills (3개)
+```
+skills/tool-usage/tool-autonomy.md
+skills/tool-usage/web-search.md
+skills/code-workflow/quality-checklist.md
+```
+
+### Hooks (5개)
+```
+hooks/build-test/post-edit.js
+hooks/memory-persistence/session-start.js
+hooks/memory-persistence/session-end.js
+hooks/strategic-compact/pre-compact.js
+hooks/strategic-compact/suggest-compact.js
 ```
 
 ---
 
 ## 주의사항
 
-### 컨텍스트 윈도우 관리
+### 컨텍스트 윈도우
 
-MCP를 너무 많이 활성화하면 컨텍스트 윈도우가 줄어듭니다.
-
-권장:
-- 설정된 MCP: 20-30개
-- 프로젝트당 활성화: 10개 이하
-- 활성 도구: 80개 이하
+MCP를 너무 많이 활성화하면 컨텍스트가 줄어듭니다:
+- 권장: 프로젝트당 MCP 10개 이하
 
 ### 금지 표현
 
@@ -197,18 +302,6 @@ MCP를 너무 많이 활성화하면 컨텍스트 윈도우가 줄어듭니다.
 - "⚠️ 고려사항:"
 - "전제조건:"
 - "잠재적 이슈:"
-
----
-
-## 기여
-
-기여를 환영합니다!
-
-- 유용한 규칙/에이전트 추가
-- 버그 수정
-- 문서 개선
-
-[CONTRIBUTING.md](CONTRIBUTING.md) 참고
 
 ---
 

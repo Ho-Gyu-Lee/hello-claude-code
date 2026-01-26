@@ -2,15 +2,19 @@
 
 /**
  * Post-Edit Hook: 코드 편집 후 자동 빌드/테스트
- * 
- * 실행 순서:
- * 1. Makefile/Task 정의 확인
- * 2. lint 실행 (있으면)
- * 3. build 실행 (필수)
- * 4. test 실행 (있으면)
+ *
+ * 지원 빌드 시스템:
+ * - Make/CMake (C/C++)
+ * - Cargo (Rust)
+ * - Go modules
+ * - .NET (C#)
+ * - Python (pytest, unittest)
+ * - Task (범용)
+ *
+ * 실행 순서: lint → build → test
  */
 
-const { execSync, spawnSync } = require('child_process');
+const { spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -27,108 +31,205 @@ function loadConfig() {
 
 function getDefaultConfig() {
   return {
-    runners: {
-      makefile: ['make'],
-      taskfile: ['task'],
-      npm: ['npm', 'run'],
-      pnpm: ['pnpm', 'run'],
-      yarn: ['yarn'],
-      bun: ['bun', 'run']
-    },
-    commands: {
-      lint: ['lint', 'eslint', 'check'],
-      build: ['build', 'compile'],
-      test: ['test', 'spec']
+    projectMarkers: {
+      makefile: ['Makefile', 'GNUmakefile'],
+      cmake: ['CMakeLists.txt'],
+      cargo: ['Cargo.toml'],
+      go: ['go.mod'],
+      dotnet: ['*.csproj', '*.sln'],
+      python: ['pyproject.toml', 'setup.py']
     }
   };
 }
 
-// 프로젝트 루트 찾기
-function findProjectRoot(startPath) {
+// 프로젝트 루트 및 타입 찾기
+function findProject(startPath) {
+  const config = loadConfig();
   let currentPath = path.dirname(startPath);
-  
+
   while (currentPath !== path.dirname(currentPath)) {
-    const markers = ['package.json', 'Makefile', 'Taskfile.yml', 'go.mod', 'Cargo.toml'];
-    for (const marker of markers) {
-      if (fs.existsSync(path.join(currentPath, marker))) {
-        return currentPath;
+    // 우선순위대로 확인
+    const checks = [
+      { type: 'cargo', files: ['Cargo.toml'] },
+      { type: 'go', files: ['go.mod'] },
+      { type: 'cmake', files: ['CMakeLists.txt'] },
+      { type: 'makefile', files: ['Makefile', 'GNUmakefile'] },
+      { type: 'dotnet', files: ['*.csproj', '*.sln'] },
+      { type: 'python', files: ['pyproject.toml', 'setup.py'] },
+      { type: 'taskfile', files: ['Taskfile.yml', 'Taskfile.yaml'] }
+    ];
+
+    for (const check of checks) {
+      for (const file of check.files) {
+        if (file.includes('*')) {
+          // glob 패턴 처리
+          const pattern = file.replace('*', '');
+          const files = fs.readdirSync(currentPath);
+          if (files.some(f => f.endsWith(pattern))) {
+            return { root: currentPath, type: check.type };
+          }
+        } else if (fs.existsSync(path.join(currentPath, file))) {
+          return { root: currentPath, type: check.type };
+        }
       }
     }
     currentPath = path.dirname(currentPath);
   }
-  
+
   return null;
 }
 
-// 사용 가능한 러너 감지
-function detectRunner(projectRoot) {
-  const runners = [];
-  
-  if (fs.existsSync(path.join(projectRoot, 'Makefile'))) {
-    runners.push({ type: 'makefile', cmd: ['make'] });
-  }
-  
-  if (fs.existsSync(path.join(projectRoot, 'Taskfile.yml'))) {
-    runners.push({ type: 'taskfile', cmd: ['task'] });
-  }
-  
-  if (fs.existsSync(path.join(projectRoot, 'package.json'))) {
-    // 패키지 매니저 감지
-    if (fs.existsSync(path.join(projectRoot, 'pnpm-lock.yaml'))) {
-      runners.push({ type: 'pnpm', cmd: ['pnpm', 'run'] });
-    } else if (fs.existsSync(path.join(projectRoot, 'yarn.lock'))) {
-      runners.push({ type: 'yarn', cmd: ['yarn'] });
-    } else if (fs.existsSync(path.join(projectRoot, 'bun.lockb'))) {
-      runners.push({ type: 'bun', cmd: ['bun', 'run'] });
-    } else {
-      runners.push({ type: 'npm', cmd: ['npm', 'run'] });
-    }
-  }
-  
-  return runners;
+// 명령어 실행
+function runCommand(cmd, args, cwd, description) {
+  console.log(`\n🔧 ${description}: ${cmd} ${args.join(' ')}`);
+
+  const result = spawnSync(cmd, args, {
+    cwd: cwd,
+    stdio: 'inherit',
+    shell: process.platform === 'win32'
+  });
+
+  return result.status === 0;
 }
 
-// 명령어 존재 여부 확인
-function hasCommand(runner, command, projectRoot) {
-  if (runner.type === 'makefile') {
-    try {
-      const result = execSync(`make -n ${command} 2>/dev/null`, { cwd: projectRoot });
+// Make 타겟 존재 확인
+function hasMakeTarget(target, cwd) {
+  const result = spawnSync('make', ['-n', target], {
+    cwd: cwd,
+    stdio: 'pipe',
+    shell: process.platform === 'win32'
+  });
+  return result.status === 0;
+}
+
+// 빌드 시스템별 실행
+function runBuildSystem(project) {
+  const { root, type } = project;
+
+  switch (type) {
+    case 'cargo':
+      return runCargo(root);
+    case 'go':
+      return runGo(root);
+    case 'cmake':
+      return runCMake(root);
+    case 'makefile':
+      return runMake(root);
+    case 'dotnet':
+      return runDotnet(root);
+    case 'python':
+      return runPython(root);
+    case 'taskfile':
+      return runTask(root);
+    default:
+      console.log('⚠️ Unknown build system');
       return true;
-    } catch {
-      return false;
-    }
   }
-  
-  if (runner.type === 'taskfile') {
-    try {
-      const result = execSync(`task --list 2>/dev/null | grep -q "${command}"`, { cwd: projectRoot });
-      return true;
-    } catch {
-      return false;
-    }
-  }
-  
-  // npm/pnpm/yarn/bun
-  try {
-    const pkg = JSON.parse(fs.readFileSync(path.join(projectRoot, 'package.json'), 'utf8'));
-    return pkg.scripts && pkg.scripts[command];
-  } catch {
+}
+
+function runCargo(cwd) {
+  // cargo clippy (lint)
+  if (!runCommand('cargo', ['clippy', '--', '-D', 'warnings'], cwd, 'Lint')) {
     return false;
   }
+  // cargo build
+  if (!runCommand('cargo', ['build'], cwd, 'Build')) {
+    return false;
+  }
+  // cargo test
+  return runCommand('cargo', ['test'], cwd, 'Test');
 }
 
-// 명령어 실행
-function runCommand(runner, command, projectRoot) {
-  const fullCmd = [...runner.cmd, command];
-  console.log(`\n🔧 Running: ${fullCmd.join(' ')}`);
-  
-  const result = spawnSync(fullCmd[0], fullCmd.slice(1), {
-    cwd: projectRoot,
-    stdio: 'inherit',
-    shell: true
+function runGo(cwd) {
+  // go vet (lint)
+  if (!runCommand('go', ['vet', './...'], cwd, 'Lint')) {
+    return false;
+  }
+  // go build
+  if (!runCommand('go', ['build', './...'], cwd, 'Build')) {
+    return false;
+  }
+  // go test
+  return runCommand('go', ['test', './...'], cwd, 'Test');
+}
+
+function runCMake(cwd) {
+  const buildDir = path.join(cwd, 'build');
+
+  // cmake 빌드 디렉토리 없으면 생성
+  if (!fs.existsSync(buildDir)) {
+    if (!runCommand('cmake', ['-B', 'build', '-S', '.'], cwd, 'Configure')) {
+      return false;
+    }
+  }
+
+  // build
+  if (!runCommand('cmake', ['--build', 'build'], cwd, 'Build')) {
+    return false;
+  }
+
+  // test (ctest)
+  return runCommand('ctest', ['--test-dir', 'build', '--output-on-failure'], cwd, 'Test');
+}
+
+function runMake(cwd) {
+  // lint (있으면)
+  if (hasMakeTarget('lint', cwd)) {
+    if (!runCommand('make', ['lint'], cwd, 'Lint')) {
+      return false;
+    }
+  }
+
+  // build
+  if (!runCommand('make', [], cwd, 'Build')) {
+    return false;
+  }
+
+  // test (있으면)
+  if (hasMakeTarget('test', cwd)) {
+    return runCommand('make', ['test'], cwd, 'Test');
+  }
+
+  return true;
+}
+
+function runDotnet(cwd) {
+  // build
+  if (!runCommand('dotnet', ['build'], cwd, 'Build')) {
+    return false;
+  }
+  // test
+  return runCommand('dotnet', ['test'], cwd, 'Test');
+}
+
+function runPython(cwd) {
+  // pytest 존재 확인
+  const hasPytest = fs.existsSync(path.join(cwd, 'pytest.ini')) ||
+                    fs.existsSync(path.join(cwd, 'pyproject.toml'));
+
+  if (hasPytest) {
+    return runCommand('python', ['-m', 'pytest'], cwd, 'Test');
+  }
+
+  // unittest fallback
+  return runCommand('python', ['-m', 'unittest', 'discover'], cwd, 'Test');
+}
+
+function runTask(cwd) {
+  // task default
+  return runCommand('task', [], cwd, 'Task');
+}
+
+// 스킵 패턴 확인
+function shouldSkip(filePath) {
+  const config = loadConfig();
+  const skipPatterns = config.skipPatterns || [];
+  const fileName = path.basename(filePath);
+
+  return skipPatterns.some(pattern => {
+    const regex = new RegExp('^' + pattern.replace('*', '.*') + '$');
+    return regex.test(fileName);
   });
-  
-  return result.status === 0;
 }
 
 // 메인 실행
@@ -137,65 +238,27 @@ function main() {
     console.log('No file path provided');
     return;
   }
-  
-  const projectRoot = findProjectRoot(filePath);
-  if (!projectRoot) {
+
+  if (shouldSkip(filePath)) {
+    console.log('⏭️ Skipped (non-code file)');
+    return;
+  }
+
+  const project = findProject(filePath);
+  if (!project) {
     console.log('Could not find project root');
     return;
   }
-  
-  const runners = detectRunner(projectRoot);
-  if (runners.length === 0) {
-    console.log('No build system detected');
-    return;
+
+  console.log(`\n📁 Project: ${project.root}`);
+  console.log(`🔨 Type: ${project.type}`);
+
+  if (runBuildSystem(project)) {
+    console.log('\n✅ All checks passed');
+  } else {
+    console.log('\n❌ Check failed');
+    process.exit(1);
   }
-  
-  const runner = runners[0]; // 첫 번째 러너 사용
-  const config = loadConfig();
-  
-  console.log(`\n📁 Project: ${projectRoot}`);
-  console.log(`🔨 Runner: ${runner.type}`);
-  
-  // 1. Lint
-  for (const cmd of config.commands.lint) {
-    if (hasCommand(runner, cmd, projectRoot)) {
-      if (!runCommand(runner, cmd, projectRoot)) {
-        console.log('\n❌ Lint failed');
-        process.exit(1);
-      }
-      break;
-    }
-  }
-  
-  // 2. Build
-  let buildRan = false;
-  for (const cmd of config.commands.build) {
-    if (hasCommand(runner, cmd, projectRoot)) {
-      if (!runCommand(runner, cmd, projectRoot)) {
-        console.log('\n❌ Build failed');
-        process.exit(1);
-      }
-      buildRan = true;
-      break;
-    }
-  }
-  
-  if (!buildRan) {
-    console.log('\n⚠️ No build command found');
-  }
-  
-  // 3. Test
-  for (const cmd of config.commands.test) {
-    if (hasCommand(runner, cmd, projectRoot)) {
-      if (!runCommand(runner, cmd, projectRoot)) {
-        console.log('\n❌ Tests failed');
-        process.exit(1);
-      }
-      break;
-    }
-  }
-  
-  console.log('\n✅ All checks passed');
 }
 
 main();

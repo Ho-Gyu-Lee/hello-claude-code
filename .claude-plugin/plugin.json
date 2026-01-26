@@ -1,15 +1,18 @@
 {
   "name": "hello-claude-config",
-  "version": "1.0.0",
-  "description": "개인 맞춤형 Claude Code 설정 - 헛소리 방지, 컨텍스트 고정, 자동 빌드/테스트",
+  "version": "1.1.0",
+  "description": "게임 서버 개발자를 위한 Claude Code 설정 - C/C++, Go, Rust, C#, Python 지원",
   "author": "",
   "license": "MIT",
   "repository": "",
   "keywords": [
     "claude-code",
-    "productivity",
-    "developer-tools",
-    "ai-agents",
+    "game-server",
+    "cpp",
+    "golang",
+    "rust",
+    "csharp",
+    "python",
     "code-quality"
   ],
   "components": {
@@ -22,7 +25,8 @@
       "rules/05-security.md",
       "rules/06-coding-style.md",
       "rules/07-testing.md",
-      "rules/08-git-workflow.md"
+      "rules/08-git-workflow.md",
+      "rules/09-performance.md"
     ],
     "agents": [
       "agents/planner.md",
