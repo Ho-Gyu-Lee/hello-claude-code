@@ -37,10 +37,6 @@
 - `commands/` 폴더에 `.md` 파일 추가
 - 사용법, 옵션, 예시 포함
 
-### Hooks 추가
-- `hooks/hooks.json`에 훅 정의 추가
-- 필요시 스크립트 파일 추가
-
 ## 커밋 메시지
 
 ```
@@ -48,7 +44,7 @@
 
 예:
 feat: add new security-reviewer agent
-fix: correct build-test hook timeout
+fix: correct coding-style rule example
 docs: update README installation guide
 ```
 
