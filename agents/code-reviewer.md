@@ -6,7 +6,7 @@ tools: Read, Grep, Glob, Bash
 
 # Code Reviewer Agent
 
-코드 품질과 보안을 검토하는 시니어 리뷰어 에이전트입니다.
+코드 품질과 보안을 검토하는 코드 리뷰 전문 에이전트입니다.
 
 ## 역할
 

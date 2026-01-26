@@ -1,8 +1,8 @@
-# Hello Claude Config
+# Hello Claude Code
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**게임 서버 개발자를 위한 Claude Code 설정**
+**서버 개발자를 위한 Claude Code 설정**
 
 C/C++, Go, Rust, C#, Python 개발 환경에 최적화된 설정입니다.
 
@@ -12,24 +12,23 @@ C/C++, Go, Rust, C#, Python 개발 환경에 최적화된 설정입니다.
 
 | 원칙 | 설명 |
 |------|------|
-| **헛소리 방지** | 확실한 정보만 답변, 추측은 "추측:" 명시 |
-| **컨텍스트 고정** | 원래 질문에 집중, 주제 이탈 방지 |
-| **자동화** | 코드 변경 후 자동 lint → build → test |
-| **간결함** | Over-engineering 금지, 최소 변경 |
+| **정확성** | 확실한 정보만 답변, 추측은 "추측:" 명시 |
+| **집중** | 요청 범위에 집중, 불필요한 확장 방지 |
+| **코드 기반** | 실제 코드 분석 후 판단, 추측 금지 |
+| **간결함** | Over-engineering 금지, 요청 범위만 수정 |
 
 ---
 
 ## 프로젝트 구조
 
 ```
-hello-claude-config/
+hello-claude-code/
 ├── rules/           # 핵심 규칙 (10개) - 항상 적용
 ├── agents/          # 서브에이전트 (6개) - 위임 작업용
 ├── commands/        # 슬래시 명령어 (3개)
 ├── contexts/        # 컨텍스트 모드 (3개)
 ├── skills/          # 워크플로우 가이드
-├── hooks/           # 자동 트리거
-└── examples/        # 예시 (CLAUDE.md)
+└── templates/       # 템플릿 파일
 ```
 
 ---
@@ -39,8 +38,8 @@ hello-claude-config/
 ### 1. 레포지토리 클론
 
 ```bash
-git clone https://github.com/[your-username]/hello-claude-config.git
-cd hello-claude-config
+git clone https://github.com/[your-username]/hello-claude-code.git
+cd hello-claude-code
 ```
 
 ### 2. 파일 복사 (선택)
@@ -58,26 +57,6 @@ cp agents/*.md ~/.claude/agents/
 cp commands/*.md ~/.claude/commands/
 ```
 
-### 3. Hooks 설정 (선택)
-
-`~/.claude/settings.json`에 hooks 설정 추가:
-
-```json
-{
-  "hooks": [
-    {
-      "name": "build-test-after-edit",
-      "description": "코드 편집 후 자동 빌드/테스트",
-      "matcher": "tool == 'Edit' || tool == 'Write'",
-      "hooks": [{
-        "type": "command",
-        "command": "node /path/to/hooks/build-test/post-edit.js \"$file_path\""
-      }]
-    }
-  ]
-}
-```
-
 ---
 
 ## 사용 방법
@@ -88,16 +67,16 @@ cp commands/*.md ~/.claude/commands/
 
 | 파일 | 용도 |
 |------|------|
-| `00-anti-hallucination.md` | 헛소리 방지, 정확도 라벨링 |
+| `00-anti-hallucination.md` | 헛소리 방지, 정확도 검증 |
 | `01-mandatory-checklist.md` | 응답 전 필수 체크리스트 |
 | `02-context-anchoring.md` | 컨텍스트 고정, 범위 제한 |
-| `03-core-principles.md` | 핵심 원칙, 금지 표현 |
+| `03-core-principles.md` | 응답 철학, 금지/허용 표현 |
 | `04-communication.md` | 커뮤니케이션 스타일 |
-| `05-security.md` | 보안 체크리스트 |
-| `06-coding-style.md` | 언어별 코딩 컨벤션 |
-| `07-testing.md` | 테스트 규칙 (TDD) |
+| `05-security.md` | 보안 규칙, 즉시 경고 항목 |
+| `06-coding-style.md` | 간결성 원칙, 언어별 컨벤션 |
+| `07-testing.md` | 테스트 규칙, 빌드/린트 |
 | `08-git-workflow.md` | Git 커밋/브랜치 규칙 |
-| `09-performance.md` | 성능 최적화 (게임 서버) |
+| `09-performance.md` | 서버 성능 최적화 |
 
 ### Commands (명령어)
 
@@ -136,25 +115,6 @@ Claude Code에서 슬래시 명령어로 사용:
 | `review` | 코드 리뷰, PR 검토 | 보안 → 버그 → 성능 → 스타일 |
 | `research` | 기술 조사, 비교 | 정확성 → 최신성 → 관련성 |
 
-### Hooks (자동 트리거)
-
-코드 편집 후 자동 실행:
-
-```
-Edit/Write → 프로젝트 타입 감지 → lint → build → test
-```
-
-**지원 빌드 시스템:**
-
-| 언어 | 빌드 시스템 | 감지 파일 | 실행 명령 |
-|------|-------------|-----------|----------|
-| Rust | Cargo | `Cargo.toml` | `cargo clippy && cargo build && cargo test` |
-| Go | go modules | `go.mod` | `go vet && go build && go test` |
-| C/C++ | CMake | `CMakeLists.txt` | `cmake --build && ctest` |
-| C/C++ | Make | `Makefile` | `make && make test` |
-| C# | .NET | `*.csproj` | `dotnet build && dotnet test` |
-| Python | pytest | `pyproject.toml` | `pytest` |
-
 ---
 
 ## 언어별 코딩 스타일
@@ -171,7 +131,7 @@ Edit/Write → 프로젝트 타입 감지 → lint → build → test
 
 ---
 
-## 게임 서버 특화 기능
+## 서버 특화 기능
 
 ### 성능 규칙 (`09-performance.md`)
 
@@ -217,18 +177,6 @@ tools: Read, Grep, Glob
 ...
 ```
 
-### Hooks 비활성화
-
-`hooks/hooks.json`에서 원하는 훅 제거:
-
-```json
-{
-  "hooks": [
-    // 원하는 훅만 유지
-  ]
-}
-```
-
 ---
 
 ## 파일 목록
@@ -264,20 +212,12 @@ commands/review.md
 commands/tdd.md
 ```
 
-### Skills (3개)
+### Skills (4개)
 ```
 skills/tool-usage/tool-autonomy.md
 skills/tool-usage/web-search.md
+skills/tool-usage/sequential-thinking.md
 skills/code-workflow/quality-checklist.md
-```
-
-### Hooks (5개)
-```
-hooks/build-test/post-edit.js
-hooks/memory-persistence/session-start.js
-hooks/memory-persistence/session-end.js
-hooks/strategic-compact/pre-compact.js
-hooks/strategic-compact/suggest-compact.js
 ```
 
 ---
