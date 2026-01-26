@@ -29,7 +29,7 @@ tools: Read, Grep, Glob
 - YAGNI (You Aren't Gonna Need It)
 - DRY (Don't Repeat Yourself)
 
-### 게임 서버 아키텍처 철학
+### 서버 아키텍처 철학
 
 **핵심 목표**:
 1. **장애 포인트 감소**: 컴포넌트가 적을수록 장애 확률 감소
@@ -51,10 +51,10 @@ tools: Read, Grep, Glob
 ```
 예시 1) 레이어 최소화
 일반적인 구조:
-게임 서버 → 메시지 큐 → 캐시 서버 → RDB
+서버 → 메시지 큐 → 캐시 서버 → RDB
 
 레이어 최소화:
-게임 서버 → 캐시 & 큐 서버 → RDB
+서버 → 캐시 & 큐 서버 → RDB
 (메모리 DB 라이브러리로 Pod 간 동기화 등)
 
 ---

@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**게임 서버 개발자를 위한 Claude Code 설정**
+**서버 개발자를 위한 Claude Code 설정**
 
 C/C++, Go, Rust, C#, Python 개발 환경에 최적화된 설정입니다.
 
@@ -97,7 +97,7 @@ cp commands/*.md ~/.claude/commands/
 | `06-coding-style.md` | 언어별 코딩 컨벤션 |
 | `07-testing.md` | 테스트 규칙 (TDD) |
 | `08-git-workflow.md` | Git 커밋/브랜치 규칙 |
-| `09-performance.md` | 성능 최적화 (게임 서버) |
+| `09-performance.md` | 성능 최적화 |
 
 ### Commands (명령어)
 
@@ -171,7 +171,7 @@ Edit/Write → 프로젝트 타입 감지 → lint → build → test
 
 ---
 
-## 게임 서버 특화 기능
+## 서버 특화 기능
 
 ### 성능 규칙 (`09-performance.md`)
 
