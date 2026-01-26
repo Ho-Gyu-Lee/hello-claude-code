@@ -68,16 +68,16 @@ cp commands/*.md ~/.claude/commands/
 
 | 파일 | 용도 |
 |------|------|
-| `00-anti-hallucination.md` | 헛소리 방지, 정확도 라벨링 |
+| `00-anti-hallucination.md` | 헛소리 방지, 정확도 검증 |
 | `01-mandatory-checklist.md` | 응답 전 필수 체크리스트 |
 | `02-context-anchoring.md` | 컨텍스트 고정, 범위 제한 |
-| `03-core-principles.md` | 핵심 원칙, 금지 표현 |
+| `03-core-principles.md` | 응답 철학, 금지/허용 표현 |
 | `04-communication.md` | 커뮤니케이션 스타일 |
-| `05-security.md` | 보안 체크리스트 |
-| `06-coding-style.md` | 언어별 코딩 컨벤션 |
-| `07-testing.md` | 테스트 규칙 (TDD) |
+| `05-security.md` | 보안 규칙, 즉시 경고 항목 |
+| `06-coding-style.md` | 간결성 원칙, 언어별 컨벤션 |
+| `07-testing.md` | 테스트 규칙, 빌드/린트 |
 | `08-git-workflow.md` | Git 커밋/브랜치 규칙 |
-| `09-performance.md` | 성능 최적화 |
+| `09-performance.md` | 서버 성능 최적화 |
 
 ### Commands (명령어)
 
