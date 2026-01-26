@@ -213,10 +213,11 @@ commands/review.md
 commands/tdd.md
 ```
 
-### Skills (3개)
+### Skills (4개)
 ```
 skills/tool-usage/tool-autonomy.md
 skills/tool-usage/web-search.md
+skills/tool-usage/sequential-thinking.md
 skills/code-workflow/quality-checklist.md
 ```
 
