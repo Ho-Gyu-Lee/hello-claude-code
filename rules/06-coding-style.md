@@ -19,44 +19,10 @@
 ### 적용 순서
 
 1. **프로젝트 기존 패턴** ← 최우선 (기존 코드 분석)
-2. **언어 표준 컨벤션** ← 해당 언어 커뮤니티 표준
-3. **일반 원칙** ← 언어 표준 없을 때
+2. **표준 컨벤션** ← 기본적인 코드 컨벤션
+3. **일반 원칙** ← 언어별 표준 컨벤션
 
-### 언어별 표준 컨벤션
-
-#### C/C++
-
-| 구분 | 스타일 | 예시 |
-|------|--------|------|
-| 클래스/구조체 | PascalCase | `GameSession`, `PlayerData` |
-| 함수 | snake_case 또는 PascalCase | `process_packet()`, `ProcessPacket()` |
-| 변수 | snake_case | `player_count`, `max_connections` |
-| 멤버 변수 | `m_` 접두사 또는 `_` 접미사 | `m_session_id`, `session_id_` |
-| 상수/매크로 | SCREAMING_SNAKE_CASE | `MAX_PLAYERS`, `BUFFER_SIZE` |
-| 네임스페이스 | snake_case | `game_server`, `network` |
-
-#### Go
-
-| 구분 | 스타일 | 예시 |
-|------|--------|------|
-| 패키지 | lowercase | `gameserver`, `network` |
-| exported 함수/타입 | PascalCase | `NewSession()`, `PlayerData` |
-| unexported | camelCase | `processPacket()`, `sessionID` |
-| 상수 | PascalCase (exported) | `MaxPlayers`, `DefaultTimeout` |
-| 인터페이스 | `-er` 접미사 권장 | `Reader`, `SessionHandler` |
-
-#### Rust
-
-| 구분 | 스타일 | 예시 |
-|------|--------|------|
-| 구조체/열거형/트레이트 | PascalCase | `GameSession`, `PacketType` |
-| 함수/메서드 | snake_case | `process_packet()`, `new()` |
-| 변수 | snake_case | `player_count`, `session_id` |
-| 상수 | SCREAMING_SNAKE_CASE | `MAX_PLAYERS`, `BUFFER_SIZE` |
-| 모듈 | snake_case | `game_server`, `network` |
-| 생명주기 | 소문자 | `'a`, `'static` |
-
-#### C#
+### 표준 컨벤션
 
 | 구분 | 스타일 | 예시 |
 |------|--------|------|
@@ -65,19 +31,9 @@
 | public 프로퍼티 | PascalCase | `SessionId`, `PlayerCount` |
 | private 필드 | `_` + camelCase | `_sessionId`, `_playerCount` |
 | 지역 변수/파라미터 | camelCase | `playerId`, `packetData` |
-| 상수 | PascalCase | `MaxPlayers`, `DefaultTimeout` |
+| 상수 | SCREAMING_SNAKE_CASE | `MAX_PLAYERS`, `BUFFER_SIZE` |
 | 인터페이스 | `I` + PascalCase | `ISessionHandler`, `IPacketProcessor` |
 
-#### Python
-
-| 구분 | 스타일 | 예시 |
-|------|--------|------|
-| 클래스 | PascalCase | `GameSession`, `PlayerData` |
-| 함수/메서드 | snake_case | `process_packet()`, `send_message()` |
-| 변수 | snake_case | `player_count`, `session_id` |
-| 상수 | SCREAMING_SNAKE_CASE | `MAX_PLAYERS`, `BUFFER_SIZE` |
-| private | `_` 접두사 | `_internal_state` |
-| 모듈 | snake_case | `game_server.py` |
 
 ### 프로젝트 패턴 분석
 

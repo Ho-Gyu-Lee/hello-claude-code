@@ -62,4 +62,3 @@ JWT 유틸리티 함수 (sign, verify) 구현 시작
 
 - `--detailed`: 더 상세한 계획
 - `--minimal`: 핵심만 간략하게
-- `--timeline`: 예상 일정 포함
