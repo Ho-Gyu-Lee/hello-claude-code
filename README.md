@@ -23,12 +23,10 @@ C/C++, Go, Rust, C#, Python 개발 환경에 최적화된 설정입니다.
 
 ```
 hello-claude-code/
-├── rules/           # 핵심 규칙 (9개) - 항상 적용
+├── rules/           # 핵심 규칙 (11개) - 항상 적용
 ├── agents/          # 서브에이전트 (6개) - 위임 작업용
 ├── commands/        # 슬래시 명령어 (3개)
-├── contexts/        # 컨텍스트 모드 (3개)
-├── skills/          # 워크플로우 가이드
-└── templates/       # 템플릿 파일
+└── skills/          # 스킬 (4개) - 필요시 호출
 ```
 
 ---
@@ -55,6 +53,9 @@ cp agents/*.md ~/.claude/agents/
 
 # 명령어도 사용
 cp commands/*.md ~/.claude/commands/
+
+# 스킬도 사용
+cp -r skills/* ~/.claude/skills/
 ```
 
 ---
@@ -76,6 +77,8 @@ cp commands/*.md ~/.claude/commands/
 | `06-coding-style.md` | 간결성 원칙, 언어별 컨벤션 |
 | `07-testing.md` | 테스트 규칙, 빌드/린트 |
 | `08-performance.md` | 서버 성능 최적화 |
+| `09-tool-autonomy.md` | 도구 자율 사용 원칙 |
+| `10-web-search.md` | 웹 검색 가이드 |
 
 ### Commands (명령어)
 
@@ -104,15 +107,16 @@ Claude Code에서 슬래시 명령어로 사용:
 | `refactorer` | 코드 리팩토링 |
 | `tdd-guide` | TDD 가이드 |
 
-### Contexts (컨텍스트)
+### Skills (스킬)
 
-작업 모드에 따라 우선순위 조정:
+슬래시 명령어로 필요할 때 호출:
 
-| 컨텍스트 | 언제 사용 | 우선순위 |
-|----------|----------|----------|
-| `dev` | 코드 작성/수정 | 품질 → 테스트 → 유지보수 |
-| `review` | 코드 리뷰, PR 검토 | 보안 → 버그 → 성능 → 스타일 |
-| `research` | 기술 조사, 비교 | 정확성 → 최신성 → 관련성 |
+| 스킬 | 용도 |
+|------|------|
+| `/quality-checklist` | 코드 품질 체크리스트 |
+| `/sequential-thinking` | 복잡한 문제 단계별 분석 |
+| `/research-context` | 기술 조사 모드 활성화 |
+| `/error-response` | 에러 응답 표준 형식 |
 
 ---
 
@@ -127,7 +131,7 @@ Claude Code에서 슬래시 명령어로 사용:
 
 ### 코드 품질 체크리스트
 
-`skills/code-workflow/quality-checklist.md`에 언어별 예시 포함:
+`skills/quality-checklist/SKILL.md`에 언어별 예시 포함:
 - Go: context + 에러 래핑
 - Rust: Result + 명시적 에러 처리
 - C++: RAII + optional
@@ -166,7 +170,7 @@ tools: Read, Grep, Glob
 
 ## 파일 목록
 
-### Rules (9개)
+### Rules (11개)
 ```
 rules/00-anti-hallucination.md
 rules/01-mandatory-checklist.md
@@ -177,6 +181,8 @@ rules/05-security.md
 rules/06-coding-style.md
 rules/07-testing.md
 rules/08-performance.md
+rules/09-tool-autonomy.md
+rules/10-web-search.md
 ```
 
 ### Agents (6개)
@@ -198,10 +204,10 @@ commands/tdd.md
 
 ### Skills (4개)
 ```
-skills/tool-usage/tool-autonomy.md
-skills/tool-usage/web-search.md
-skills/tool-usage/sequential-thinking.md
-skills/code-workflow/quality-checklist.md
+skills/quality-checklist/SKILL.md
+skills/sequential-thinking/SKILL.md
+skills/research-context/SKILL.md
+skills/error-response/SKILL.md
 ```
 
 ---
