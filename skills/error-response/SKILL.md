@@ -1,4 +1,9 @@
-# 에러 응답 템플릿 (Error Response Template)
+---
+name: error-response
+description: 에러 응답 템플릿. 실패 상황 보고 시 표준 형식 제공.
+---
+
+# 에러 응답 템플릿
 
 ## 표준 형식
 

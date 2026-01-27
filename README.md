@@ -26,9 +26,7 @@ hello-claude-code/
 ├── rules/           # 핵심 규칙 (9개) - 항상 적용
 ├── agents/          # 서브에이전트 (6개) - 위임 작업용
 ├── commands/        # 슬래시 명령어 (3개)
-├── contexts/        # 컨텍스트 모드 (3개)
-├── skills/          # 워크플로우 가이드
-└── templates/       # 템플릿 파일
+└── skills/          # 스킬 (6개) - 워크플로우 가이드
 ```
 
 ---
@@ -107,15 +105,18 @@ Claude Code에서 슬래시 명령어로 사용:
 | `refactorer` | 코드 리팩토링 |
 | `tdd-guide` | TDD 가이드 |
 
-### Contexts (컨텍스트)
+### Skills (스킬)
 
-작업 모드에 따라 우선순위 조정:
+슬래시 명령어로 필요할 때 호출:
 
-| 컨텍스트 | 언제 사용 | 우선순위 |
-|----------|----------|----------|
-| `dev` | 코드 작성/수정 | 품질 → 테스트 → 유지보수 |
-| `review` | 코드 리뷰, PR 검토 | 보안 → 버그 → 성능 → 스타일 |
-| `research` | 기술 조사, 비교 | 정확성 → 최신성 → 관련성 |
+| 스킬 | 용도 |
+|------|------|
+| `/quality-checklist` | 코드 품질 체크리스트 |
+| `/tool-autonomy` | 도구 자율 사용 원칙 |
+| `/web-search` | 웹 검색 가이드 |
+| `/sequential-thinking` | 복잡한 문제 단계별 분석 |
+| `/research-context` | 기술 조사 모드 활성화 |
+| `/error-response` | 에러 응답 표준 형식 |
 
 ---
 
@@ -199,12 +200,14 @@ commands/review.md
 commands/tdd.md
 ```
 
-### Skills (4개)
+### Skills (6개)
 ```
 skills/quality-checklist/SKILL.md
 skills/tool-autonomy/SKILL.md
 skills/web-search/SKILL.md
 skills/sequential-thinking/SKILL.md
+skills/research-context/SKILL.md
+skills/error-response/SKILL.md
 ```
 
 ---

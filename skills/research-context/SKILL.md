@@ -1,3 +1,8 @@
+---
+name: research-context
+description: 기술 조사, 라이브러리 비교, 아키텍처 결정 시 리서치 모드 활성화. 정확성과 최신성 우선.
+---
+
 # Research Context
 
 리서치/탐색 모드 컨텍스트입니다.
