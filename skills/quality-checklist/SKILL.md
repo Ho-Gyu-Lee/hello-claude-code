@@ -1,4 +1,9 @@
-# 코드 품질 체크리스트 (Quality Checklist)
+---
+name: quality-checklist
+description: 코드 품질 체크리스트. 코드 작성, 리뷰, PR 제출 전 품질 검증이 필요할 때 사용.
+---
+
+# 코드 품질 체크리스트
 
 ## 완전성 체크리스트 (7/7 필수)
 

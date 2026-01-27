@@ -55,6 +55,9 @@ cp agents/*.md ~/.claude/agents/
 
 # 명령어도 사용
 cp commands/*.md ~/.claude/commands/
+
+# 스킬도 사용
+cp -r skills/* ~/.claude/skills/
 ```
 
 ---
@@ -127,7 +130,7 @@ Claude Code에서 슬래시 명령어로 사용:
 
 ### 코드 품질 체크리스트
 
-`skills/code-workflow/quality-checklist.md`에 언어별 예시 포함:
+`skills/quality-checklist/SKILL.md`에 언어별 예시 포함:
 - Go: context + 에러 래핑
 - Rust: Result + 명시적 에러 처리
 - C++: RAII + optional
@@ -198,10 +201,10 @@ commands/tdd.md
 
 ### Skills (4개)
 ```
-skills/tool-usage/tool-autonomy.md
-skills/tool-usage/web-search.md
-skills/tool-usage/sequential-thinking.md
-skills/code-workflow/quality-checklist.md
+skills/quality-checklist/SKILL.md
+skills/tool-autonomy/SKILL.md
+skills/web-search/SKILL.md
+skills/sequential-thinking/SKILL.md
 ```
 
 ---

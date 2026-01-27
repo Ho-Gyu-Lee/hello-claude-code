@@ -1,3 +1,8 @@
+---
+name: tdd
+description: Test-Driven Development 방식으로 기능 개발. RED-GREEN-REFACTOR 사이클 가이드.
+---
+
 # /tdd - Test-Driven Development
 
 TDD 방식으로 기능을 개발합니다.
