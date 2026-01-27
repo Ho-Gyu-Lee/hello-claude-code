@@ -23,10 +23,10 @@ C/C++, Go, Rust, C#, Python 개발 환경에 최적화된 설정입니다.
 
 ```
 hello-claude-code/
-├── rules/           # 핵심 규칙 (9개) - 항상 적용
+├── rules/           # 핵심 규칙 (11개) - 항상 적용
 ├── agents/          # 서브에이전트 (6개) - 위임 작업용
 ├── commands/        # 슬래시 명령어 (3개)
-└── skills/          # 스킬 (6개) - 워크플로우 가이드
+└── skills/          # 스킬 (4개) - 필요시 호출
 ```
 
 ---
@@ -77,6 +77,8 @@ cp -r skills/* ~/.claude/skills/
 | `06-coding-style.md` | 간결성 원칙, 언어별 컨벤션 |
 | `07-testing.md` | 테스트 규칙, 빌드/린트 |
 | `08-performance.md` | 서버 성능 최적화 |
+| `09-tool-autonomy.md` | 도구 자율 사용 원칙 |
+| `10-web-search.md` | 웹 검색 가이드 |
 
 ### Commands (명령어)
 
@@ -112,8 +114,6 @@ Claude Code에서 슬래시 명령어로 사용:
 | 스킬 | 용도 |
 |------|------|
 | `/quality-checklist` | 코드 품질 체크리스트 |
-| `/tool-autonomy` | 도구 자율 사용 원칙 |
-| `/web-search` | 웹 검색 가이드 |
 | `/sequential-thinking` | 복잡한 문제 단계별 분석 |
 | `/research-context` | 기술 조사 모드 활성화 |
 | `/error-response` | 에러 응답 표준 형식 |
@@ -170,7 +170,7 @@ tools: Read, Grep, Glob
 
 ## 파일 목록
 
-### Rules (9개)
+### Rules (11개)
 ```
 rules/00-anti-hallucination.md
 rules/01-mandatory-checklist.md
@@ -181,6 +181,8 @@ rules/05-security.md
 rules/06-coding-style.md
 rules/07-testing.md
 rules/08-performance.md
+rules/09-tool-autonomy.md
+rules/10-web-search.md
 ```
 
 ### Agents (6개)
@@ -200,11 +202,9 @@ commands/review.md
 commands/tdd.md
 ```
 
-### Skills (6개)
+### Skills (4개)
 ```
 skills/quality-checklist/SKILL.md
-skills/tool-autonomy/SKILL.md
-skills/web-search/SKILL.md
 skills/sequential-thinking/SKILL.md
 skills/research-context/SKILL.md
 skills/error-response/SKILL.md

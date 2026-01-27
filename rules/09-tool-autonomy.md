@@ -1,9 +1,4 @@
----
-name: tool-autonomy
-description: 도구 자율 사용 원칙. 도구 사용 방식과 응답 스타일에 대한 가이드라인.
----
-
-# 도구 자율 사용 원칙
+# 도구 자율 사용 원칙 (Tool Autonomy)
 
 ## 핵심 철학
 
