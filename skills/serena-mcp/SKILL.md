@@ -1,6 +1,7 @@
 ---
 name: serena-mcp
 description: Serena MCP 시맨틱 코드 분석 및 프로젝트 지식 관리 가이드. 코드 탐색, 심볼 검색, 메모리 저장, 작업 검증 시 사용.
+user-invocable: false
 ---
 
 # Serena MCP 활용 가이드
