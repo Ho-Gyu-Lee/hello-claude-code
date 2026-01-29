@@ -1,6 +1,7 @@
 ---
 name: sequential-thinking
 description: Sequential Thinking MCP 사용 가이드. 복잡한 문제 분석 시 단계별 사고가 필요할 때 사용.
+user-invocable: false
 ---
 
 # Sequential Thinking MCP 사용 가이드

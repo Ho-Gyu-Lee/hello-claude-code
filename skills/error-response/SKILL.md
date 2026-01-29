@@ -1,6 +1,7 @@
 ---
 name: error-response
 description: 에러 응답 템플릿. 실패 상황 보고 시 표준 형식 제공.
+user-invocable: false
 ---
 
 # 에러 응답 템플릿
