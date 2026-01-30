@@ -104,7 +104,115 @@ rm -rf .serena
 
 ---
 
-## 5. 트러블슈팅
+## 5. Language Server 설정
+
+Serena는 LSP(Language Server Protocol) 기반으로 30개 이상 언어를 지원합니다.
+
+### 5.1 지원 수준
+
+| 지원 수준 | 언어 | 설명 |
+|----------|------|------|
+| **직접 지원** | Python, TypeScript, JavaScript, Go, Rust, C/C++, Java, PHP | 자동 설치 |
+| **간접 지원** | C#, Ruby, Kotlin, Dart | 수동 설치 필요 |
+
+### 5.2 프로젝트 언어 설정
+
+프로젝트별 `.serena/project.yml` 파일 생성:
+
+```yaml
+# .serena/project.yml
+
+# 프로젝트 언어 설정
+# 옵션: python, typescript, javascript, csharp, go, rust, java, cpp, ruby
+language: csharp
+
+# 프로젝트 경로 (선택)
+projects:
+  - path: .
+    language: csharp
+```
+
+### 5.3 C# Language Server 설정
+
+C#은 Microsoft Roslyn 기반 Language Server 사용:
+
+```yaml
+# ~/.serena/serena_config.yml
+
+language_servers:
+  - language: csharp
+    # csharp-ls 또는 OmniSharp 경로
+    command: ["csharp-ls"]
+    # 또는 OmniSharp 사용 시
+    # command: ["dotnet", "/path/to/OmniSharp.dll", "-lsp"]
+
+# C# 런타임 의존성 설정 (선택)
+ls_specific_settings:
+  csharp:
+    runtime_dependencies:
+      - dotnet
+```
+
+**C# Language Server 설치:**
+
+```bash
+# csharp-ls 설치 (권장)
+dotnet tool install --global csharp-ls
+
+# 또는 OmniSharp 다운로드
+# https://github.com/OmniSharp/omnisharp-roslyn/releases
+```
+
+### 5.4 TypeScript/JavaScript 설정
+
+```yaml
+# .serena/project.yml
+# TypeScript VTS 사용 시
+language: typescript_vts
+```
+
+### 5.5 커스텀 Language Server 추가
+
+```yaml
+# ~/.serena/serena_config.yml
+
+language_servers:
+  - language: R
+    command: ["R", "--slave", "-e", "languageserver::run()"]
+
+  - language: kotlin
+    command: ["kotlin-language-server"]
+```
+
+### 5.6 Language Server 문제 해결
+
+```bash
+# Language Server 로그 확인
+cat ~/.serena/mcp.log | grep -i "LSP"
+cat ~/.serena/mcp-server-*.log
+
+# 특정 Language Server 수동 테스트
+csharp-ls --version
+dotnet --list-sdks
+```
+
+**C# 타임아웃 에러 해결:**
+
+```yaml
+# ~/.serena/serena_config.yml
+ls_specific_settings:
+  csharp:
+    # 타임아웃 증가 (밀리초)
+    timeout: 60000
+    # 프로젝트 로드 제외 패턴
+    exclude_patterns:
+      - "**/bin/**"
+      - "**/obj/**"
+```
+
+---
+
+## 6. 트러블슈팅
 
 ### uvx 명령어를 찾을 수 없음
 
@@ -144,7 +252,7 @@ read_only: true
 
 ---
 
-## 6. 핵심 플래그 설명
+## 7. 핵심 플래그 설명
 
 | 플래그 | 설명 |
 |--------|------|
@@ -155,7 +263,7 @@ read_only: true
 
 ---
 
-## 7. 설정 완료 후
+## 8. 설정 완료 후
 
 설정이 완료되면 Serena MCP 도구를 사용할 수 있습니다.
 사용법은 `/serena-mcp` 스킬을 참고하세요.
