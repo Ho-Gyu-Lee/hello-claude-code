@@ -25,8 +25,7 @@ C/C++, Go, Rust, C#, Python 개발 환경에 최적화된 설정입니다.
 hello-claude-code/
 ├── rules/           # 핵심 규칙 (11개) - 항상 적용
 ├── agents/          # 서브에이전트 (6개) - 위임 작업용
-├── commands/        # 슬래시 명령어 (3개)
-└── skills/          # 스킬 (4개) - 필요시 호출
+└── skills/          # 스킬 (12개) - 필요시 호출
 ```
 
 ---
@@ -80,20 +79,6 @@ cp -r skills/* ~/.claude/skills/
 | `09-tool-autonomy.md` | 도구 자율 사용 원칙 |
 | `10-web-search.md` | 웹 검색 가이드 |
 
-### Commands (명령어)
-
-Claude Code에서 슬래시 명령어로 사용:
-
-```
-/plan 사용자 인증 시스템 구현
-```
-
-| 명령어 | 용도 | 예시 |
-|--------|------|------|
-| `/plan` | 구현 계획 수립 | `/plan 매칭 시스템 구현` |
-| `/review` | 코드 리뷰 | `/review src/server/session.go` |
-| `/tdd` | TDD 시작 | `/tdd 패킷 파서 함수` |
-
 ### Agents (에이전트)
 
 복잡한 작업을 위임할 때 사용:
@@ -109,14 +94,27 @@ Claude Code에서 슬래시 명령어로 사용:
 
 ### Skills (스킬)
 
-슬래시 명령어로 필요할 때 호출:
+**사용자 호출** (슬래시 명령어로 직접 호출):
 
 | 스킬 | 용도 |
 |------|------|
-| `/quality-checklist` | 코드 품질 체크리스트 |
-| `/sequential-thinking` | 복잡한 문제 단계별 분석 |
-| `/research-context` | 기술 조사 모드 활성화 |
-| `/error-response` | 에러 응답 표준 형식 |
+| `/brainstorming` | 구현 전 설계 논의 (plan 전 단계) |
+| `/plan` | 복잡한 구현을 위한 계획 수립 |
+| `/review` | 코드 품질/보안/유지보수성 검토 |
+| `/setup-serena-mcp` | Serena MCP 프로젝트 활성화 및 온보딩 |
+| `/tdd` | TDD 방식 개발 (RED-GREEN-REFACTOR) |
+
+**자동 호출** (시스템이 상황에 맞춰 자동 활성화):
+
+| 스킬 | 용도 |
+|------|------|
+| `error-response` | 에러 응답 표준 형식 |
+| `executing-plans` | 계획을 배치로 실행하고 체크포인트에서 검증 |
+| `quality-verification` | 코드 품질 기준 + 완료 검증 프로세스 |
+| `research-context` | 기술 조사, 라이브러리 비교, 아키텍처 결정 |
+| `sequential-thinking` | Sequential Thinking MCP 사용 가이드 |
+| `serena-mcp` | Serena MCP 시맨틱 코드 분석 및 프로젝트 지식 관리 |
+| `systematic-debugging` | 체계적 디버깅 프로세스 |
 
 ---
 
@@ -195,19 +193,26 @@ agents/refactorer.md
 agents/tdd-guide.md
 ```
 
-### Commands (3개)
+### Skills (12개)
+
+**사용자 호출 (5개)**
 ```
-commands/plan.md
-commands/review.md
-commands/tdd.md
+skills/brainstorming/SKILL.md
+skills/plan/SKILL.md
+skills/review/SKILL.md
+skills/setup-serena-mcp/SKILL.md
+skills/tdd/SKILL.md
 ```
 
-### Skills (4개)
+**자동 호출 (7개)**
 ```
-skills/quality-checklist/SKILL.md
-skills/sequential-thinking/SKILL.md
-skills/research-context/SKILL.md
 skills/error-response/SKILL.md
+skills/executing-plans/SKILL.md
+skills/quality-verification/SKILL.md
+skills/research-context/SKILL.md
+skills/sequential-thinking/SKILL.md
+skills/serena-mcp/SKILL.md
+skills/systematic-debugging/SKILL.md
 ```
 
 ---

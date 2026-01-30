@@ -29,13 +29,23 @@
   ---
   name: agent-name
   description: 설명
-  tools: Read, Grep, Glob
+  tools: Read, Grep, Glob, Bash
   ---
   ```
 
-### Commands 추가
-- `commands/` 폴더에 `.md` 파일 추가
+### Skills 추가
+- `skills/` 폴더에 새 폴더 및 `SKILL.md` 파일 추가
+- 프론트매터 필수:
+  ```yaml
+  ---
+  name: skill-name
+  description: 설명
+  user-invocable: false  # 선택 (기본 true, 자동 호출용은 false)
+  ---
+  ```
 - 사용법, 옵션, 예시 포함
+
+> **참고**: 기존 `commands/` 폴의는 skills로 통합되었습니다. 새로운 슬래시 명령어를 추가하려면 `skills/` 폴의에 `SKILL.md`로 작성하세요.
 
 ## 커밋 메시지
 

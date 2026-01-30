@@ -10,7 +10,7 @@ Serena MCP가 현재 프로젝트를 인식하도록 설정합니다.
 ## 1. 프로젝트 활성화
 
 ```
-serena.activate_project("/path/to/project")
+serena.activate_project("./")
 ```
 
 `.serena/project.yml` 파일이 자동 생성됩니다.
@@ -54,9 +54,9 @@ serena.prepare_for_new_conversation()
 
 ## 5. 재설정
 
-```bash
-# 메모리 초기화
-rm -rf .serena/memories/
+```
+# 메모리 삭제
+.serena/memories/ 삭제
 
 # 온보딩 다시 실행
 serena.onboarding()

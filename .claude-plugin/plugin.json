@@ -25,7 +25,9 @@
       "rules/05-security.md",
       "rules/06-coding-style.md",
       "rules/07-testing.md",
-      "rules/08-performance.md"
+      "rules/08-performance.md",
+      "rules/09-tool-autonomy.md",
+      "rules/10-web-search.md"
     ],
     "agents": [
       "agents/planner.md",
@@ -36,23 +38,18 @@
       "agents/tdd-guide.md"
     ],
     "skills": [
-      "skills/tool-usage/tool-autonomy.md",
-      "skills/tool-usage/web-search.md",
-      "skills/tool-usage/sequential-thinking.md",
-      "skills/code-workflow/quality-checklist.md"
-    ],
-    "commands": [
-      "commands/plan.md",
-      "commands/review.md",
-      "commands/tdd.md"
-    ],
-    "contexts": [
-      "contexts/dev.md",
-      "contexts/review.md",
-      "contexts/research.md"
+      "skills/brainstorming/SKILL.md",
+      "skills/plan/SKILL.md",
+      "skills/review/SKILL.md",
+      "skills/setup-serena-mcp/SKILL.md",
+      "skills/tdd/SKILL.md",
+      "skills/error-response/SKILL.md",
+      "skills/executing-plans/SKILL.md",
+      "skills/quality-verification/SKILL.md",
+      "skills/research-context/SKILL.md",
+      "skills/sequential-thinking/SKILL.md",
+      "skills/serena-mcp/SKILL.md",
+      "skills/systematic-debugging/SKILL.md"
     ]
-  },
-  "config": {
-    "defaultContext": "dev"
   }
 }
