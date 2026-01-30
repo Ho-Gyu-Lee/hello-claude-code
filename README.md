@@ -2,12 +2,6 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**서버 개발자를 위한 Claude Code 설정**
-
-C/C++, Go, Rust, C#, Python 개발 환경에 최적화된 설정입니다.
-
----
-
 ## 핵심 철학
 
 | 원칙 | 설명 |
@@ -49,9 +43,6 @@ cp rules/*.md ~/.claude/rules/
 
 # 에이전트도 사용
 cp agents/*.md ~/.claude/agents/
-
-# 명령어도 사용
-cp commands/*.md ~/.claude/commands/
 
 # 스킬도 사용
 cp -r skills/* ~/.claude/skills/
@@ -118,26 +109,6 @@ cp -r skills/* ~/.claude/skills/
 
 ---
 
-## 서버 특화 기능
-
-### 성능 규칙 (`08-performance.md`)
-
-- **메모리 관리**: 풀링, 프리얼로케이션, GC 최소화
-- **동시성**: Lock-free 선호, 락 범위 최소화
-- **네트워크 I/O**: 버퍼 재사용, 비동기 처리
-- **프로파일링 도구**: 언어별 도구 안내
-
-### 코드 품질 체크리스트
-
-`skills/quality-checklist/SKILL.md`에 언어별 예시 포함:
-- Go: context + 에러 래핑
-- Rust: Result + 명시적 에러 처리
-- C++: RAII + optional
-- C#: async/await + CancellationToken
-- Python: 타입 힌트 + 컨텍스트 매니저
-
----
-
 ## 커스터마이징
 
 ### 규칙 수정
@@ -153,11 +124,11 @@ vim rules/06-coding-style.md
 
 `agents/` 폴더에 새 파일 생성:
 
-```markdown
+```yaml
 ---
 name: my-agent
 description: 에이전트 설명
-tools: Read, Grep, Glob
+tools: Read, Grep, Glob, Bash
 ---
 
 # 에이전트 내용
@@ -223,20 +194,6 @@ skills/systematic-debugging/SKILL.md
 
 MCP를 너무 많이 활성화하면 컨텍스트가 줄어듭니다:
 - 권장: 프로젝트당 MCP 10개 이하
-
-### 금지 표현
-
-응답에서 피해야 할 표현:
-- "추가로" (맥락 없이)
-- "참고로" (느슨한 연관)
-- "나중에 도움될"
-
-### 허용 표현
-
-가치 있는 확장 시:
-- "⚠️ 고려사항:"
-- "전제조건:"
-- "잠재적 이슈:"
 
 ---
 
