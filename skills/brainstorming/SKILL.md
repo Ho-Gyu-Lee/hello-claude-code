@@ -1,6 +1,6 @@
 ---
 name: brainstorming
-description: 구현 전 설계 논의 및 아이디어 정제. 새 기능 설계, 아키텍처 결정, 복잡한 문제 해결 시 사용. plan 스킬 전 단계.
+description: 구현 전 설계 논의 (plan 전 단계)
 ---
 
 # 브레인스토밍 - 설계 논의
