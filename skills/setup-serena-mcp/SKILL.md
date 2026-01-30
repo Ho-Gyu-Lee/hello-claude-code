@@ -32,28 +32,24 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ## 2. 초기 설정
 
-### 2.1 프로젝트 수준 설정 (권장)
-
-현재 프로젝트에만 Serena MCP 활성화:
+### 2.1 빠른 설정 (한 줄)
 
 ```bash
-# 프로젝트 디렉토리에서 실행
-claude mcp add serena -s project -- \
-  uvx --from git+https://github.com/oraios/serena \
-  serena start-mcp-server \
-  --context claude-code \
-  --project $(pwd)
+# 프로젝트 수준 (권장)
+claude mcp add serena -s project -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context claude-code
+
+# 전역 수준
+claude mcp add serena -s user -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context claude-code
 ```
 
-### 2.2 전역 설정
-
-모든 프로젝트에서 Serena MCP 사용:
+### 2.2 JSON 형식 설정 (더 짧음)
 
 ```bash
-claude mcp add serena -s user -- \
-  uvx --from git+https://github.com/oraios/serena \
-  serena start-mcp-server \
-  --context claude-code
+# 프로젝트 수준
+claude mcp add-json serena '{"command":"uvx","args":["--from","git+https://github.com/oraios/serena","serena","start-mcp-server","--context","claude-code"]}' -s project
+
+# 전역 수준
+claude mcp add-json serena '{"command":"uvx","args":["--from","git+https://github.com/oraios/serena","serena","start-mcp-server","--context","claude-code"]}' -s user
 ```
 
 ### 2.3 설정 확인
@@ -217,27 +213,20 @@ ls_specific_settings:
 ### uvx 명령어를 찾을 수 없음
 
 ```bash
-# uvx 전체 경로 확인
-which uvx
+# uvx 전체 경로 확인 후 사용
+which uvx  # 예: /home/user/.local/bin/uvx
 
-# 전체 경로로 설정 (예시)
-claude mcp add serena -s project -- \
-  /home/user/.local/bin/uvx \
-  --from git+https://github.com/oraios/serena \
-  serena start-mcp-server \
-  --context claude-code \
-  --project $(pwd)
+# 전체 경로로 설정
+claude mcp add serena -s project -- $(which uvx) --from git+https://github.com/oraios/serena serena start-mcp-server --context claude-code
 ```
 
 ### 연결 실패 시
 
 ```bash
 # 수동 테스트
-uvx --from git+https://github.com/oraios/serena \
-  serena start-mcp-server --help
+uvx --from git+https://github.com/oraios/serena serena start-mcp-server --help
 
 # 로그 확인
-ls -la ~/.serena/*.log
 cat ~/.serena/mcp.log
 ```
 
@@ -256,10 +245,9 @@ read_only: true
 
 | 플래그 | 설명 |
 |--------|------|
-| `--context claude-code` | Claude Code 전용 최적화 (중복 도구 비활성화) |
-| `--project $(pwd)` | 현재 디렉토리를 프로젝트 루트로 지정 |
+| `--context claude-code` | Claude Code 최적화 (중복 도구 비활성화) |
 | `-s project` | 프로젝트 수준 설정 |
-| `-s user` | 전역 (사용자) 수준 설정 |
+| `-s user` | 전역 설정 |
 
 ---
 
