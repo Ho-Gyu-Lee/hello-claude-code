@@ -30,29 +30,19 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ---
 
-## 2. 초기 설정
-
-### 2.1 빠른 설정 (한 줄)
+## 2. 초기 설정 (전역)
 
 ```bash
-# 프로젝트 수준 (권장)
-claude mcp add serena -s project -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context claude-code
-
-# 전역 수준
 claude mcp add serena -s user -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context claude-code
 ```
 
-### 2.2 JSON 형식 설정 (더 짧음)
+또는 JSON 형식:
 
 ```bash
-# 프로젝트 수준
-claude mcp add-json serena '{"command":"uvx","args":["--from","git+https://github.com/oraios/serena","serena","start-mcp-server","--context","claude-code"]}' -s project
-
-# 전역 수준
 claude mcp add-json serena '{"command":"uvx","args":["--from","git+https://github.com/oraios/serena","serena","start-mcp-server","--context","claude-code"]}' -s user
 ```
 
-### 2.3 설정 확인
+### 설정 확인
 
 ```bash
 # MCP 서버 목록 확인
@@ -217,7 +207,7 @@ ls_specific_settings:
 which uvx  # 예: /home/user/.local/bin/uvx
 
 # 전체 경로로 설정
-claude mcp add serena -s project -- $(which uvx) --from git+https://github.com/oraios/serena serena start-mcp-server --context claude-code
+claude mcp add serena -s user -- $(which uvx) --from git+https://github.com/oraios/serena serena start-mcp-server --context claude-code
 ```
 
 ### 연결 실패 시
@@ -246,8 +236,7 @@ read_only: true
 | 플래그 | 설명 |
 |--------|------|
 | `--context claude-code` | Claude Code 최적화 (중복 도구 비활성화) |
-| `-s project` | 프로젝트 수준 설정 |
-| `-s user` | 전역 설정 |
+| `-s user` | 전역 설정 (모든 프로젝트에서 사용) |
 
 ---
 
