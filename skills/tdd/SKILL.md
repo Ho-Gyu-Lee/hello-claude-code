@@ -115,9 +115,3 @@ function validateEmail(email: string): { valid: boolean; error?: string }
 - `--integration`: 통합 테스트 포함
 - `--coverage`: 커버리지 목표 설정
 
----
-
-## 관련 문서
-
-- `rules/07-testing.md` - 테스트 원칙 및 체크리스트
-- `agents/tdd-guide.md` - TDD 가이드 에이전트

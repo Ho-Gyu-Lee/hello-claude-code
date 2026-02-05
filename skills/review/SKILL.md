@@ -65,11 +65,3 @@ description: 코드 품질/보안/유지보수성 검토
 - `--style`: 스타일 중심 리뷰
 - `--verbose`: 상세 설명 포함
 
----
-
-## 관련 문서
-
-- `rules/05-security.md` - 보안 규칙
-- `rules/06-coding-style.md` - 코딩 스타일
-- `agents/code-reviewer.md` - 코드 리뷰어 에이전트
-- `agents/security-reviewer.md` - 보안 리뷰어 에이전트

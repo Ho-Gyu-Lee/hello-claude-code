@@ -1,6 +1,6 @@
 ---
 name: web-search
-description: 웹 검색 가이드. "검색해줘", "찾아봐", "최신 정보", "공식 문서 확인", 버전/날짜/수치 확인이 필요한 질문 시 자동 활성화. 검색 결과 검증 프로토콜과 도구 우선순위 제공.
+description: 웹 검색 가이드. "검색해줘", "찾아봐", "최신 정보", "공식 문서 확인", 버전/날짜/수치 확인이 필요한 질문 시 자동 활성화. 검색 결과 검증 프로토콜 제공.
 user-invocable: false
 ---
 
@@ -44,32 +44,6 @@ user-invocable: false
 - 검색 결과가 원래 질문을 대체하는 것
 - 검색 결과 기반으로 주제 확장/변경
 - 관련성 낮은 결과를 "참고로" 포함
-```
-
-## 도구 우선순위
-
-> 상세 내용은 CLAUDE.md 참조
-
-```
-1순위: Z.ai MCP (연결 시)
-  - Search MCP (webSearch) → 웹 검색
-  - Reader MCP (webReader) → URL 콘텐츠 추출
-
-2순위: 기타 MCP (Z.ai 미연결 시)
-  - Brave Search MCP → 웹 검색
-  - Fetch MCP → URL 접근
-
-3순위: 내장 도구 (MCP 미연결 시)
-  - WebSearch → 웹 검색
-  - WebFetch → URL 접근
-```
-
-## 사용 전략
-
-```
-1. 웹 검색: 정보 탐색
-2. URL 접근: 특정 페이지 상세 읽기
-3. 뉴스 검색: 최신 뉴스 필요 시
 ```
 
 ## 권장 사항

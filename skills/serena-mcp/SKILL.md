@@ -106,24 +106,6 @@ Serena MCP는 LSP 기반 시맨틱 코드 분석 + 프로젝트 지식 관리 �
 
 ---
 
-## 도구 우선순위 요약
-
-```
-1순위: Serena MCP 도구
-  - 심볼 분석: find_symbol, get_symbols_overview
-  - 참조 추적: find_referencing_symbols
-  - 코드 편집: replace_symbol_body, insert_*_symbol
-  - 지식 관리: write_memory, read_memory
-
-2순위: 내장 도구 (Serena 미지원 시)
-  - Read, Grep, Glob, Edit
-
-3순위: Bash (최후 수단)
-  - Git 명령어, 비코드 파일
-```
-
----
-
 ## Serena 사용의 이점
 
 1. **토큰 효율성** - 전체 파일 읽기 없이 필요한 심볼만 조회
