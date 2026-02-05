@@ -17,9 +17,9 @@
 
 ```
 hello-claude-code/
-├── rules/           # 핵심 규칙 (11개) - 항상 적용
+├── rules/           # 핵심 규칙 (10개) - 항상 적용
 ├── agents/          # 서브에이전트 (6개) - 위임 작업용
-└── skills/          # 스킬 (12개) - 필요시 호출
+└── skills/          # 스킬 (13개) - 필요시 호출
 ```
 
 ---
@@ -68,7 +68,6 @@ cp -r skills/* ~/.claude/skills/
 | `07-testing.md` | 테스트 규칙, 빌드/린트 |
 | `08-performance.md` | 서버 성능 최적화 |
 | `09-tool-autonomy.md` | 도구 자율 사용 원칙 |
-| `10-web-search.md` | 웹 검색 가이드 |
 
 ### Agents (에이전트)
 
@@ -106,6 +105,7 @@ cp -r skills/* ~/.claude/skills/
 | `sequential-thinking` | Sequential Thinking MCP 사용 가이드 |
 | `serena-mcp` | Serena MCP 시맨틱 코드 분석 및 프로젝트 지식 관리 |
 | `systematic-debugging` | 체계적 디버깅 프로세스 |
+| `web-search` | 웹 검색 가이드 및 도구 우선순위 |
 
 ---
 
@@ -139,7 +139,7 @@ tools: Read, Grep, Glob, Bash
 
 ## 파일 목록
 
-### Rules (11개)
+### Rules (10개)
 ```
 rules/00-anti-hallucination.md
 rules/01-mandatory-checklist.md
@@ -151,7 +151,6 @@ rules/06-coding-style.md
 rules/07-testing.md
 rules/08-performance.md
 rules/09-tool-autonomy.md
-rules/10-web-search.md
 ```
 
 ### Agents (6개)
@@ -164,7 +163,7 @@ agents/refactorer.md
 agents/tdd-guide.md
 ```
 
-### Skills (12개)
+### Skills (13개)
 
 **사용자 호출 (5개)**
 ```
@@ -175,7 +174,7 @@ skills/setup-serena-mcp/SKILL.md
 skills/tdd/SKILL.md
 ```
 
-**자동 호출 (7개)**
+**자동 호출 (8개)**
 ```
 skills/error-response/SKILL.md
 skills/executing-plans/SKILL.md
@@ -184,6 +183,7 @@ skills/research-context/SKILL.md
 skills/sequential-thinking/SKILL.md
 skills/serena-mcp/SKILL.md
 skills/systematic-debugging/SKILL.md
+skills/web-search/SKILL.md
 ```
 
 ---

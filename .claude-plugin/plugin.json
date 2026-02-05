@@ -26,8 +26,7 @@
       "rules/06-coding-style.md",
       "rules/07-testing.md",
       "rules/08-performance.md",
-      "rules/09-tool-autonomy.md",
-      "rules/10-web-search.md"
+      "rules/09-tool-autonomy.md"
     ],
     "agents": [
       "agents/planner.md",
@@ -49,7 +48,8 @@
       "skills/research-context/SKILL.md",
       "skills/sequential-thinking/SKILL.md",
       "skills/serena-mcp/SKILL.md",
-      "skills/systematic-debugging/SKILL.md"
+      "skills/systematic-debugging/SKILL.md",
+      "skills/web-search/SKILL.md"
     ]
   }
 }

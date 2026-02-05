@@ -1,6 +1,6 @@
 ---
 name: error-response
-description: 에러 응답 템플릿. 실패 상황 보고 시 표준 형식 제공.
+description: 에러 응답 템플릿. 작업 실패, 코드 탐색 실패, 빌드/테스트 실패, 예상치 못한 오류 발생 시 자동 활성화. 원인, 시도한 대안, 다음 단계 옵션을 포함한 표준 형식으로 실패 상황 보고.
 user-invocable: false
 ---
 
