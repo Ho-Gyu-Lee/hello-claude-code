@@ -46,6 +46,7 @@
 - `research-context` - 기술 조사/비교 시
 - `executing-plans` - 계획 실행 시
 - `error-response` - 실패 상황 보고 시
+- `web-search` - 웹 검색/최신 정보 필요 시
 
 ---
 
@@ -74,7 +75,7 @@
 | `refactorer.md` | 리팩토링 |
 
 ### Skills (`skills/`)
-12개 스킬 - 상세 내용은 각 `SKILL.md` 참조
+13개 스킬 - 상세 내용은 각 `SKILL.md` 참조
 
 ---
 
