@@ -40,28 +40,30 @@
 - 관련성 낮은 결과를 "참고로" 포함
 ```
 
-## 도구 선택
+## 도구 우선순위
 
-### 1순위: 기본 웹 검색
+> 상세 내용은 CLAUDE.md 참조
 
-| 파라미터 | 설명 | 권장 값 |
-|----------|------|----------|
-| search_query | 검색어 (70자 이내) | 구체적이고 명확하게 |
-| content_size | 요약 길이 | medium (기본), high (심층) |
-| search_recency_filter | 시간 범위 | oneWeek, oneMonth, oneYear |
+```
+1순위: Z.ai MCP (연결 시)
+  - Search MCP (webSearch) → 웹 검색
+  - Reader MCP (webReader) → URL 콘텐츠 추출
 
-### 2순위: 뉴스 검색
-최신 뉴스가 필요한 경우
+2순위: 기타 MCP (Z.ai 미연결 시)
+  - Brave Search MCP → 웹 검색
+  - Fetch MCP → URL 접근
 
-### 3순위: URL 직접 접근
-특정 URL의 상세 내용이 필요한 경우
+3순위: 내장 도구 (MCP 미연결 시)
+  - WebSearch → 웹 검색
+  - WebFetch → URL 접근
+```
 
 ## 사용 전략
 
 ```
-1. 기본: 웹 검색
-2. 보완: 뉴스 검색 (더 많은 결과 필요 시)
-3. 상세: URL 직접 접근 (특정 페이지 상세 읽기)
+1. 웹 검색: 정보 탐색
+2. URL 접근: 특정 페이지 상세 읽기
+3. 뉴스 검색: 최신 뉴스 필요 시
 ```
 
 ## 권장 사항
