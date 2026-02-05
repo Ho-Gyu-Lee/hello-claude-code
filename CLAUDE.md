@@ -112,15 +112,15 @@
 
 ### 웹 검색/접근
 ```
-1순위: Z.ai MCP (연결 시)
-  - Search MCP (webSearch) → 웹 검색
-  - Reader MCP (webReader) → URL 콘텐츠 추출
+⚠️ 내장 도구(WebSearch, WebFetch) 사용 전에
+   반드시 ToolSearch로 MCP 도구를 먼저 확인하고 사용할 것
 
-2순위: 기타 MCP (Z.ai 미연결 시)
-  - Brave Search MCP → 웹 검색
-  - Fetch MCP → URL 접근
+1순위: MCP 도구 (ToolSearch로 로드 후 사용)
+  - 웹 검색: ToolSearch "web search" → web-search-prime, brave 계열
+  - URL 접근: ToolSearch "web reader fetch" → web-reader, fetch 계열
+  - 뉴스 검색: ToolSearch "news search" → brave news 계열
 
-3순위: 내장 도구 (MCP 미연결 시)
+2순위: 내장 도구 (MCP 미연결 시에만)
   - WebSearch → 웹 검색
   - WebFetch → URL 접근
 ```
