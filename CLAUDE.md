@@ -111,12 +111,15 @@
 
 ### 웹 검색/접근
 ```
-1순위: MCP 도구 (연결 시)
+1순위: Z.ai MCP (연결 시)
+  - Search MCP (webSearch) → 웹 검색
+  - Reader MCP (webReader) → URL 콘텐츠 추출
+
+2순위: 기타 MCP (Z.ai 미연결 시)
   - Brave Search MCP → 웹 검색
   - Fetch MCP → URL 접근
-  - 기타 웹 관련 MCP
 
-2순위: 내장 도구 (MCP 미연결 시)
+3순위: 내장 도구 (MCP 미연결 시)
   - WebSearch → 웹 검색
   - WebFetch → URL 접근
 ```
