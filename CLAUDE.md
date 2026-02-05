@@ -105,13 +105,33 @@
 
 ---
 
-## MCP 도구
+## MCP 도구 우선순위
 
-### Serena MCP (연결 시)
+> **원칙**: MCP 도구가 연결되어 있으면 내장 도구보다 우선 사용
+
+### 웹 검색/접근
+```
+1순위: MCP 도구 (연결 시)
+  - Brave Search MCP → 웹 검색
+  - Fetch MCP → URL 접근
+  - 기타 웹 관련 MCP
+
+2순위: 내장 도구 (MCP 미연결 시)
+  - WebSearch → 웹 검색
+  - WebFetch → URL 접근
+```
+
+### 코드 분석 (Serena MCP 연결 시)
 심볼 검색, 참조 추적, 코드 편집에서 내장 도구 대신 Serena 도구 우선 사용.
-- `find_symbol`, `get_symbols_overview` - 심볼 분석
-- `replace_symbol_body`, `rename_symbol` - 코드 편집
-- `write_memory`, `read_memory` - 지식 관리
+```
+1순위: Serena MCP
+  - find_symbol, get_symbols_overview - 심볼 분석
+  - replace_symbol_body, rename_symbol - 코드 편집
+  - write_memory, read_memory - 지식 관리
+
+2순위: 내장 도구 (Serena 미연결 시)
+  - Grep, Glob, Read, Edit
+```
 
 ### Sequential Thinking MCP (연결 시)
 복잡한 아키텍처 결정, 3개 이상 옵션 비교 시 사용.
