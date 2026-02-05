@@ -1,6 +1,6 @@
 ---
 name: executing-plans
-description: 계획을 배치로 실행하고 체크포인트에서 검증. 계획 실행, 배치 작업, 단계별 진행이 필요할 때 사용.
+description: 계획을 배치로 실행하고 체크포인트에서 검증. /plan으로 생성된 계획 실행 시, 다단계 작업 진행 시, "계획대로 진행해줘", "실행해줘", "구현 시작" 요청 시 자동 활성화.
 user-invocable: false
 ---
 
