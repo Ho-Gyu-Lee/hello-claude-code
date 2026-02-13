@@ -39,8 +39,10 @@
 | `/review` | 코드 품질/보안 검토 |
 | `/tdd` | TDD 방식 개발 |
 | `/setup-serena-mcp` | Serena MCP 프로젝트 설정 |
+| `/ui-toolkit-design` | Unity UI Toolkit (UXML/USS) 가이드라인 |
 
 **자동 트리거** (상황에 따라 활성화):
+- `ui-toolkit-design` - UXML/USS/UI Toolkit 작업 시
 - `systematic-debugging` - 에러/버그 발생 시
 - `quality-verification` - 작업 완료 검증 시
 - `research-context` - 기술 조사/비교 시
@@ -75,7 +77,7 @@
 | `refactorer.md` | 리팩토링 |
 
 ### Skills (`skills/`)
-13개 스킬 - 상세 내용은 각 `SKILL.md` 참조
+14개 스킬 - 상세 내용은 각 `SKILL.md` 참조
 
 ---
 
