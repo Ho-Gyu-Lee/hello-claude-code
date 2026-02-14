@@ -178,6 +178,7 @@ root.dataSource = playerDataSO; // ScriptableObject 등
     --color-bg-secondary: rgb(245, 245, 245);
     --color-bg-dark: rgb(32, 33, 36);
     --color-border: rgb(218, 220, 224);
+    --color-focus-ring: rgb(66, 133, 244);
 
     /* === 간격 === */
     --spacing-xs: 4px;
@@ -332,9 +333,9 @@ root.dataSource = playerDataSO; // ScriptableObject 등
 }
 ```
 
-### :hover 성능 주의
+### :hover 주의사항
 
-`:hover`는 포인터 이동 시마다 대상 요소의 전체 하위 계층을 무효화한다.
+**성능**: `:hover`는 포인터 이동 시마다 대상 요소의 전체 하위 계층을 무효화한다.
 
 ```css
 /* ❌ 나쁜 예: 하위 요소가 많은 곳에서 후손 셀렉터 + :hover */
@@ -342,6 +343,19 @@ root.dataSource = playerDataSO; // ScriptableObject 등
 
 /* ✅ 좋은 예: 직접 대상 요소에만 :hover */
 .btn:hover { }
+```
+
+**멀티 플랫폼**: `:hover`는 터치 디바이스에서 동작하지 않는다.
+`:hover`에만 의존하는 UI는 모바일에서 시각적 피드백이 사라진다.
+반드시 `:active`를 함께 정의하여 터치에서도 피드백을 제공해야 한다.
+
+```css
+/* ✅ 멀티 플랫폼 대응: hover + active 모두 정의 */
+.btn:hover { background-color: var(--color-primary-hover); }    /* PC 마우스 */
+.btn:active { background-color: var(--color-primary-active); }  /* 터치 + 마우스 클릭 */
+
+/* ❌ hover만 정의 → 모바일에서 피드백 없음 */
+.btn:hover { background-color: var(--color-primary-hover); }
 ```
 
 ---
@@ -703,67 +717,499 @@ UI Toolkit은 동일한 GPU 요건을 가진 요소들을 배칭하여 드로우
 
 ---
 
-## 12. 반응형 디자인
+## 12. 반응형 디자인 & 해상도 대응
 
-UI Toolkit은 CSS 미디어 쿼리를 지원하지 않는다. 대안:
+**원칙**: 특정 해상도 하나에 맞추지 않고, 다양한 비율과 해상도에서 깨지지 않는 UI를 설계한다.
 
-### USS 기반 반응형
+### 12-1. PanelSettings: 해상도 스케일링 (필수 설정)
+
+UI Toolkit의 해상도 대응은 **PanelSettings** 에셋의 Scale Mode로 제어한다.
+
+#### Scale Mode 선택 가이드
+
+| Scale Mode | 동작 | 권장 상황 |
+|-----------|------|----------|
+| **Scale With Screen Size** | 레퍼런스 해상도 기준으로 비례 스케일링 | **게임 UI 전반 (가장 권장)** |
+| Constant Pixel Size | 1:1 픽셀 매핑, 스케일링 없음 | 에디터 도구, 디버그 UI |
+| Constant Physical Size | DPI 기반 물리적 크기 유지 | 문서 뷰어 등 (DPI 보고 부정확으로 비권장) |
+
+#### 레퍼런스 해상도 권장값
+
+```
+PanelSettings 설정:
+  Scale Mode: Scale With Screen Size
+  Reference Resolution: 1080 x 1920  (세로 기준, FHD)
+  Screen Match Mode: Expand
+```
+
+**왜 1080×1920인가?**
+- 모바일 FHD+(1080×2400)가 현재 중·고급 스마트폰의 표준 해상도
+- PC 모니터 FHD(1920×1080)의 세로 회전과 동일
+- 720p(HD) 기기에서는 자연스럽게 축소, 1440p(QHD) 기기에서는 확대
+- 태블릿(768×1024 ~ 2048×2732)에서도 비례 스케일링 유지
+
+#### Screen Match Mode 상세
+
+| Match Mode | 동작 | 적합한 경우 |
+|-----------|------|-----------|
+| **Expand** | 레퍼런스보다 작아지지 않도록 확장. **UI가 절대 잘리지 않음** | **대부분의 게임 (가장 안전)** |
+| Shrink | 레퍼런스보다 커지지 않도록 축소. 빈 공간 가능 | 고정 레이아웃 필요 시 |
+| Match Width or Height | Width/Height 비율로 혼합 스케일링 | 가로/세로 고정 시 |
+
+```
+⚠️ 주의: Expand 모드에서는 레퍼런스보다 넓거나 높은 화면에서
+         UI 양쪽에 여백이 생길 수 있다.
+         → flex-grow, 퍼센트 크기로 채우는 레이아웃을 사용하면 해결
+```
+
+### 12-2. 대응해야 할 화면 해상도·비율
+
+#### 주요 플랫폼별 해상도 (2024~2025 시장 기준)
+
+**모바일 (세로 기준)**
+
+| 등급 | 해상도 | 비율 | 대표 기기 |
+|------|--------|------|----------|
+| HD+ | 720×1600 | 20:9 | 보급형 Android |
+| **FHD+** | **1080×2400** | **20:9** | **대부분의 Android (표준)** |
+| FHD+ | 1170×2532 | 19.5:9 | iPhone 12~14 |
+| FHD+ | 1179×2556 | 19.5:9 | iPhone 14 Pro, 15 |
+| QHD+ | 1440×3200 | 20:9 | Samsung Galaxy S 플래그십 |
+
+**태블릿**
+
+| 해상도 | 비율 | 대표 기기 |
+|--------|------|----------|
+| 768×1024 | 4:3 | iPad (기본) |
+| 810×1080 | 4:3 | iPad 10세대 |
+| 1920×1200 | 16:10 | Android 태블릿 |
+| 2048×2732 | 4:3 | iPad Pro |
+
+**PC/콘솔**
+
+| 해상도 | 비율 | 사용처 |
+|--------|------|--------|
+| 1280×720 | 16:9 | HD, 저사양 PC, Switch |
+| **1920×1080** | **16:9** | **FHD (PC 표준)** |
+| 2560×1440 | 16:9 | QHD |
+| 3840×2160 | 16:9 | 4K UHD |
+| 2560×1080 | 21:9 | 울트라와이드 |
+| 3440×1440 | 21:9 | 울트라와이드 QHD |
+
+#### 핵심 비율 요약
+
+```
+모바일:  20:9 (가장 보편) / 19.5:9 (iPhone)
+태블릿:  4:3 (iPad) / 16:10 (Android)
+PC:     16:9 (표준) / 21:9 (울트라와이드)
+```
+
+**설계 시 반드시 테스트할 비율**: `16:9`, `20:9`, `4:3`
+
+### 12-3. 비율 변화에 안전한 레이아웃 패턴
+
+#### 고정 크기 사용 금지
 
 ```css
-/* 퍼센트, flex 기반 유연한 레이아웃 */
-.responsive-container {
+/* ❌ 고정 크기: 다른 해상도에서 깨짐 */
+.panel {
+    width: 400px;
+    height: 800px;
+}
+
+/* ✅ 유연한 크기: 모든 해상도에서 적응 */
+.panel {
+    flex-grow: 1;
+    min-width: 300px;
+    max-width: 600px;
+}
+```
+
+#### 앵커 기반 배치 (절대 위치)
+
+```css
+/* 화면 비율이 변해도 안전한 배치 */
+.hud__top-left {
+    position: absolute;
+    left: var(--spacing-md);
+    top: var(--spacing-md);
+}
+.hud__bottom-center {
+    position: absolute;
+    bottom: var(--spacing-lg);
+    left: 0; right: 0;
+    align-items: center;
+}
+.hud__full-stretch {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+}
+```
+
+#### 종횡비 안전 레이아웃 구조
+
+```css
+/* 헤더/푸터: 고정 높이, 가로는 채움 */
+.screen__header {
+    height: 60px;            /* 고정 */
+    flex-direction: row;
+    align-items: center;
+    padding: 0 var(--spacing-md);
+}
+
+/* 콘텐츠: 남은 공간 전부 사용 (비율 무관) */
+.screen__content {
+    flex-grow: 1;            /* 핵심: 남은 영역 채움 */
+    padding: var(--spacing-md);
+}
+
+/* 푸터: 고정 높이, 가로는 채움 */
+.screen__footer {
+    height: 50px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+```
+
+#### 20:9 ↔ 4:3 비율 차이 대응
+
+```css
+/* 기본: 세로 레이아웃 (모바일 20:9에 최적) */
+.inventory {
+    flex-direction: column;
+}
+
+/* 가로가 충분하면 그리드로 전환 (태블릿 4:3, PC 16:9) */
+.layout--wide .inventory {
     flex-direction: row;
     flex-wrap: wrap;
 }
-.responsive-item {
-    flex-grow: 1;
-    flex-basis: 200px;   /* 최소 너비 힌트 */
-    min-width: 150px;
-    max-width: 100%;
+.layout--wide .inventory__slot {
+    flex-basis: 25%;   /* 4열 그리드 */
+    max-width: 25%;
 }
 ```
 
-### C# 기반 적응형
+### 12-4. C# 기반 적응형 레이아웃
 
 ```csharp
-// 화면 크기에 따라 클래스 전환
+// 화면 비율 + 해상도에 따라 레이아웃 클래스 전환
 void UpdateLayout()
 {
     var root = document.rootVisualElement;
-    var width = root.resolvedStyle.width;
+    float width = root.resolvedStyle.width;
+    float height = root.resolvedStyle.height;
+    float aspect = width / height;
 
+    // 화면 크기 분기
     root.EnableInClassList("layout--mobile", width < 600);
     root.EnableInClassList("layout--tablet", width >= 600 && width < 1024);
     root.EnableInClassList("layout--desktop", width >= 1024);
+
+    // 종횡비 분기 (세로가 긴지, 가로가 긴지)
+    root.EnableInClassList("layout--portrait", aspect < 1.0f);
+    root.EnableInClassList("layout--landscape", aspect >= 1.0f);
+    root.EnableInClassList("layout--wide", aspect >= 1.6f);       // 16:9 이상
+    root.EnableInClassList("layout--ultrawide", aspect >= 2.0f);  // 21:9 이상
+}
+
+// GeometryChangedEvent로 리사이징 시 자동 갱신
+void OnEnable()
+{
+    var root = GetComponent<UIDocument>().rootVisualElement;
+    root.RegisterCallback<GeometryChangedEvent>(evt => UpdateLayout());
 }
 ```
 
 ```css
-/* 각 레이아웃 모드에 대한 스타일 */
-.layout--mobile .sidebar { display: none; }
-.layout--mobile .content { flex-direction: column; }
-.layout--desktop .sidebar { width: 250px; }
-.layout--desktop .content { flex-direction: row; }
+/* 가로/세로 모드별 레이아웃 */
+.layout--portrait .sidebar { display: none; }
+.layout--portrait .content { flex-direction: column; }
+.layout--landscape .sidebar { width: 250px; display: flex; }
+.layout--landscape .content { flex-direction: row; }
+
+/* 울트라와이드: 양쪽 여백 추가 */
+.layout--ultrawide .screen__content {
+    max-width: 1600px;
+    align-self: center;
+}
 ```
 
-### Safe Area (모바일 노치 대응)
+### 12-5. Safe Area (모바일 노치/펀치홀 대응)
 
 내장 지원 없음. 커뮤니티 패키지 사용 권장:
 - `artstorm/ui-toolkit-safe-area` — UI Builder에서 커스텀 컨트롤로 사용
 
 ```csharp
-// 수동 Safe Area 적용
-var safeArea = Screen.safeArea;
-var root = document.rootVisualElement;
-root.style.paddingLeft = safeArea.x;
-root.style.paddingTop = Screen.height - safeArea.yMax;
-root.style.paddingRight = Screen.width - safeArea.xMax;
-root.style.paddingBottom = safeArea.y;
+// 수동 Safe Area 적용 (모든 모바일에서 필수)
+void ApplySafeArea()
+{
+    var safeArea = Screen.safeArea;
+    var root = document.rootVisualElement;
+
+    // Safe Area 패딩 적용
+    root.style.paddingLeft = safeArea.x;
+    root.style.paddingTop = Screen.height - safeArea.yMax;
+    root.style.paddingRight = Screen.width - safeArea.xMax;
+    root.style.paddingBottom = safeArea.y;
+}
+
+// 화면 회전 시 재적용 필요
+void Update()
+{
+    if (_lastSafeArea != Screen.safeArea)
+    {
+        _lastSafeArea = Screen.safeArea;
+        ApplySafeArea();
+    }
+}
+```
+
+### 12-6. 해상도 대응 체크리스트
+
+```
+PanelSettings 설정:
+  ☐ Scale Mode → Scale With Screen Size
+  ☐ Reference Resolution → 1080×1920 (또는 프로젝트에 맞게)
+  ☐ Screen Match Mode → Expand (권장)
+
+레이아웃 규칙:
+  ☐ 고정 width/height 대신 flex-grow + min/max 사용
+  ☐ 콘텐츠 영역은 flex-grow: 1로 남은 공간 채움
+  ☐ 퍼센트(%) 기반 크기 또는 flex-basis 활용
+  ☐ position: absolute 사용 시 앵커(left/right/top/bottom) 활용
+
+비율 대응:
+  ☐ 16:9 / 20:9 / 4:3 세 가지 비율에서 테스트
+  ☐ 세로(portrait) / 가로(landscape) 모두 테스트
+  ☐ C# EnableInClassList로 비율별 스타일 분기
+  ☐ 울트라와이드(21:9) 시 max-width로 컨텐츠 제한
+
+모바일 필수:
+  ☐ Safe Area 패딩 적용 (노치/펀치홀/Dynamic Island)
+  ☐ 화면 회전 시 Safe Area 재적용
 ```
 
 ---
 
-## 13. C# 바인딩 패턴
+## 13. 멀티 플랫폼 입력 대응
+
+UI를 작성할 때 **항상 모든 입력 방식을 동시에 고려**해야 한다.
+PC 전용/모바일 전용으로 작성하면 다른 플랫폼에서 사용 불가능한 UI가 된다.
+
+### 입력 방식별 차이점
+
+| 항목 | 마우스 (PC) | 터치 (모바일) | 게임패드/키보드 |
+|------|------------|--------------|----------------|
+| Hover | ✅ `:hover` 동작 | ❌ 동작 안 함 | ❌ 동작 안 함 |
+| 정밀도 | 높음 (1px 단위) | 낮음 (손가락 ~7mm) | 없음 (방향 이동) |
+| 최소 타겟 | 24px 이상 | **48dp 이상** | 포커스 영역 |
+| 피드백 | hover → active | active만 | **:focus 필수** |
+| 스크롤 | 휠 + 드래그 | 스와이프 | 스틱/D-pad |
+| 우클릭 | ✅ | ❌ (롱프레스 대체) | ❌ |
+
+### 핵심 원칙: "가장 제한적인 입력에서 동작 보장"
+
+```
+개발 순서:
+1. 터치(모바일) 기준으로 UI 설계 → 타겟 크기, active 피드백
+2. 마우스(PC) 피드백 추가 → hover 상태
+3. 게임패드/키보드 네비게이션 → focus 상태, tabIndex
+```
+
+### 터치 타겟 크기 가이드라인
+
+| 기준 | 최소 크기 | 권장 크기 |
+|------|----------|----------|
+| WCAG 2.2 (Level AA) | 24×24px | 44×44px |
+| Apple HIG | 44×44pt (~59px) | — |
+| Google Material | 48×48dp | — |
+| **이 가이드라인 권장** | **44×44px** | **48×48px** |
+
+```css
+/* ✅ 터치 친화적 버튼 */
+.btn {
+    min-height: 48px;
+    min-width: 48px;
+    padding: var(--spacing-sm) var(--spacing-lg);
+}
+
+/* ✅ 작은 아이콘 버튼도 터치 영역 확보 */
+.btn--icon {
+    width: 32px;
+    height: 32px;
+    /* padding으로 48px 터치 영역 확보 */
+    padding: 8px;
+}
+
+/* ❌ 터치 불가능한 작은 버튼 */
+.btn--tiny {
+    min-height: 20px;
+    padding: 2px 4px;
+}
+```
+
+### 요소 간 간격
+
+터치 오류를 방지하기 위해 인터랙티브 요소 사이에 충분한 간격 필요:
+
+```css
+/* ✅ 인터랙티브 요소 간 최소 8px 간격 */
+.btn + .btn {
+    margin-left: var(--spacing-sm); /* 8px */
+}
+
+.list__item {
+    min-height: 48px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    /* 리스트 아이템 사이 구분선이 터치 버퍼 역할 */
+    border-bottom-width: 1px;
+    border-bottom-color: var(--color-border);
+}
+```
+
+### 인터랙션 스타일 패턴 (3단계 필수)
+
+모든 인터랙티브 요소에 **hover + active + focus** 세 가지를 반드시 정의:
+
+```css
+.btn {
+    background-color: var(--color-primary);
+    color: white;
+    min-height: 48px;
+    border-radius: var(--border-radius-md);
+    transition: background-color var(--transition-fast) ease-in-out,
+                scale var(--transition-fast) ease-out;
+}
+
+/* 1) PC 마우스: hover 피드백 */
+.btn:hover {
+    background-color: var(--color-primary-hover);
+}
+
+/* 2) 터치 + 마우스 클릭: active 피드백 */
+.btn:active {
+    background-color: var(--color-primary-active);
+    scale: 0.97;
+}
+
+/* 3) 게임패드/키보드: focus 피드백 (포커스 링) */
+.btn:focus {
+    /* 포커스 링: 접근성 필수 */
+    border-width: 2px;
+    border-color: var(--color-focus-ring, rgb(66, 133, 244));
+}
+
+/* 비활성: 모든 입력 공통 */
+.btn:disabled {
+    opacity: 0.5;
+}
+```
+
+### 게임패드/키보드 네비게이션
+
+#### tabIndex 설정
+
+```xml
+<!-- UXML: tabindex로 포커스 순서 제어 -->
+<ui:Button name="play-btn" tabindex="1" text="Play" />
+<ui:Button name="settings-btn" tabindex="2" text="Settings" />
+<ui:Button name="quit-btn" tabindex="3" text="Quit" />
+
+<!-- tabindex="0": 기본 순서 (visual tree DFS 순) -->
+<!-- tabindex="-1": 포커스 순서에서 제외 (코드로만 포커스 가능) -->
+```
+
+#### 초기 포커스 설정 (게임패드 전용 게임 필수)
+
+```csharp
+// 씬 로드 후 첫 포커스 요소 지정
+// — 이것이 없으면 게임패드로 탐색 시작점이 없음
+void OnEnable()
+{
+    var root = GetComponent<UIDocument>().rootVisualElement;
+    // schedule: UI 트리가 완전히 빌드된 후 실행
+    root.schedule.Execute(() =>
+    {
+        root.Q<Button>("play-btn")?.Focus();
+    });
+}
+```
+
+#### NavigationMoveEvent (커스텀 네비게이션)
+
+```csharp
+// 기본 DFS 순서 대신 커스텀 네비게이션이 필요한 경우
+element.RegisterCallback<NavigationMoveEvent>(evt =>
+{
+    switch (evt.direction)
+    {
+        case NavigationMoveEvent.Direction.Left:
+            leftElement.Focus();
+            evt.PreventDefault();
+            break;
+        case NavigationMoveEvent.Direction.Right:
+            rightElement.Focus();
+            evt.PreventDefault();
+            break;
+    }
+});
+```
+
+### C# 이벤트 패턴: 멀티 입력 대응
+
+```csharp
+// ✅ ClickEvent: 마우스 클릭 + 터치 탭 + 키보드 Enter 모두 처리
+button.RegisterCallback<ClickEvent>(evt => OnButtonClicked());
+
+// ⚠️ PointerDownEvent 등은 터치에서 문제 발생 가능 (알려진 이슈)
+// 꼭 필요한 경우에만 사용하고, 터치 테스트 필수
+button.RegisterCallback<PointerDownEvent>(evt => OnDragStart(evt));
+
+// ✅ 게임패드 대응: NavigationSubmitEvent
+button.RegisterCallback<NavigationSubmitEvent>(evt => OnButtonClicked());
+```
+
+### 플랫폼 감지 및 적응
+
+```csharp
+// 런타임에 입력 방식 감지하여 UI 클래스 전환
+void DetectInputMode(VisualElement root)
+{
+    bool isTouchDevice = Input.touchSupported && !Input.mousePresent;
+    bool isGamepad = Gamepad.current != null; // Input System 사용 시
+
+    root.EnableInClassList("input--touch", isTouchDevice);
+    root.EnableInClassList("input--mouse", !isTouchDevice && !isGamepad);
+    root.EnableInClassList("input--gamepad", isGamepad);
+}
+```
+
+```css
+/* 입력 방식별 스타일 분기 */
+.input--touch .tooltip { display: none; }          /* 터치: 툴팁 숨김 */
+.input--touch .btn { min-height: 48px; }           /* 터치: 큰 타겟 */
+.input--gamepad .btn:focus { border-width: 3px; }  /* 게임패드: 굵은 포커스 링 */
+.input--mouse .btn { min-height: 36px; }           /* 마우스: 컴팩트 허용 */
+```
+
+### 플랫폼별 주의사항 요약
+
+| 흔한 실수 | 영향 | 해결 |
+|-----------|------|------|
+| `:hover`만 정의, `:active` 없음 | 모바일에서 피드백 없음 | hover + active 모두 정의 |
+| `:focus` 스타일 없음 | 게임패드/키보드로 현재 위치 파악 불가 | 포커스 링 필수 |
+| 버튼 크기 24px 이하 | 터치 오탭, 접근성 위반 | 최소 44px, 권장 48px |
+| 우클릭 메뉴만 제공 | 모바일에서 접근 불가 | 롱프레스 또는 대체 UI |
+| 드래그 앤 드롭만 사용 | 터치 스크롤과 충돌 | 터치 시 버튼 기반 대안 제공 |
+| Tooltip hover 전용 | 모바일에서 정보 접근 불가 | 탭 시 표시 또는 인라인 텍스트 |
+| tabIndex 미설정 | 게임패드 탐색 순서 비직관적 | 논리적 순서로 tabIndex 지정 |
+| 초기 포커스 미지정 | 게임패드 시작점 없음 | 씬 로드 시 Focus() 호출 |
+
+---
+
+## 14. C# 바인딩 패턴
 
 ### 요소 조회
 
@@ -815,6 +1261,7 @@ UXML/USS 코드를 출력하기 전에 아래를 자기 검증한다.
 ☐ 클래스명이 BEM/kebab-case 패턴 준수
 ☐ 불필요한 깊은 중첩 없음 (최대 4-5단계)
 ☐ 재사용 컴포넌트는 Template/Instance로 분리
+☐ 인터랙티브 요소에 tabindex 속성 설정 (게임패드/키보드 대응)
 ```
 
 ### USS 체크
@@ -829,6 +1276,8 @@ UXML/USS 코드를 출력하기 전에 아래를 자기 검증한다.
 ☐ 트랜지션은 기본 상태에 선언 (pseudo-class가 아닌)
 ☐ 트랜지션 값의 단위가 시작/끝 상태에서 일치
 ☐ :hover 셀렉터가 하위 요소 많은 곳에서 후손 조합으로 사용되지 않음
+☐ 고정 width/height 대신 flex-grow + min/max 사용 (해상도 대응)
+☐ 콘텐츠 영역에 flex-grow: 1 적용 (비율 변화 대응)
 ```
 
 ### 바인딩 체크
@@ -838,6 +1287,19 @@ UXML/USS 코드를 출력하기 전에 아래를 자기 검증한다.
 ☐ name이 kebab-case이고 패널 내 고유함
 ☐ Q<Type>("name") 패턴으로 조회 가능
 ☐ 이벤트 콜백 등록 패턴 준수
+```
+
+### 멀티 플랫폼 체크
+
+```
+☐ 인터랙티브 요소에 :hover + :active + :focus 모두 정의
+☐ :hover에만 의존하는 기능/정보 없음 (모바일 대응)
+☐ 버튼/터치 타겟 최소 44px, 권장 48px
+☐ 인터랙티브 요소 간 최소 8px 간격
+☐ 게임패드/키보드 탐색용 tabIndex 설정
+☐ 초기 포커스 요소 지정 (Focus() 호출)
+☐ ClickEvent 사용 (PointerDownEvent 대신, 터치 호환)
+☐ 우클릭/Tooltip 등 PC 전용 기능에 모바일 대안 존재
 ```
 
 ### 성능 체크
@@ -881,3 +1343,12 @@ UXML/USS 코드를 출력하기 전에 아래를 자기 검증한다.
 - [Optimizing Performance](https://docs.unity3d.com/6000.3/Documentation/Manual/best-practice-guides/ui-toolkit-for-advanced-unity-developers/optimizing-performance.html)
 - [Runtime UI Performance](https://docs.unity3d.com/Manual/UIE-performance-consideration-runtime.html)
 - [Scalable UI with UI Toolkit in Unity 6](https://unity.com/resources/scalable-performant-ui-uitoolkit-unity-6)
+- [Focus System](https://docs.unity3d.com/6000.3/Documentation/Manual/UIE-focus-order.html)
+- [Navigation Events](https://docs.unity3d.com/Manual/UIE-Navigation-Events.html)
+- [FAQ: Input and Event Systems](https://docs.unity3d.com/Manual/UIE-faq-event-and-input-system.html)
+
+### 접근성 가이드라인
+- [WCAG 2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)
+- [WCAG 2.5.5 Target Size (Enhanced)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced.html)
+- [Apple HIG - Touch Targets](https://developer.apple.com/design/human-interface-guidelines/accessibility)
+- [Material Design - Touch Targets](https://m3.material.io/foundations/accessible-design/accessibility-basics)
