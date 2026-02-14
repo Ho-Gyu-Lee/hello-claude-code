@@ -19,7 +19,7 @@
 hello-claude-code/
 ├── rules/           # 핵심 규칙 (10개) - 항상 적용
 ├── agents/          # 서브에이전트 (6개) - 위임 작업용
-└── skills/          # 스킬 (13개) - 필요시 호출
+└── skills/          # 스킬 (14개) - 필요시 호출
 ```
 
 ---
@@ -93,6 +93,7 @@ cp -r skills/* ~/.claude/skills/
 | `/review` | 코드 품질/보안/유지보수성 검토 |
 | `/setup-serena-mcp` | Serena MCP 프로젝트 활성화 및 온보딩 |
 | `/tdd` | TDD 방식 개발 (RED-GREEN-REFACTOR) |
+| `/ui-toolkit-design` | Unity UI Toolkit (UXML/USS) 가이드라인 |
 
 **자동 호출** (시스템이 상황에 맞춰 자동 활성화):
 
@@ -105,6 +106,7 @@ cp -r skills/* ~/.claude/skills/
 | `sequential-thinking` | Sequential Thinking MCP 사용 가이드 |
 | `serena-mcp` | Serena MCP 시맨틱 코드 분석 및 프로젝트 지식 관리 |
 | `systematic-debugging` | 체계적 디버깅 프로세스 |
+| `ui-toolkit-design` | Unity UI Toolkit (UXML/USS) 작업 시 자동 활성화 |
 | `web-search` | 웹 검색 가이드 및 도구 우선순위 |
 
 ---
@@ -163,18 +165,19 @@ agents/refactorer.md
 agents/tdd-guide.md
 ```
 
-### Skills (13개)
+### Skills (14개)
 
-**사용자 호출 (5개)**
+**사용자 호출 (6개)**
 ```
 skills/brainstorming/SKILL.md
 skills/plan/SKILL.md
 skills/review/SKILL.md
 skills/setup-serena-mcp/SKILL.md
 skills/tdd/SKILL.md
+skills/ui-toolkit-design/SKILL.md
 ```
 
-**자동 호출 (8개)**
+**자동 호출 (9개 — 일부는 사용자 호출도 겸함)**
 ```
 skills/error-response/SKILL.md
 skills/executing-plans/SKILL.md
@@ -183,6 +186,7 @@ skills/research-context/SKILL.md
 skills/sequential-thinking/SKILL.md
 skills/serena-mcp/SKILL.md
 skills/systematic-debugging/SKILL.md
+skills/ui-toolkit-design/SKILL.md
 skills/web-search/SKILL.md
 ```
 
