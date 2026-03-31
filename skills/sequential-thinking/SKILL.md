@@ -1,6 +1,6 @@
 ---
 name: sequential-thinking
-description: Sequential Thinking MCP 활용 가이드. 복잡한 아키텍처 결정, 3개 이상 옵션 비교, 다중 트레이드오프 분석, "모놀리스 vs MSA", "어떤 방식이 나을까" 등 깊은 분석이 필요한 질문 시 자동 활성화.
+description: Sequential Thinking MCP 활용 가이드. 복잡한 아키텍처 결정, 3개 이상 옵션 비교, 다중 트레이드오프 분석, "모놀리스 vs MSA", "어떤 방식이 나을까" 등 깊은 분석이 필요한 질문 시 자동 활성화. 단계별 사고, 가정 수정, 구조화된 결론 도출.
 user-invocable: false
 ---
 
