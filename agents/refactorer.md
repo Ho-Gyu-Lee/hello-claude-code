@@ -1,6 +1,6 @@
 ---
 name: refactorer
-description: 코드 리팩토링 및 정리
+description: Use proactively when the user asks to refactor, clean up, or reduce complexity. 중복 제거, 복잡도 감소, 가독성 개선 — 테스트 확인 후 작은 단위로 변경.
 tools: Read, Grep, Glob, Bash, Edit
 ---
 

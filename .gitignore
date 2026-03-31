@@ -31,3 +31,8 @@ coverage/
 # Temporary
 *.tmp
 *.temp
+
+# AI Agent
+.claude/
+.serena/
+codex/

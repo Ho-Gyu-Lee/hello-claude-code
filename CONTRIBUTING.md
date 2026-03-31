@@ -28,10 +28,12 @@
   ```yaml
   ---
   name: agent-name
-  description: 설명
+  description: 에이전트 역할과 사용 시점을 구체적으로 기술
   tools: Read, Grep, Glob, Bash
   ---
   ```
+- 선택 필드: `model`, `memory`, `skills`, `permissionMode`, `maxTurns`, `hooks`, `isolation`, `initialPrompt`
+- `initialPrompt`: 에이전트 첫 턴에 자동 제출할 프롬프트 (반복 작업 자동화에 유용)
 
 ### Skills 추가
 - `skills/` 폴더에 새 폴더 및 `SKILL.md` 파일 추가
@@ -63,6 +65,17 @@ docs: update README installation guide
 - 한국어 우선 (영문 병기 가능)
 - Markdown 린트 준수
 - 예시 코드는 실행 가능하게
+
+### Hooks 추가
+- `.claude/settings.json`의 `hooks` 섹션에 추가
+- 주요 이벤트: `PreToolUse`, `PostToolUse`, `SessionStart` 등
+- hooks 명령어에 사용자 입력 포함 금지 (Command Injection 방지)
+- 변경사항은 반드시 Git 추적
+
+### 보안 주의사항
+- 커뮤니티 스킬/플러그인 설치 전 코드 리뷰 필수
+- MCP 서버는 신뢰된 소스만 사용
+- 시크릿/크리덴셜이 포함된 파일을 커밋하지 않도록 주의
 
 ## 질문이 있으시면
 

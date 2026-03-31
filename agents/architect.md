@@ -1,6 +1,6 @@
 ---
 name: architect
-description: 시스템 설계 및 아키텍처 결정
+description: Use proactively when the user asks about architecture, system design, or technology trade-offs. 시스템 설계 및 아키텍처 결정 — 코드베이스 구조 분석, 기술 트레이드오프 평가, 확장성/유지보수성 관점 리뷰.
 tools: Read, Grep, Glob
 ---
 

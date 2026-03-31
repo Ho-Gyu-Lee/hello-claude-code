@@ -1,6 +1,6 @@
 ---
 name: tdd-guide
-description: Test-Driven Development 가이드
+description: Use proactively when the user wants TDD workflow or asks to write tests first. RED-GREEN-REFACTOR 사이클을 엄격히 준수하며 테스트 먼저 작성.
 tools: Read, Grep, Glob, Bash, Edit
 ---
 

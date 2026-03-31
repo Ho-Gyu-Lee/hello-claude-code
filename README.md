@@ -2,14 +2,18 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+서버 개발자를 위한 Claude Code 설정 프레임워크.
+C/C++, Go, Rust, C#, Python 지원. Opus 4.6 / Sonnet 4.6 대응.
+
 ## 핵심 철학
 
 | 원칙 | 설명 |
 |------|------|
-| **정확성** | 확실한 정보만 답변, 추측은 "추측:" 명시 |
+| **정확성** | 확실한 정보만 답변, 추측은 명시 |
 | **집중** | 요청 범위에 집중, 불필요한 확장 방지 |
-| **코드 기반** | 실제 코드 분석 후 판단, 추측 금지 |
-| **간결함** | Over-engineering 금지, 요청 범위만 수정 |
+| **코드 기반** | 실제 코드 분석 후 판단 |
+| **간결함** | Over-engineering 금지 |
+| **Context Engineering** | 프롬프트가 아닌 전체 정보 환경을 설계 |
 
 ---
 
@@ -17,97 +21,90 @@
 
 ```
 hello-claude-code/
-├── rules/           # 핵심 규칙 (10개) - 항상 적용
-├── agents/          # 서브에이전트 (6개) - 위임 작업용
-└── skills/          # 스킬 (14개) - 필요시 호출
+├── rules/           # 8개 규칙 - 항상 적용
+├── agents/          # 7개 에이전트 - 위임 작업용
+├── skills/          # 15개 스킬 - 수동 호출 + 자동 트리거
+└── CLAUDE.md        # 메인 설정 (200줄 이하)
 ```
 
 ---
 
-## 설치 방법
-
-### 1. 레포지토리 클론
+## 설치
 
 ```bash
 git clone https://github.com/[your-username]/hello-claude-code.git
 cd hello-claude-code
-```
 
-### 2. 파일 복사 (선택)
-
-원하는 구성 요소만 복사:
-
-```bash
-# 규칙만 사용
+# 원하는 구성 요소만 복사
 cp rules/*.md ~/.claude/rules/
-
-# 에이전트도 사용
 cp agents/*.md ~/.claude/agents/
-
-# 스킬도 사용
 cp -r skills/* ~/.claude/skills/
 ```
 
 ---
 
-## 사용 방법
+## 구성 요소
 
-### Rules (규칙)
-
-**자동 적용** - Claude Code가 항상 참조합니다.
+### Rules (8개) — 항상 적용
 
 | 파일 | 용도 |
 |------|------|
-| `00-anti-hallucination.md` | 헛소리 방지, 정확도 검증 |
-| `01-mandatory-checklist.md` | 응답 전 필수 체크리스트 |
-| `02-context-anchoring.md` | 컨텍스트 고정, 범위 제한 |
-| `03-core-principles.md` | 응답 철학, 금지/허용 표현 |
-| `04-communication.md` | 커뮤니케이션 스타일 |
-| `05-security.md` | 보안 규칙, 즉시 경고 항목 |
-| `06-coding-style.md` | 간결성 원칙, 언어별 컨벤션 |
-| `07-testing.md` | 테스트 규칙, 빌드/린트 |
-| `08-performance.md` | 서버 성능 최적화 |
-| `09-tool-autonomy.md` | 도구 자율 사용 원칙 |
+| `00-accuracy.md` | 정확성, 반환각 방지, 응답 전 체크 |
+| `01-response-principles.md` | 앵커링, 범위 제한, 커뮤니케이션 스타일 |
+| `02-security.md` | 보안 즉시 경고, 취약점 체크리스트 |
+| `03-coding-style.md` | 간결성, 네이밍 컨벤션, 서버 특화 |
+| `04-testing.md` | TDD, AAA 패턴, 테스트 체크리스트 |
+| `05-tool-usage.md` | 도구 자율 사용, MCP 우선순위 |
+| `06-context-engineering.md` | 세션 관리, /compact, .claudeignore |
+| `07-ui-design.md` | AI 안티패턴 금지, 접근성, 인터랙션 상태 |
 
-### Agents (에이전트)
-
-복잡한 작업을 위임할 때 사용:
+### Agents (7개) — 복잡한 작업 위임
 
 | 에이전트 | 역할 |
 |----------|------|
 | `planner` | 구현 계획 수립, 작업 분해 |
 | `architect` | 시스템 설계, 아키텍처 결정 |
 | `code-reviewer` | 코드 품질/보안/유지보수성 리뷰 |
-| `security-reviewer` | 보안 취약점 전문 분석 |
+| `security-reviewer` | OWASP 기반 보안 취약점 분석 |
 | `refactorer` | 코드 리팩토링 |
-| `tdd-guide` | TDD 가이드 |
+| `tdd-guide` | TDD 가이드 (RED-GREEN-REFACTOR) |
+| `explorer` | 코드베이스 탐색 전문 (컨텍스트 격리) |
 
-### Skills (스킬)
+### Skills (15개) — 수동 호출 + 자동 트리거
 
-**사용자 호출** (슬래시 명령어로 직접 호출):
-
-| 스킬 | 용도 |
-|------|------|
-| `/brainstorming` | 구현 전 설계 논의 (plan 전 단계) |
-| `/plan` | 복잡한 구현을 위한 계획 수립 |
-| `/review` | 코드 품질/보안/유지보수성 검토 |
-| `/setup-serena-mcp` | Serena MCP 프로젝트 활성화 및 온보딩 |
-| `/tdd` | TDD 방식 개발 (RED-GREEN-REFACTOR) |
-| `/ui-toolkit-design` | Unity UI Toolkit (UXML/USS) 가이드라인 |
-
-**자동 호출** (시스템이 상황에 맞춰 자동 활성화):
+**수동 호출 (6개)**:
 
 | 스킬 | 용도 |
 |------|------|
-| `error-response` | 에러 응답 표준 형식 |
-| `executing-plans` | 계획을 배치로 실행하고 체크포인트에서 검증 |
-| `quality-verification` | 코드 품질 기준 + 완료 검증 프로세스 |
-| `research-context` | 기술 조사, 라이브러리 비교, 아키텍처 결정 |
-| `sequential-thinking` | Sequential Thinking MCP 사용 가이드 |
-| `serena-mcp` | Serena MCP 시맨틱 코드 분석 및 프로젝트 지식 관리 |
-| `systematic-debugging` | 체계적 디버깅 프로세스 |
-| `ui-toolkit-design` | Unity UI Toolkit (UXML/USS) 작업 시 자동 활성화 |
-| `web-search` | 웹 검색 가이드 및 도구 우선순위 |
+| `/brainstorming` | 구현 전 설계 논의 |
+| `/grill-me` | 설계/계획 스트레스 테스트 |
+| `/plan` | 구현 계획 수립 |
+| `/review` | 코드 리뷰 (단일 진입점 — 파일/staged/commit/PR) |
+| `/tdd` | TDD 방식 개발 |
+| `/ui-toolkit-design` | Unity UI Toolkit 가이드 |
+
+**자동 트리거 (9개)**:
+
+| 스킬 | 트리거 |
+|------|--------|
+| `error-response` | 작업 실패, 빌드/테스트 실패 |
+| `executing-plans` | 계획 실행 시 |
+| `quality-verification` | 작업 완료 검증 |
+| `research-context` | 기술 조사/비교 |
+| `performance-guide` | 성능/최적화 관련 질문 |
+| `systematic-debugging` | 에러/버그 발생 |
+| `sequential-thinking` | 복잡한 아키텍처 결정 (MCP) |
+| `serena-mcp` | Serena MCP 연결 시 코드 분석 (MCP) |
+| `web-search` | 웹 검색/최신 정보 (MCP) |
+
+---
+
+## 개발 흐름
+
+```
+/brainstorming → /grill-me → /plan → 구현 → /tdd → /review
+    설계          검증        계획     코드   테스트   리뷰
+```
 
 ---
 
@@ -115,12 +112,7 @@ cp -r skills/* ~/.claude/skills/
 
 ### 규칙 수정
 
-`rules/` 폴더에서 직접 수정:
-
-```bash
-# 예: 코딩 스타일 수정
-vim rules/06-coding-style.md
-```
+`rules/` 폴더에서 직접 수정.
 
 ### 에이전트 추가
 
@@ -129,75 +121,61 @@ vim rules/06-coding-style.md
 ```yaml
 ---
 name: my-agent
-description: 에이전트 설명
-tools: Read, Grep, Glob, Bash
+description: 에이전트 역할과 위임 시점을 구체적으로 기술
+tools: Read, Grep, Glob
+initialPrompt: (선택) 첫 턴 자동 제출 프롬프트
 ---
 
 # 에이전트 내용
-...
 ```
 
+### 스킬 추가
+
+`skills/[skill-name]/SKILL.md` 생성:
+
+```yaml
+---
+name: my-skill
+description: 스킬 설명과 트리거 조건
 ---
 
-## 파일 목록
-
-### Rules (10개)
-```
-rules/00-anti-hallucination.md
-rules/01-mandatory-checklist.md
-rules/02-context-anchoring.md
-rules/03-core-principles.md
-rules/04-communication.md
-rules/05-security.md
-rules/06-coding-style.md
-rules/07-testing.md
-rules/08-performance.md
-rules/09-tool-autonomy.md
+# 스킬 내용
 ```
 
-### Agents (6개)
-```
-agents/planner.md
-agents/architect.md
-agents/code-reviewer.md
-agents/security-reviewer.md
-agents/refactorer.md
-agents/tdd-guide.md
+### Hooks 설정
+
+`.claude/settings.json`에서 확정적 강제 규칙 설정:
+
+```jsonc
+{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Edit|Write",
+      "command": "prettier --write $FILE_PATH"
+    }]
+  }
+}
 ```
 
-### Skills (14개)
+### 조건부 규칙
 
-**사용자 호출 (6개)**
-```
-skills/brainstorming/SKILL.md
-skills/plan/SKILL.md
-skills/review/SKILL.md
-skills/setup-serena-mcp/SKILL.md
-skills/tdd/SKILL.md
-skills/ui-toolkit-design/SKILL.md
-```
+CLAUDE.md에서 도메인별 조건부 규칙:
 
-**자동 호출 (9개 — 일부는 사용자 호출도 겸함)**
-```
-skills/error-response/SKILL.md
-skills/executing-plans/SKILL.md
-skills/quality-verification/SKILL.md
-skills/research-context/SKILL.md
-skills/sequential-thinking/SKILL.md
-skills/serena-mcp/SKILL.md
-skills/systematic-debugging/SKILL.md
-skills/ui-toolkit-design/SKILL.md
-skills/web-search/SKILL.md
+```markdown
+<important if="editing auth module">
+반드시 CSRF 토큰 검증을 포함할 것
+</important>
 ```
 
 ---
 
 ## 주의사항
 
-### 컨텍스트 윈도우
-
-MCP를 너무 많이 활성화하면 컨텍스트가 줄어듭니다:
-- 권장: 프로젝트당 MCP 10개 이하
+- **컨텍스트**: MCP 10개 이하 권장
+- **세션 관리**: 작업 간 `/clear`, 70% 사용 시 `/compact`
+- **MCP 조건부**: sequential-thinking, serena-mcp, web-search는 MCP 연결 시에만 활성화
+- **MCP 보안**: 신뢰된 소스의 MCP 서버만 사용. `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1` 설정 권장
+- **Agent Teams**: 실험적 기능. 명확한 작업 분리 시에만 사용 (토큰 비용 주의)
 
 ---
 

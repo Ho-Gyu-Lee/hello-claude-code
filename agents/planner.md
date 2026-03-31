@@ -1,7 +1,7 @@
 ---
 name: planner
-description: 구현 계획 수립 및 작업 분해
-tools: Read, Grep, Glob
+description: Use proactively when the user requests a complex feature or multi-step implementation. 구현 계획 수립 및 작업 분해 — 요구사항 분석, 작업 분해, 의존성 매핑, 리스크 식별.
+tools: Read, Grep, Glob, Bash
 ---
 
 # Planner Agent

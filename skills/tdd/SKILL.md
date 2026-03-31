@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: TDD 방식 개발 (RED-GREEN-REFACTOR)
+description: TDD 방식 개발 (RED-GREEN-REFACTOR). "테스트 먼저", "TDD로", "테스트 주도", "RED-GREEN" 요청 시 사용.
 ---
 
 # TDD - Test-Driven Development
