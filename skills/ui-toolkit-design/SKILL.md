@@ -1,6 +1,6 @@
 ---
 name: ui-toolkit-design
-description: Unity UI Toolkit (UXML/USS) 디자인 가이드라인. UXML, USS, UI Toolkit, UI Builder, VisualElement, UIDocument 관련 작업 시 자동 활성화. Unity UI 화면 생성, 스타일 작성, 레이아웃 구성 요청 시 사용.
+description: Unity UI Toolkit (UXML/USS) 디자인 가이드라인. UXML, USS, UI Toolkit, UI Builder, VisualElement, UIDocument 관련 작업 시 자동 활성화. "UI 디자인", "HUD", "버튼 스타일", Unity 프로젝트에서 UI 화면/컴포넌트 생성, 스타일 작성, 레이아웃 구성 요청 시 사용.
 user-invocable: true
 ---
 
