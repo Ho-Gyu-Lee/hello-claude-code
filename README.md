@@ -21,7 +21,7 @@ C/C++, Go, Rust, C#, Python 지원. Opus 4.6 / Sonnet 4.6 대응.
 
 ```
 hello-claude-code/
-├── rules/           # 8개 규칙 - 항상 적용
+├── rules/           # 7개 규칙 - 항상 적용
 ├── agents/          # 7개 에이전트 - 위임 작업용
 ├── skills/          # 15개 스킬 - 수동 호출 + 자동 트리거
 └── CLAUDE.md        # 메인 설정 (200줄 이하)
@@ -45,7 +45,7 @@ cp -r skills/* ~/.claude/skills/
 
 ## 구성 요소
 
-### Rules (8개) — 항상 적용
+### Rules (7개) — 항상 적용
 
 | 파일 | 용도 |
 |------|------|

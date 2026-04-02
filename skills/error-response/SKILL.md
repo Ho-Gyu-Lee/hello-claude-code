@@ -29,29 +29,7 @@ user-invocable: false
 - [질문 2]
 ```
 
-## 예시 1: 코드 탐색 실패
-
-```markdown
-[실패] 코드 탐색 실패: 대상 심볼을 찾지 못했습니다
-
-원인:
-- `UserAuth` 클래스가 프로젝트 내 존재하지 않거나
-- 인덱싱되지 않은 디렉토리에 위치
-
-시도한 대안:
-1. "UserAuth" 키워드 텍스트 검색 → 0건
-2. "user authentication" 관련 키워드 검색 → 유사 결과 3건
-
-다음 단계:
-[ ] 옵션 1: 파일 경로를 알려주시면 직접 확인
-[ ] 옵션 2: 유사 결과 확인: `AuthUser`, `UserAuthService`
-[ ] 옵션 3: 전체 프로젝트 구조 탐색 (시간 소요)
-
-추가 정보 필요:
-- `UserAuth`가 있을 것으로 예상되는 위치는?
-```
-
-## 예시 2: 빌드 실패
+## 예시
 
 ```markdown
 [실패] 빌드 실패: TypeScript 컴파일 에러
@@ -67,34 +45,9 @@ user-invocable: false
 다음 단계:
 [ ] 옵션 1: `User` 타입에 `email` 속성 추가
 [ ] 옵션 2: `IUser` 타입으로 변경
-[ ] 옵션 3: 타입 정의 파일 확인 후 결정
 
 추가 정보 필요:
 - `User`와 `IUser` 중 어떤 것을 사용해야 하나요?
-```
-
-## 예시 3: 테스트 실패
-
-```markdown
-[실패] 테스트 실패: 3개 테스트 케이스 실패
-
-원인:
-- `user.test.ts`: 예상 값과 실제 값 불일치
-- 비동기 처리 타이밍 문제 가능성
-
-실패한 테스트:
-1. `should create user` → Expected: 201, Received: 400
-2. `should validate email` → Timeout
-3. `should hash password` → Expected hash length mismatch
-
-다음 단계:
-[ ] 옵션 1: 실패한 테스트 하나씩 디버깅
-[ ] 옵션 2: 관련 코드 변경사항 확인
-[ ] 옵션 3: 테스트 환경 설정 확인
-
-추가 정보 필요:
-- 최근 변경된 코드가 있나요?
-- 테스트 환경 설정이 변경되었나요?
 ```
 
 ## 원칙
