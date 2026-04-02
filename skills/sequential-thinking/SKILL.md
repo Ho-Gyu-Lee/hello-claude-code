@@ -6,7 +6,6 @@ user-invocable: false
 
 # Sequential Thinking MCP 사용 가이드
 
-복잡한 문제를 단계별로 분석할 때 사용하는 도구입니다.
 **Sequential Thinking MCP 연결 시에만 적용.** 미연결 시 일반 추론으로 대체.
 
 ## 사용 시점

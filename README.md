@@ -54,9 +54,8 @@ cp -r skills/* ~/.claude/skills/
 | `02-security.md` | 보안 즉시 경고, 취약점 체크리스트 |
 | `03-coding-style.md` | 간결성, 네이밍 컨벤션, 서버 특화 |
 | `04-testing.md` | TDD, AAA 패턴, 테스트 체크리스트 |
-| `05-tool-usage.md` | 도구 자율 사용, MCP 우선순위 |
-| `06-context-engineering.md` | 세션 관리, /compact, .claudeignore |
-| `07-ui-design.md` | AI 안티패턴 금지, 접근성, 인터랙션 상태 |
+| `05-tool-usage.md` | 도구 자율 사용, MCP 우선순위, 서브에이전트 위임 |
+| `06-ui-design.md` | AI 안티패턴 금지, 접근성, 인터랙션 상태 |
 
 ### Agents (7개) — 복잡한 작업 위임
 

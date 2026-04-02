@@ -105,7 +105,7 @@ Assets/UI/
 ### 비주얼 스타일 원칙
 
 **모바일 게임 UI는 심플하고 절제된 톤을 기본으로 한다.**
-**범용 AI 안티패턴은 `rules/07-ui-design.md` 참조.**
+**범용 AI 안티패턴은 `rules/06-ui-design.md` 참조.**
 
 ```
 금지 (AI가 흔히 생성하는 패턴):
@@ -420,5 +420,5 @@ Assets/UI/
 
 ## 관련 문서
 
-- `rules/07-ui-design.md` - AI 안티패턴 금지, 접근성, 인터랙션 상태 (범용 UI 규칙)
+- `rules/06-ui-design.md` - AI 안티패턴 금지, 접근성, 인터랙션 상태 (범용 UI 규칙)
 - `rules/03-coding-style.md` - 일반 코딩 스타일 및 네이밍 규칙

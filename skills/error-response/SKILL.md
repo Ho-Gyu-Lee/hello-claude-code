@@ -9,7 +9,7 @@ user-invocable: false
 ## 표준 형식
 
 ```markdown
-🔴 [단계명] 실패: [구체적 원인]
+[실패] [단계명] 실패: [구체적 원인]
 
 원인:
 - [기술적 이유]
@@ -32,7 +32,7 @@ user-invocable: false
 ## 예시 1: 코드 탐색 실패
 
 ```markdown
-🔴 코드 탐색 실패: 대상 심볼을 찾지 못했습니다
+[실패] 코드 탐색 실패: 대상 심볼을 찾지 못했습니다
 
 원인:
 - `UserAuth` 클래스가 프로젝트 내 존재하지 않거나
@@ -54,7 +54,7 @@ user-invocable: false
 ## 예시 2: 빌드 실패
 
 ```markdown
-🔴 빌드 실패: TypeScript 컴파일 에러
+[실패] 빌드 실패: TypeScript 컴파일 에러
 
 원인:
 - `src/api/user.ts:45` 타입 불일치
@@ -76,7 +76,7 @@ user-invocable: false
 ## 예시 3: 테스트 실패
 
 ```markdown
-🔴 테스트 실패: 3개 테스트 케이스 실패
+[실패] 테스트 실패: 3개 테스트 케이스 실패
 
 원인:
 - `user.test.ts`: 예상 값과 실제 값 불일치

@@ -6,7 +6,6 @@ user-invocable: false
 
 # Serena MCP 활용 가이드
 
-Serena MCP는 LSP 기반 시맨틱 코드 분석 + 프로젝트 지식 관리 도구입니다.
 **Serena MCP 연결 시에만 적용.** 미연결 시 내장 도구(Grep, Glob, Read, Edit) 사용.
 
 ## 핵심 원칙

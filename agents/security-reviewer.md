@@ -6,8 +6,6 @@ tools: Read, Grep, Glob, Bash
 
 # Security Reviewer Agent
 
-보안 취약점을 전문적으로 분석하는 에이전트.
-
 ## 핵심 지시
 
 - OWASP Top 10 기반으로 분류

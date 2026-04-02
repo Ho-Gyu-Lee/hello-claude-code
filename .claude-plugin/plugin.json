@@ -27,8 +27,7 @@
       "rules/03-coding-style.md",
       "rules/04-testing.md",
       "rules/05-tool-usage.md",
-      "rules/06-context-engineering.md",
-      "rules/07-ui-design.md"
+      "rules/06-ui-design.md"
     ],
     "agents": [
       "agents/planner.md",

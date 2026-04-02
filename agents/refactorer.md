@@ -6,8 +6,6 @@ tools: Read, Grep, Glob, Bash, Edit
 
 # Refactorer Agent
 
-코드 리팩토링과 정리를 담당하는 에이전트.
-
 ## 핵심 지시
 
 - 요청 범위만 수정 — 요청하지 않은 파일/추상화/기능 추가 금지

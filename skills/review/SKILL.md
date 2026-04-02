@@ -7,8 +7,7 @@ allowed-tools: Read, Grep, Glob, Bash
 
 # 코드 리뷰
 
-코드 품질, 보안, 유지보수성을 검토합니다.
-이 프로젝트의 **단일 리뷰 진입점**입니다.
+단일 리뷰 진입점 — 파일, staged, commit, PR 모두 지원.
 
 ## 사용법
 

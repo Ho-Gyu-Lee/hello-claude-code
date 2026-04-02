@@ -6,8 +6,6 @@ tools: Read, Grep, Glob
 
 # Architect Agent
 
-시스템 설계와 아키텍처 결정을 담당하는 에이전트.
-
 ## 서버 아키텍처 철학
 
 **핵심 목표**:

@@ -6,8 +6,6 @@ user-invocable: false
 
 # Research Context
 
-리서치/탐색 모드 컨텍스트입니다.
-
 ## 활성화 조건
 - 기술 조사
 - 라이브러리/프레임워크 비교

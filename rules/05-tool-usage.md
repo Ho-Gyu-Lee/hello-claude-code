@@ -35,8 +35,14 @@ MCP 도구가 연결되어 있으면 내장 도구보다 우선 사용:
   - find_symbol, get_symbols_overview, find_referencing_symbols
   - replace_symbol_body, rename_symbol
 
-2순위: 내장 (Serena 미연결 시)
+2순위: 내장 LSP
+  - LSP 심볼 검색, 참조 검색, 코드 수정
+
+3순위: 내장 도구
   - Grep, Glob, Read, Edit
+
+폴백 체인 (분석 실패 시):
+Serena MCP → Glob → Grep → Read → 사용자에게 추가 정보 요청
 ```
 
 ### 복잡한 분석 (Sequential Thinking MCP 연결 시)
@@ -53,6 +59,9 @@ MCP 서버는 코드베이스 읽기/쓰기 권한을 가지므로 서플라이 
 
 ## 서브에이전트 위임
 
-- 독립적 탐색/분석 → 서브에이전트로 위임 (메인 컨텍스트 보호)
-- 코드 변경이 포함된 병렬 작업 → `isolation: "worktree"`로 격리
 - 단순 파일/심볼 검색 → Glob, Grep 직접 사용 (서브에이전트 불필요)
+- 3회 이상 탐색이 필요한 넓은 조사 → Explorer 에이전트 위임
+- 독립적 조사 여러 건 → 서브에이전트 병렬 실행 (메인 컨텍스트 보호)
+- 코드 변경이 포함된 병렬 작업 → `isolation: "worktree"`로 격리
+- 대규모 작업은 Plan Mode로 전략 수립 후 실행
+- 배치 실행 시 체크포인트에서 검증
