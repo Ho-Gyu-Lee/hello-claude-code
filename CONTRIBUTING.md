@@ -32,8 +32,17 @@
   tools: Read, Grep, Glob, Bash
   ---
   ```
-- 선택 필드: `model`, `memory`, `skills`, `permissionMode`, `maxTurns`, `hooks`, `isolation`, `initialPrompt`
-- `initialPrompt`: 에이전트 첫 턴에 자동 제출할 프롬프트 (반복 작업 자동화에 유용)
+- 선택 필드:
+  | 필드 | 설명 | 예시 |
+  |------|------|------|
+  | `model` | 모델 지정 | `sonnet`, `opus`, `haiku` |
+  | `skills` | 연결할 스킬 | `review`, `tdd` |
+  | `memory` | 메모리 타입 | `project` |
+  | `permissionMode` | 권한 모드 | `bypassPermissions`, `plan`, `default` |
+  | `maxTurns` | 최대 턴 수 | `10`, `25` |
+  | `isolation` | 격리 모드 | `worktree` |
+  | `hooks` | 에이전트별 훅 | `PreToolUse`, `PostToolUse` |
+  | `initialPrompt` | 첫 턴 자동 제출 | 반복 작업 자동화에 유용 |
 
 ### Skills 추가
 - `skills/` 폴더에 새 폴더 및 `SKILL.md` 파일 추가

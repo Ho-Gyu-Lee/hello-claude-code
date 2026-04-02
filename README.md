@@ -122,11 +122,22 @@ cp -r skills/* ~/.claude/skills/
 name: my-agent
 description: 에이전트 역할과 위임 시점을 구체적으로 기술
 tools: Read, Grep, Glob
-initialPrompt: (선택) 첫 턴 자동 제출 프롬프트
 ---
 
 # 에이전트 내용
 ```
+
+선택 필드:
+
+| 필드 | 설명 | 예시 |
+|------|------|------|
+| `model` | 모델 지정 | `sonnet`, `opus`, `haiku` |
+| `skills` | 연결할 스킬 | `review`, `tdd` |
+| `memory` | 메모리 타입 | `project` |
+| `permissionMode` | 권한 모드 | `bypassPermissions`, `plan`, `default` |
+| `maxTurns` | 최대 턴 수 | `10`, `25` |
+| `isolation` | 격리 모드 | `worktree` |
+| `initialPrompt` | 첫 턴 자동 제출 프롬프트 | 반복 작업 자동화에 유용 |
 
 ### 스킬 추가
 
@@ -154,16 +165,6 @@ description: 스킬 설명과 트리거 조건
     }]
   }
 }
-```
-
-### 조건부 규칙
-
-CLAUDE.md에서 도메인별 조건부 규칙:
-
-```markdown
-<important if="editing auth module">
-반드시 CSRF 토큰 검증을 포함할 것
-</important>
 ```
 
 ---
