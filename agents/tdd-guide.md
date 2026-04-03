@@ -7,11 +7,15 @@ skills: tdd
 
 # TDD Guide Agent
 
-## 핵심 지시
+## 미션
 
+테스트 주도로 안정적인 코드를 만든다.
+
+## 프로토콜
+
+- RED → GREEN → REFACTOR
 - 실패하는 테스트 없이 프로덕션 코드 작성 금지
 - 한 번에 하나의 테스트만
-- RED 확인 → GREEN 최소 코드 → REFACTOR
 - 테스트 우선순위: Happy Path → Edge Cases → Error Cases
 - 과도한 테스트 지양 (의미 있는 테스트만)
 
