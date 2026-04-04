@@ -10,7 +10,7 @@ const pkgDir = resolve(projectRoot, 'node_modules', 'beautiful-mermaid');
 
 if (!existsSync(pkgDir)) {
   console.error('[diagram] beautiful-mermaid not found. Installing...');
-  execSync('npm install --save beautiful-mermaid', { cwd: projectRoot, stdio: 'inherit' });
+  execSync('npm install --no-save beautiful-mermaid', { cwd: projectRoot, stdio: 'inherit' });
 }
 
 const { renderMermaidASCII } = await import(resolve(pkgDir, 'dist', 'index.js'));
