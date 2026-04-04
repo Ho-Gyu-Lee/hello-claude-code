@@ -20,21 +20,22 @@ user-invocable: false
 
 ## 렌더링
 
-스크립트 경로: `skills/diagram/scripts/render-mermaid.mjs`
+스크립트: 이 SKILL.md와 같은 디렉토리의 `scripts/render-mermaid.mjs`
 
-라이브러리 미설치 시 자동 설치된다.
+라이브러리 미설치 시 스킬 디렉토리에 자동 설치된다 (프로젝트 오염 없음).
 
 ### 렌더링 절차
 
-1. Bash로 스크립트 실행하여 ASCII 출력을 얻는다
-2. 출력 결과를 답변 텍스트에 직접 포함한다 (Bash 실행 결과는 사용자에게 보이지 않을 수 있음)
-3. 마크다운 파일에서는 ```text 코드 블록에 삽입한다
+1. 이 스킬의 scripts/render-mermaid.mjs 절대 경로를 구성한다
+2. Bash로 스크립트 실행하여 ASCII 출력을 얻는다
+3. 출력 결과를 답변 텍스트에 직접 포함한다 (Bash 실행 결과는 사용자에게 보이지 않을 수 있음)
+4. 마크다운 파일에서는 ```text 코드 블록에 삽입한다
 
 ### 예시
 
 ```
 echo 'graph LR
-  A --> B --> C' | node skills/diagram/scripts/render-mermaid.mjs
+  A --> B --> C' | node ~/.claude/skills/diagram/scripts/render-mermaid.mjs
 ```
 
 실행 후 결과를 답변에 직접 포함:
