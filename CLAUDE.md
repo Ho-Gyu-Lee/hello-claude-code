@@ -19,9 +19,7 @@
 ## 컨텍스트 관리
 
 압축보다 리셋이 낫다. 자연스러운 작업 구간(배치 완료, 기능 완성 등)에서:
-1. `~/.claude/handoff/{project}/context.md`에 핸드오프 작성 (완료 작업, 핵심 결정, 다음 단계)
-   - {project} = 작업 디렉토리 경로에서 선행 `/` 제거 후 `/` -> `-` 치환
-   - 예: `/Users/foo/my-project` -> `Users-foo-my-project`
+1. `.claude/handoff/context.md`에 핸드오프 작성 (완료 작업, 핵심 결정, 다음 단계)
 2. 사용자에게 /clear 제안
 3. 새 세션에서 핸드오프를 읽고 실제 파일/코드를 확인하여 현재 상태 검증 후 작업 재개
 

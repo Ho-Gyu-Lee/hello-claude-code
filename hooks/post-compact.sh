@@ -8,10 +8,7 @@ set -euo pipefail
 INPUT=$(cat)
 CWD=$(echo "$INPUT" | jq -r '.cwd // "."')
 
-# 프로젝트별 핸드오프 디렉토리 (CWD 기반)
-PROJECT_KEY=$(echo "$CWD" | sed 's|^/||' | sed 's|/|-|g')
-HANDOFF_DIR="${HOME}/.claude/handoff/${PROJECT_KEY}"
-
+HANDOFF_DIR="${CWD}/.claude/handoff"
 AGENT_HANDOFF="${HANDOFF_DIR}/context.md"
 FALLBACK_HANDOFF="${HANDOFF_DIR}/last-compact.json"
 

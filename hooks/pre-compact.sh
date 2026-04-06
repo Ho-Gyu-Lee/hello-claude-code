@@ -10,9 +10,7 @@ SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // "unknown"')
 CWD=$(echo "$INPUT" | jq -r '.cwd // "."')
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-# 프로젝트별 핸드오프 디렉토리 (CWD 기반)
-PROJECT_KEY=$(echo "$CWD" | sed 's|^/||' | sed 's|/|-|g')
-HANDOFF_DIR="${HOME}/.claude/handoff/${PROJECT_KEY}"
+HANDOFF_DIR="${CWD}/.claude/handoff"
 mkdir -p "$HANDOFF_DIR"
 
 # 에이전트가 작성한 핸드오프가 이미 있으면 덮어쓰지 않음
