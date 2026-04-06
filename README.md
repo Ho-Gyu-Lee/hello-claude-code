@@ -175,7 +175,8 @@ description: 스킬 설명과 트리거 조건
 | Hook | 이벤트 | 역할 |
 |------|--------|------|
 | `pre-compact.sh` | PreCompact | 안전망: 에이전트 핸드오프가 없을 때만 최소 메타데이터 저장 |
-| `post-compact.sh` | SessionStart (compact/startup/resume) | 핸드오프 아티팩트가 있으면 Claude에 읽도록 안내 |
+| `post-compact.sh` | PostCompact | 압축 후 작업 맥락 재주입 (CLAUDE.md 규칙은 자동 리로드) |
+| `session-start.sh` | SessionStart (startup/resume/clear) | 리셋/새 세션에서 핸드오프 로드 |
 
 사전 요구: `jq` (JSON 처리)
 

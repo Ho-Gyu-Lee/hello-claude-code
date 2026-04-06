@@ -6,20 +6,30 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/pre-compact.sh",
-            "timeout": 10,
-            "statusMessage": "Saving handoff artifact..."
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-compact.sh",
+            "timeout": 10
           }
         ]
       }
     ],
     "SessionStart": [
       {
-        "matcher": "compact|startup|resume",
+        "matcher": "startup|resume|clear",
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/post-compact.sh",
-            "statusMessage": "Restoring context..."
+            "command": "~/.claude/hooks/session-start.sh",
+            "timeout": 10
           }
         ]
       }
