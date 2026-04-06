@@ -19,13 +19,15 @@ if [ -f "${HANDOFF_DIR}/context.md" ]; then
 fi
 
 # 에이전트가 핸드오프를 작성하지 못한 경우의 안전망
-cat > "${HANDOFF_DIR}/last-compact.json" << ARTIFACT
-{
-  "session_id": "${SESSION_ID}",
-  "cwd": "${CWD}",
-  "timestamp": "${TIMESTAMP}",
-  "source": "auto_compact_fallback"
-}
-ARTIFACT
+jq -n \
+  --arg sid "$SESSION_ID" \
+  --arg cwd "$CWD" \
+  --arg ts "$TIMESTAMP" \
+  '{
+    session_id: $sid,
+    cwd: $cwd,
+    timestamp: $ts,
+    source: "auto_compact_fallback"
+  }' > "${HANDOFF_DIR}/last-compact.json"
 
 exit 0
