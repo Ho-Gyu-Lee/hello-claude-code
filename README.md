@@ -170,10 +170,12 @@ description: 스킬 설명과 트리거 조건
 `hooks/` 디렉토리에 컨텍스트 핸드오프 스크립트 포함.
 `hooks/hooks-config.json`의 hooks 섹션을 `~/.claude/settings.json`에 병합하여 사용.
 
-| Hook | 이벤트 | 기능 |
+컨텍스트 관리 전략: 압축보다 리셋. 에이전트가 자연스러운 작업 구간에서 `~/.claude/handoff/context.md`에 핸드오프를 작성하고 /clear를 제안.
+
+| Hook | 이벤트 | 역할 |
 |------|--------|------|
-| `pre-compact.sh` | PreCompact | 컨텍스트 압축 전 작업 상태를 핸드오프 아티팩트로 저장 |
-| `post-compact.sh` | SessionStart (compact) | 압축 후 핸드오프 아티팩트를 Claude에 재주입 |
+| `pre-compact.sh` | PreCompact | 안전망: 에이전트 핸드오프가 없을 때만 최소 메타데이터 저장 |
+| `post-compact.sh` | SessionStart (compact/startup/resume) | 핸드오프 아티팩트가 있으면 Claude에 읽도록 안내 |
 
 사전 요구: `jq` (JSON 처리)
 

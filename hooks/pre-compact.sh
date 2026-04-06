@@ -1,7 +1,7 @@
 #!/bin/bash
-# Pre-Compact Hook
-# 컨텍스트 압축 전 작업 상태를 핸드오프 아티팩트로 저장한다.
-# 블로그 권장: "압축만으로는 불충분; 리셋 시 구조화된 핸드오프가 필수"
+# Pre-Compact Hook (안전망)
+# 자동 압축 발동 시 최소 메타데이터만 저장한다.
+# 실제 핸드오프 아티팩트는 에이전트가 능동적으로 작성해야 한다.
 
 set -euo pipefail
 
@@ -13,28 +13,18 @@ TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 HANDOFF_DIR="${HOME}/.claude/handoff"
 mkdir -p "$HANDOFF_DIR"
 
-# Git 상태 캡처 (git repo인 경우)
-GIT_BRANCH=""
-GIT_STATUS=""
-GIT_RECENT=""
-if git -C "$CWD" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  GIT_BRANCH=$(git -C "$CWD" branch --show-current 2>/dev/null || echo "")
-  GIT_STATUS=$(git -C "$CWD" status --short 2>/dev/null | head -20 || echo "")
-  GIT_RECENT=$(git -C "$CWD" log --oneline -5 2>/dev/null || echo "")
+# 에이전트가 작성한 핸드오프가 이미 있으면 덮어쓰지 않음
+if [ -f "${HANDOFF_DIR}/context.md" ]; then
+  exit 0
 fi
 
-# 핸드오프 아티팩트 저장
+# 에이전트가 핸드오프를 작성하지 못한 경우의 안전망
 cat > "${HANDOFF_DIR}/last-compact.json" << ARTIFACT
 {
   "session_id": "${SESSION_ID}",
   "cwd": "${CWD}",
   "timestamp": "${TIMESTAMP}",
-  "source": "pre_compact",
-  "git": {
-    "branch": $(echo "$GIT_BRANCH" | jq -Rs .),
-    "status": $(echo "$GIT_STATUS" | jq -Rs .),
-    "recent_commits": $(echo "$GIT_RECENT" | jq -Rs .)
-  }
+  "source": "auto_compact_fallback"
 }
 ARTIFACT
 
