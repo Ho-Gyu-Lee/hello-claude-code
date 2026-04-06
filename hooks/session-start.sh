@@ -17,10 +17,7 @@ fi
 CONTEXT="[Handoff] Previous session handoff exists at ${AGENT_HANDOFF}. Read it to restore working context, then verify current state by checking actual files and code."
 
 jq -n --arg ctx "$CONTEXT" '{
-  "hookSpecificOutput": {
-    "hookEventName": "SessionStart",
-    "additionalContext": $ctx
-  }
+  "systemMessage": $ctx
 }'
 
 exit 0

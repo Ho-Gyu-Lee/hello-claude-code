@@ -26,10 +26,7 @@ if [ -z "$CONTEXT" ]; then
 fi
 
 jq -n --arg ctx "$CONTEXT" '{
-  "hookSpecificOutput": {
-    "hookEventName": "PostCompact",
-    "additionalContext": $ctx
-  }
+  "systemMessage": $ctx
 }'
 
 exit 0
