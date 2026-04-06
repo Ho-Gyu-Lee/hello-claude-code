@@ -1,7 +1,7 @@
 #!/bin/bash
-# Post-Compact Hook (SessionStart compact matcher)
-# 컨텍스트 압축 후 핸드오프 아티팩트를 읽어 Claude에 재주입한다.
-# 블로그 권장: "컨텍스트 리셋 + 구조화된 핸드오프로 상태 전달"
+# Context Handoff Hook (SessionStart compact|startup|resume)
+# 컨텍스트 압축, 리셋(/clear), 세션 재개 시 핸드오프 아티팩트를 읽어 Claude에 재주입한다.
+# 블로그 권장: "압축만으로는 불충분; 리셋 + 구조화된 핸드오프가 필수"
 
 set -euo pipefail
 
