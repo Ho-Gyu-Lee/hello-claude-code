@@ -5,7 +5,13 @@
 
 set -euo pipefail
 
-HANDOFF_DIR="${HOME}/.claude/handoff"
+INPUT=$(cat)
+CWD=$(echo "$INPUT" | jq -r '.cwd // "."')
+
+# 프로젝트별 핸드오프 디렉토리 (CWD 기반)
+PROJECT_KEY=$(echo "$CWD" | sed 's|^/||' | sed 's|/|-|g')
+HANDOFF_DIR="${HOME}/.claude/handoff/${PROJECT_KEY}"
+
 AGENT_HANDOFF="${HANDOFF_DIR}/context.md"
 FALLBACK_HANDOFF="${HANDOFF_DIR}/last-compact.json"
 
@@ -14,9 +20,8 @@ CONTEXT=""
 if [ -f "$AGENT_HANDOFF" ]; then
   CONTEXT="[Handoff] Previous session handoff exists at ${AGENT_HANDOFF}. Read it to restore working context, then verify current state by checking actual files and code."
 elif [ -f "$FALLBACK_HANDOFF" ]; then
-  CWD=$(jq -r '.cwd // "."' "$FALLBACK_HANDOFF" 2>/dev/null)
   TIMESTAMP=$(jq -r '.timestamp // "unknown"' "$FALLBACK_HANDOFF" 2>/dev/null)
-  CONTEXT="[Handoff] Auto-compact occurred at ${TIMESTAMP} without agent handoff. Working directory: ${CWD}. Check tasks, plans, and git status to restore context."
+  CONTEXT="[Handoff] Auto-compact occurred at ${TIMESTAMP} without agent handoff. Working directory: ${CWD}. Check tasks, plans, and current state to restore context."
 fi
 
 if [ -z "$CONTEXT" ]; then
