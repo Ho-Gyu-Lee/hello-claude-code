@@ -1,6 +1,6 @@
 {
   "name": "hello-claude-code",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "서버 개발자를 위한 Claude Code 설정 - C/C++, Go, Rust, C#, Python 지원. Opus 4.6 / Sonnet 4.6 대응",
   "author": "",
   "license": "MIT",
@@ -36,7 +36,8 @@
       "agents/security-reviewer.md",
       "agents/refactorer.md",
       "agents/tdd-guide.md",
-      "agents/explorer.md"
+      "agents/explorer.md",
+      "agents/evaluator.md"
     ],
     "skills": [
       "skills/brainstorming/SKILL.md",

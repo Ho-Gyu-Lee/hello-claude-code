@@ -22,8 +22,9 @@ C/C++, Go, Rust, C#, Python 지원. Opus 4.6 / Sonnet 4.6 대응.
 ```
 hello-claude-code/
 ├── rules/           # 7개 규칙 - 항상 적용
-├── agents/          # 7개 에이전트 - 위임 작업용
+├── agents/          # 8개 에이전트 - 위임 작업용
 ├── skills/          # 16개 스킬 - 수동 호출 + 자동 트리거
+├── hooks/           # 컨텍스트 핸드오프 hooks
 └── CLAUDE.md        # 메인 설정 (200줄 이하)
 ```
 
@@ -39,6 +40,14 @@ cd hello-claude-code
 cp rules/*.md ~/.claude/rules/
 cp agents/*.md ~/.claude/agents/
 cp -r skills/* ~/.claude/skills/
+cp hooks/*.sh ~/.claude/hooks/
+chmod +x ~/.claude/hooks/*.sh
+```
+
+Hooks 설정 (`~/.claude/settings.json`에 추가):
+```bash
+# hooks-config.json의 hooks 섹션을 settings.json에 병합
+# 또는 수동으로 추가 (hooks/hooks-config.json 참조)
 ```
 
 ---
@@ -57,7 +66,7 @@ cp -r skills/* ~/.claude/skills/
 | `05-tool-usage.md` | 도구 자율 사용, MCP 우선순위, 서브에이전트 위임 |
 | `06-ui-design.md` | AI 안티패턴 금지, 접근성, 인터랙션 상태 |
 
-### Agents (7개) — 미션 기반, 자율적 접근 방식 선택
+### Agents (8개) — 미션 기반, 자율적 접근 방식 선택
 
 각 에이전트는 미션 + 성공 기준 + 실패 패턴 + 도메인 지식 + 제약으로 구성.
 
@@ -67,6 +76,7 @@ cp -r skills/* ~/.claude/skills/
 | `architect` | 최적의 기술적 결정 도출 |
 | `code-reviewer` | 코드 변경의 품질과 안정성 보장 |
 | `security-reviewer` | 보안 위험 식별 및 완화 방안 제시 |
+| `evaluator` | 생성 결과물의 독립적 품질 평가 (생성-평가 분리) |
 | `refactorer` | 코드 구조 개선, 기능 보존 |
 | `tdd-guide` | 테스트 주도로 안정적인 코드 생성 |
 | `explorer` | 코드베이스 정보 수집 및 정제 |
@@ -157,18 +167,15 @@ description: 스킬 설명과 트리거 조건
 
 ### Hooks 설정
 
-`.claude/settings.json`에서 확정적 강제 규칙 설정:
+`hooks/` 디렉토리에 컨텍스트 핸드오프 스크립트 포함.
+`hooks/hooks-config.json`의 hooks 섹션을 `~/.claude/settings.json`에 병합하여 사용.
 
-```jsonc
-{
-  "hooks": {
-    "PostToolUse": [{
-      "matcher": "Edit|Write",
-      "command": "prettier --write $FILE_PATH"
-    }]
-  }
-}
-```
+| Hook | 이벤트 | 기능 |
+|------|--------|------|
+| `pre-compact.sh` | PreCompact | 컨텍스트 압축 전 작업 상태를 핸드오프 아티팩트로 저장 |
+| `post-compact.sh` | SessionStart (compact) | 압축 후 핸드오프 아티팩트를 Claude에 재주입 |
+
+사전 요구: `jq` (JSON 처리)
 
 ---
 
