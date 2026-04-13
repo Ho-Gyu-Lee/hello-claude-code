@@ -8,17 +8,18 @@
 ## 네이밍 우선순위
 
 1. **프로젝트 기존 패턴** — 동일 디렉토리 코드 3-5개 샘플링 후 따름
-2. **언어 표준 컨벤션** — 프로젝트 패턴 없을 때
+2. **아래 공통 컨벤션** — 프로젝트 패턴 없을 때 (언어 무관)
 
 | 구분 | 스타일 | 예시 |
 |------|--------|------|
 | 클래스/구조체 | PascalCase | `GameSession` |
-| 메서드 | PascalCase | `ProcessPacket()` |
+| 함수/메서드 | PascalCase | `ProcessPacket()` |
 | private 필드 | `_` + camelCase | `_sessionId` |
 | 지역 변수/파라미터 | camelCase | `playerId` |
 | 상수 | SCREAMING_SNAKE_CASE | `MAX_PLAYERS` |
-| 인터페이스 | `I` + PascalCase | `ISessionHandler` |
+| 인터페이스/트레이트 | `I` + PascalCase | `ISessionHandler` |
 
+이 컨벤션은 Rust, Go 등 언어 표준이 다르더라도 동일하게 적용한다.
 서버 특화: `XxxPacket`, `XxxHandler`, `XxxManager`, `XxxSession`
 
 ## 아키텍처 원칙 (설계/리팩토링 요청 시)
