@@ -264,6 +264,42 @@ Assets/UI/
 
 ---
 
+## 출력 전 시각 검증 (필수)
+
+**코드 작성만으로 "완료"를 주장하지 않는다.** UI는 시각적 결과가 본질이므로 실제 렌더링을 확인해야 한다.
+
+### Unity MCP (CoplayDev/unity-mcp) 연결 시 3단계 검증
+
+| 단계 | 호출 | 확인 대상 |
+|------|------|----------|
+| L1 | `read_console(action="get", types=["error","warning"], include_stacktrace=true)` | UXML/USS/C# 컴파일 에러 및 경고 0건 |
+| L2 | `manage_editor(action="play")` 후 `read_console(...)` → `manage_editor(action="stop")` | 런타임 NullReference, 바인딩 실패, UXML 로드 에러 |
+| L3 | `manage_camera(action="screenshot", include_image=true, capture_source="game_view")` | 레이아웃/정렬/색상/텍스트 가독성 시각 확인 |
+
+- 최소 L1 + L3은 모든 UI 수정에 필수
+- 상호작용 로직(버튼 콜백, 네비게이션, 데이터 바인딩) 변경 시 L2 추가
+- UI Builder 뷰 확인이 필요하면 L3에서 `capture_source="scene_view"` 사용
+- 문제 발견 → 수정 → 동일 단계 재촬영
+
+### Unity MCP 미연결 시
+
+다음을 사용자에게 요청한다:
+1. Unity 에디터에서 해당 UXML을 UI Builder로 열어 본 스크린샷
+2. Play 모드 진입 후 콘솔 로그
+3. 상호작용이 있다면 실제 클릭/탭 결과 캡처
+
+사용자 확인 없이 완료를 선언하지 않는다.
+
+### 작업 분해 원칙
+
+UI 작업이 다음 중 하나에 해당하면 TaskCreate로 분해하고 서브태스크별 L1+L3 검증 후 completed 마킹:
+- 3개 이상의 UXML 파일 수정
+- 새 화면/컴포넌트 신규 생성
+- 공통 컴포넌트(Components/) 추가/변경
+- 테마/DESIGN.md 색상 팔레트 변경
+
+---
+
 ## 출력 전 체크리스트
 
 ### DESIGN.md 체크
@@ -332,6 +368,15 @@ Assets/UI/
 - display: none으로 비활성 UI 처리
 - 마스크는 직사각형 우선
 - 애니메이션 요소에 DynamicTransform Usage Hint
+```
+
+### 시각 검증 체크 (완료 선언 전 필수)
+```
+- L1: read_console(action="get", types=["error","warning"]) 결과 0건 확인
+- L3: manage_camera(action="screenshot", include_image=true)로 렌더링 확인
+- (상호작용 변경 시) L2: manage_editor(action="play") 후 read_console 재확인 → manage_editor(action="stop")
+- Unity MCP 미연결 시: 사용자에게 스크린샷/콘솔 로그 요청
+- 검증 결과를 대화에 명시 ("screenshot: 정렬 정상 / read_console: 에러 0건" 등)
 ```
 
 ---

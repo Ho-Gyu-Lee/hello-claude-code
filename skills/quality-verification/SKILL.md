@@ -84,6 +84,17 @@ user-invocable: false
 | 빌드 성공 | `npm run build`, `cargo build` |
 | 린트 정상 | `eslint .`, `golangci-lint run` |
 | 타입 체크 | `tsc --noEmit`, `mypy .` |
+| Unity 컴파일 정상 | `read_console(action="get", types=["error","warning"])` (0건) |
+| Unity UI 렌더링 정상 | `manage_camera(action="screenshot", include_image=true)` |
+| Unity UI 상호작용 정상 | `manage_editor(action="play")` → `read_console(...)` → `manage_editor(action="stop")` |
+
+### UI 작업 전용 규칙
+
+UXML/USS/UI 관련 C# 수정 후 "완료" 주장 전 (Unity MCP: CoplayDev/unity-mcp):
+- 코드 체크리스트만 충족해서는 불충분
+- 최소 `read_console` + `manage_camera(action="screenshot")` 결과를 대화에 명시
+- 상호작용 로직 변경 시 `manage_editor(action="play")` + `read_console` 2단계 추가
+- Unity MCP 미연결이면 사용자에게 에디터 확인 결과 요청
 
 ---
 
@@ -97,6 +108,12 @@ user-invocable: false
 [ ] 테스트 실행하고 결과 확인?
 [ ] 빌드 실행하고 결과 확인?
 [ ] 증거와 함께 완료 주장?
+
+UI 작업인 경우 추가 (Unity MCP: CoplayDev/unity-mcp):
+[ ] read_console(action="get", types=["error","warning"]) 결과 0건?
+[ ] manage_camera(action="screenshot", include_image=true)로 렌더링 확인?
+[ ] (상호작용 변경 시) manage_editor(action="play") 후 read_console 재확인?
+[ ] 검증 결과를 대화에 구체적으로 명시?
 ```
 
 코드 리뷰 체크리스트는 review 스킬 참조.
