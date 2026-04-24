@@ -48,7 +48,7 @@
 - `error-response` · `executing-plans` · `quality-verification`
 - `research-context` · `systematic-debugging`
 - `performance-guide` · `sequential-thinking` · `serena-mcp` · `web-search`
-- `ui-toolkit-design`
+- `ui-toolkit-design` · `diagram`
 
 ## MCP 도구 우선순위
 

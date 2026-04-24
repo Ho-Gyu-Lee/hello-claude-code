@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { existsSync } from 'fs';
 import { resolve, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import { execSync } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -13,7 +13,7 @@ if (!existsSync(pkgDir)) {
   execSync('npm install --no-save beautiful-mermaid', { cwd: skillDir, stdio: 'inherit' });
 }
 
-const { renderMermaidASCII } = await import(resolve(pkgDir, 'dist', 'index.js'));
+const { renderMermaidASCII } = await import(pathToFileURL(resolve(pkgDir, 'dist', 'index.js')).href);
 
 const input = process.argv[2];
 
