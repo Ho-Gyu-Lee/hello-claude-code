@@ -28,11 +28,15 @@ copy_tree agents
 copy_tree references
 
 # skills: copy this repo's skills only (do NOT delete other skills in ~/.claude)
+# Use the "/." idiom (same as copy_tree) so contents land in skills/<name>/,
+# not dumped into skills/ root -- a trailing-slash cp on macOS copies contents.
 mkdir -p "$DEST/skills"
 for d in "$REPO"/skills/*/; do
   [ -d "$d" ] || continue
-  cp -R "$d" "$DEST/skills/"
-  echo "copied  skills/$(basename "$d")/"
+  name="$(basename "$d")"
+  mkdir -p "$DEST/skills/$name"
+  cp -R "$d." "$DEST/skills/$name/"
+  echo "copied  skills/$name/"
 done
 
 # hooks: copy Node scripts only
