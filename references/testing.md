@@ -1,4 +1,6 @@
-# 테스트 (Testing)
+# 테스트 (Testing) — 온디맨드 참조
+
+> 항상 로드하지 않는다. 테스트 작성/실행 시 `tdd`·`quality-verification` 스킬이 이 문서를 참조한다.
 
 ## 코드 작성 완료 후
 

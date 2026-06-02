@@ -97,3 +97,8 @@ RED: "빈 문자열" 테스트 작성 중
 - `--integration`: 통합 테스트 포함
 - `--coverage`: 커버리지 목표 설정
 
+## 참조 및 산출물
+
+- 테스트 네이밍 / AAA / 경계값 / 금지 사항 기준: `references/testing.md`.
+- 워크플로우 산출물: `.claude/workflow/<기능>/plan.md`가 있으면 그 작업 단위·검증 기준에 맞춰 RED-GREEN-REFACTOR를 돈다.
+

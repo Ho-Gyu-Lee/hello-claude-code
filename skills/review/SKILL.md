@@ -66,3 +66,9 @@ gh pr diff $PR_NUMBER --name-only
 ```
 
 코드 블록은 필요한 경우에만. 단순 이슈는 설명만으로 충분.
+
+## 워크플로우 산출물 (입출력)
+
+- 입력: `.claude/workflow/<기능>/plan.md`가 있으면 리뷰 기준(요구사항/완료 조건)으로 함께 본다.
+- 독립성: 리뷰는 diff와 기준만 본다 — 변경을 만든 추론 과정에 기대지 않는다 (fresh context). 가능하면 code-reviewer 에이전트에 위임한다.
+- 출력: 주요 발견은 `.claude/workflow/<기능>/review.md`에 남겨 후속 수정이 이어받게 한다.

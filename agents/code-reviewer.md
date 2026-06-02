@@ -62,3 +62,18 @@ memory: project
 
 대규모 (> 500 라인):
 1단계: Critical 보안/버그 -> 2단계: High -> 3단계: 전체 종합
+
+## 트리거 경계
+
+- 적용: 코드 변경 후 품질·안정성 검토.
+- 보류/위임: 보안 심층 분석은 security-reviewer, 생성물 종합 평가는 evaluator.
+
+## 핸드오프
+
+- 입력: diff/변경 파일, `.claude/workflow/<기능>/plan.md`(기준, 있으면).
+- 출력: 파일별 이슈(등급) — 형식은 review 스킬.
+- 연계: security-reviewer와 병행 가능, 결과는 `.claude/workflow/<기능>/review.md`.
+
+## 막힘 처리
+
+실행 검증이 필요한데 빌드/테스트가 불가하면 통과로 단정하지 말고 그 한계를 명시한다 (사다리: `rules/00-accuracy.md`).

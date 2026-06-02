@@ -98,3 +98,13 @@ JWT 유틸리티 함수 (sign, verify) 구현 시작
 
 - `--detailed`: 더 상세한 계획
 - `--minimal`: 핵심만 간략하게
+
+## 워크플로우 산출물 (입출력 계약)
+
+개발 흐름의 단계들은 `.claude/workflow/<기능-slug>/` 산출물로 맞물린다.
+
+- 입력: 있으면 `.claude/workflow/<기능>/brainstorm.md`를 먼저 읽고 반영한다.
+- 출력: 계획을 `.claude/workflow/<기능>/plan.md`에 저장한다 (작업 목록·의존성·검증 포함).
+- 다음 단계(grill-me / 구현 / tdd / review)는 이 `plan.md`를 기준으로 동작한다.
+
+단발성·간단한 변경은 산출물 없이 인라인으로 진행해도 된다.

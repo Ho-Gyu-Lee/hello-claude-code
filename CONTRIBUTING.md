@@ -18,9 +18,9 @@
 ## 기여 가이드라인
 
 ### Rules 추가
-- `rules/` 폴더에 `.md` 파일 추가
-- 파일명 형식: `XX-rule-name.md` (XX = 번호)
-- 명확한 원칙과 예시 포함
+- `rules/` 폴더에 `.md` 파일 추가 (상시 로드됨 — 짧고 broadly-applicable한 것만)
+- 가끔만 필요한 내용은 `references/`에 두고 스킬이 참조하게 한다
+- 파일명 형식: `XX-rule-name.md`
 
 ### Agents 추가
 - `agents/` 폴더에 `.md` 파일 추가
@@ -37,12 +37,9 @@
   |------|------|------|
   | `model` | 모델 지정 | `sonnet`, `opus`, `haiku` |
   | `skills` | 연결할 스킬 | `review`, `tdd` |
-  | `memory` | 메모리 타입 | `project` |
   | `permissionMode` | 권한 모드 | `bypassPermissions`, `plan`, `default` |
   | `maxTurns` | 최대 턴 수 | `10`, `25` |
   | `isolation` | 격리 모드 | `worktree` |
-  | `hooks` | 에이전트별 훅 | `PreToolUse`, `PostToolUse` |
-  | `initialPrompt` | 첫 턴 자동 제출 | 반복 작업 자동화에 유용 |
 
 ### Skills 추가
 - `skills/` 폴더에 새 폴더 및 `SKILL.md` 파일 추가
@@ -50,13 +47,19 @@
   ```yaml
   ---
   name: skill-name
-  description: 설명
+  description: 설명과 트리거 조건
   user-invocable: false  # 선택 (기본 true, 자동 호출용은 false)
   ---
   ```
-- 사용법, 옵션, 예시 포함
 
-> **참고**: 기존 `commands/` 폴더는 skills로 통합되었습니다. 새로운 슬래시 명령어를 추가하려면 `skills/` 폴더에 `SKILL.md`로 작성하세요.
+### Hooks 추가
+- 모든 훅은 `.mjs`(Node)로 작성하고 **stdin의 JSON**을 읽는다 — bash/jq에 의존하지 않는다 (크로스플랫폼).
+- 파싱 실패 시 차단 금지: `try/catch` → `exit 0`.
+- 차단은 `exit 2`(+stderr)만 유효. Write/Edit 차단은 JSON `permissionDecision:"deny"`(exit 0)를 쓴다.
+- Stop 훅은 `stop_hook_active`를 먼저 확인(무한 루프 방지).
+- `hooks/settings.global.json`의 `hooks` 블록에 등록. 명령어에 사용자 입력을 직접 삽입하지 않는다(Command Injection 방지).
+- 반드시 매번 일어나야 하는 것만 훅으로. 가끔 필요한 절차는 스킬로.
+- 상세 가이드: `hooks/README.md`.
 
 ## 커밋 메시지
 
@@ -74,12 +77,6 @@ docs: update README installation guide
 - 한국어 우선 (영문 병기 가능)
 - Markdown 린트 준수
 - 예시 코드는 실행 가능하게
-
-### Hooks 추가
-- `.claude/settings.json`의 `hooks` 섹션에 추가
-- 주요 이벤트: `PreToolUse`, `PostToolUse`, `SessionStart` 등
-- hooks 명령어에 사용자 입력 포함 금지 (Command Injection 방지)
-- 변경사항은 반드시 Git 추적
 
 ### 보안 주의사항
 - 커뮤니티 스킬/플러그인 설치 전 코드 리뷰 필수

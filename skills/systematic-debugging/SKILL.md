@@ -91,4 +91,4 @@ user-invocable: false
 
 ## 관련 문서
 
-- `rules/04-testing.md` - 테스트 원칙 및 체크리스트
+- `references/testing.md` - 테스트 원칙 및 체크리스트

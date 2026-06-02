@@ -2,195 +2,129 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-서버 개발자를 위한 Claude Code 설정 프레임워크.
-C/C++, Go, Rust, C#, Python 지원. Opus 4.6 / Sonnet 4.6 대응.
+서버 개발자를 위한 Claude Code 설정. C/C++, Go, Rust, C#, Python 지원. Opus 4.8 / Sonnet 4.6 대응. macOS / Linux / Windows 동작.
+
+harness 엔지니어링 관점으로 구성한다: feedforward(가이드)는 짧게, feedback(검증·강제)은 실제로 배선한다.
 
 ## 핵심 철학
 
 | 원칙 | 설명 |
 |------|------|
-| **정확성** | 확실한 정보만 답변, 추측은 명시 |
-| **집중** | 요청 범위에 집중, 불필요한 확장 방지 |
-| **코드 기반** | 실제 코드 분석 후 판단 |
-| **간결함** | Over-engineering 금지 |
-| **Context Engineering** | 프롬프트가 아닌 전체 정보 환경을 설계 |
+| 정확성 | 확실한 정보만 답변, 추측은 명시 |
+| 집중 | 요청 범위에 집중, 불필요한 확장 방지 |
+| 코드 기반 | 실제 코드 분석 후 판단 |
+| 간결함 | Over-engineering 금지 |
+| Context Engineering | 상시 로드는 최소화, 나머지는 필요 시 로드 |
+| 결정적 강제 | 반드시 매번 일어나야 하는 것은 산문이 아니라 hooks로 |
 
----
+## 4사분면으로 본 구성
+
+| 사분면 | 구현 |
+|--------|------|
+| 결정적 피드포워드 (가이드) | `CLAUDE.md`, `rules/` |
+| 비결정적 피드포워드 (행동) | `skills/`, `agents/` |
+| 결정적 피드백 (기계적 차단) | `hooks/` (안전·포맷 게이트) |
+| 비결정적 피드백 (LLM 심판) | `evaluator` 에이전트, `/review` |
+
+세션 연속성·메모리는 자체 구현하지 않고 Claude Code 네이티브 메모리(CLAUDE.md, `/memory`, 자동 압축)에 맡긴다.
 
 ## 프로젝트 구조
 
 ```
 hello-claude-code/
-├── rules/           # 7개 규칙 - 항상 적용
-├── agents/          # 8개 에이전트 - 위임 작업용
-├── skills/          # 16개 스킬 - 수동 호출 + 자동 트리거
-├── hooks/           # 컨텍스트 핸드오프 hooks
-└── CLAUDE.md        # 메인 설정 (200줄 이하)
+├── rules/          # 상시 로드 규칙 5개
+├── references/     # 온디맨드 자료 (testing.md 등)
+├── agents/         # 8개 에이전트 — 위임 작업용
+├── skills/         # 15개 스킬 — 수동 호출 + 자동 트리거
+├── hooks/          # Node 기반 게이트 (.mjs) + 배선 스니펫 — 크로스플랫폼
+├── deploy.sh       # ~/.claude 로 배포 (macOS/Linux)
+├── deploy.ps1      # ~/.claude 로 배포 (Windows)
+└── CLAUDE.md       # 글로벌 설정 (짧게 유지)
 ```
-
----
 
 ## 설치
 
+전달 경로는 `~/.claude` 수동 배포로 단일화한다(플러그인 패키징 미사용). settings.json은 스크립트가 건드리지 않으니 직접 병합한다.
+
+macOS / Linux:
 ```bash
 git clone https://github.com/[your-username]/hello-claude-code.git
 cd hello-claude-code
-
-# 원하는 구성 요소만 복사
-cp rules/*.md ~/.claude/rules/
-cp agents/*.md ~/.claude/agents/
-cp -r skills/* ~/.claude/skills/
-cp hooks/*.sh ~/.claude/hooks/
-chmod +x ~/.claude/hooks/*.sh
+chmod +x deploy.sh
+./deploy.sh                  # 복사
+./deploy.sh --remove-stale   # 복사 + 구버전(.sh 훅·이동된 rule·ui 스킬) 정리
 ```
 
-Hooks 설정 (`~/.claude/settings.json`에 추가):
-```bash
-# hooks-config.json의 hooks 섹션을 settings.json에 병합
-# 또는 수동으로 추가 (hooks/hooks-config.json 참조)
+Windows (PowerShell):
+```powershell
+git clone https://github.com/[your-username]/hello-claude-code.git
+cd hello-claude-code
+.\deploy.ps1
+.\deploy.ps1 -RemoveStale
 ```
 
----
+훅 배선(수동): `hooks/settings.global.json`의 `hooks` 블록을 `~/.claude/settings.json`의 `hooks` 키에 병합. 상세는 `hooks/README.md`.
+
+요구사항: `node`(Claude Code와 함께 설치됨). Windows는 훅이 Git Bash로 실행되므로 Git for Windows 권장.
 
 ## 구성 요소
 
-### Rules (7개) — 항상 적용
+### Rules — 상시 로드 (5개)
 
 | 파일 | 용도 |
 |------|------|
-| `00-accuracy.md` | 정확성, 반환각 방지, 응답 전 체크 |
+| `00-accuracy.md` | 정확성, 환각 방지, 응답 전 체크 |
 | `01-response-principles.md` | 앵커링, 범위 제한, 커뮤니케이션 스타일 |
 | `02-security.md` | 보안 즉시 경고, 취약점 체크리스트 |
 | `03-coding-style.md` | 간결성, 네이밍 컨벤션, 서버 특화 |
-| `04-testing.md` | TDD, AAA 패턴, 테스트 체크리스트 |
-| `05-tool-usage.md` | 도구 자율 사용, MCP 우선순위, 서브에이전트 위임 |
-| `06-ui-design.md` | AI 안티패턴 금지, 접근성, 인터랙션 상태 |
+| `04-tool-usage.md` | 도구 자율 사용, MCP 우선순위, 서브에이전트 위임 |
 
-### Agents (8개) — 미션 기반, 자율적 접근 방식 선택
+테스트 기준은 상시 로드에서 빼 `references/testing.md`(온디맨드)로 옮겼다.
 
-각 에이전트는 미션 + 성공 기준 + 실패 패턴 + 도메인 지식 + 제약으로 구성.
+### Agents (8개) — 미션 기반
 
 | 에이전트 | 미션 |
 |----------|------|
 | `planner` | 작업을 실행 가능한 계획으로 변환 |
 | `architect` | 최적의 기술적 결정 도출 |
 | `code-reviewer` | 코드 변경의 품질과 안정성 보장 |
-| `security-reviewer` | 보안 위험 식별 및 완화 방안 제시 |
-| `evaluator` | 생성 결과물의 독립적 품질 평가 (생성-평가 분리) |
+| `security-reviewer` | 보안 위험 식별 및 완화 |
+| `evaluator` | 생성 결과물의 독립 평가 (생성-평가 분리) |
 | `refactorer` | 코드 구조 개선, 기능 보존 |
-| `tdd-guide` | 테스트 주도로 안정적인 코드 생성 |
+| `tdd-guide` | 테스트 주도로 안정적 코드 생성 |
 | `explorer` | 코드베이스 정보 수집 및 정제 |
 
-### Skills (16개) — 수동 호출 + 자동 트리거
+### Skills (15개)
 
-**수동 호출 (6개)**:
+수동 호출 (5개): `/brainstorming` · `/grill-me` · `/plan` · `/review` · `/tdd`
 
-| 스킬 | 용도 |
-|------|------|
-| `/brainstorming` | 구현 전 설계 논의 |
-| `/grill-me` | 설계/계획 스트레스 테스트 |
-| `/plan` | 구현 계획 수립 |
-| `/review` | 코드 리뷰 (단일 진입점 — 파일/staged/commit/PR) |
-| `/tdd` | TDD 방식 개발 |
-| `/ui-toolkit-design` | Unity UI Toolkit 가이드 |
+자동 트리거 (10개): `diagram` · `error-response` · `executing-plans` · `quality-verification` · `research-context` · `performance-guide` · `systematic-debugging` · `sequential-thinking`(MCP) · `serena-mcp`(MCP) · `web-search`(MCP)
 
-**자동 트리거 (10개)**:
+### Hooks — Node 게이트 (크로스플랫폼)
 
-| 스킬 | 트리거 |
-|------|--------|
-| `diagram` | 시각화가 필요한 모든 상황 (beautiful-mermaid ASCII) |
-| `error-response` | 작업 실패, 빌드/테스트 실패 |
-| `executing-plans` | 계획 실행 시 |
-| `quality-verification` | 작업 완료 검증 |
-| `research-context` | 기술 조사/비교 |
-| `performance-guide` | 성능/최적화 관련 질문 |
-| `systematic-debugging` | 에러/버그 발생 |
-| `sequential-thinking` | 복잡한 아키텍처 결정 (MCP) |
-| `serena-mcp` | Serena MCP 연결 시 코드 분석 (MCP) |
-| `web-search` | 웹 검색/최신 정보 (MCP) |
+`hooks/README.md` 참조. `guard-bash`(위험 명령 차단), `guard-files`(시크릿 파일 보호), `post-format`(다언어 포맷터). 모두 순수 Node(stdin JSON)라 macOS/Linux/Windows 동일 동작. 세션·메모리 지속은 훅이 아니라 네이티브 메모리에 맡긴다.
 
----
-
-## 개발 흐름
+## 개발 흐름 (산출물로 연결)
 
 ```
 /brainstorming → /grill-me → /plan → 구현 → /tdd → /review
     설계          검증        계획     코드   테스트   리뷰
 ```
 
----
+각 단계는 `.claude/workflow/<기능>/` 산출물(`brainstorm.md` → `plan.md` → `review.md`)을 읽고 쓰며 맞물린다. 자세한 계약은 각 스킬의 SKILL.md.
 
 ## 커스터마이징
 
-### 규칙 수정
-
-`rules/` 폴더에서 직접 수정.
-
-### 에이전트 추가
-
-`agents/` 폴더에 새 파일 생성:
-
-```yaml
----
-name: my-agent
-description: 에이전트 역할과 위임 시점을 구체적으로 기술
-tools: Read, Grep, Glob
----
-
-# 에이전트 내용
-```
-
-선택 필드:
-
-| 필드 | 설명 | 예시 |
-|------|------|------|
-| `model` | 모델 지정 | `sonnet`, `opus`, `haiku` |
-| `skills` | 연결할 스킬 | `review`, `tdd` |
-| `memory` | 메모리 타입 | `project` |
-| `permissionMode` | 권한 모드 | `bypassPermissions`, `plan`, `default` |
-| `maxTurns` | 최대 턴 수 | `10`, `25` |
-| `isolation` | 격리 모드 | `worktree` |
-| `initialPrompt` | 첫 턴 자동 제출 프롬프트 | 반복 작업 자동화에 유용 |
-
-### 스킬 추가
-
-`skills/[skill-name]/SKILL.md` 생성:
-
-```yaml
----
-name: my-skill
-description: 스킬 설명과 트리거 조건
----
-
-# 스킬 내용
-```
-
-### Hooks 설정
-
-`hooks/` 디렉토리에 컨텍스트 핸드오프 스크립트 포함.
-`hooks/hooks-config.json`의 hooks 섹션을 `~/.claude/settings.json`에 병합하여 사용.
-
-컨텍스트 관리 전략: 압축보다 리셋. 에이전트가 자연스러운 작업 구간에서 `~/.claude/handoff/context.md`에 핸드오프를 작성하고 /clear를 제안.
-
-| Hook | 이벤트 | 역할 |
-|------|--------|------|
-| `pre-compact.sh` | PreCompact | 안전망: 에이전트 핸드오프가 없을 때만 최소 메타데이터 저장 |
-| `post-compact.sh` | PostCompact | 압축 후 작업 맥락 재주입 (CLAUDE.md 규칙은 자동 리로드) |
-| `session-start.sh` | SessionStart (startup/resume/clear) | 리셋/새 세션에서 핸드오프 로드 |
-
-사전 요구: `jq` (JSON 처리)
-
----
+- 규칙: `rules/`에서 직접 수정. 상시 로드가 길어지면 지켜지지 않으니, 가끔 필요한 내용은 `references/`로 내리고 스킬이 참조하게 한다.
+- 에이전트/스킬: 각각 `agents/`, `skills/[name]/SKILL.md` 추가. 프론트매터 형식은 CONTRIBUTING.md.
+- 훅: `hooks/`에 `.mjs` 추가 후 `settings.global.json`에 등록. 반드시 매번 일어나야 하는 것만 훅으로.
 
 ## 주의사항
 
-- **컨텍스트**: MCP 10개 이하 권장
-- **세션 관리**: 작업 간 `/clear`, 70% 사용 시 `/compact`
-- **MCP 조건부**: sequential-thinking, serena-mcp, web-search는 MCP 연결 시에만 활성화
-- **MCP 보안**: 신뢰된 소스의 MCP 서버만 사용. `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1` 설정 권장
-- **Agent Teams**: 실험적 기능. 명확한 작업 분리 시에만 사용 (토큰 비용 주의)
-
----
+- 컨텍스트: MCP 10개 이하 권장. 작업 간 `/clear`. 영속 맥락은 `/memory`/CLAUDE.md.
+- MCP 조건부: sequential-thinking, serena-mcp, web-search는 MCP 연결 시에만 활성화.
+- MCP 보안: 신뢰된 소스의 서버만 사용. 결과에 인젝션 의심 시 즉시 경고.
+- 훅 차단은 exit 2만 유효, Write/Edit 차단은 JSON deny 사용 (상세: `hooks/README.md`).
 
 ## 라이선스
 
