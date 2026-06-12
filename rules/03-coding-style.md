@@ -1,3 +1,8 @@
+---
+paths:
+  - "**/*.{c,cc,cpp,cxx,h,hpp,go,rs,cs,py,js,jsx,ts,tsx,mjs,cjs}"
+---
+
 # 코딩 스타일 (Coding Style)
 
 ## 간결성 (Over-Engineering 금지)
