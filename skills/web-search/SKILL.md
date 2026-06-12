@@ -6,8 +6,22 @@ user-invocable: false
 
 # 웹 검색 가이드
 
-MCP 웹 검색 도구가 연결되어 있으면 우선 사용.
-미연결 시 내장 WebSearch/WebFetch로 폴백.
+## 0단계: 도구 로드 (필수 선행)
+
+MCP 검색 도구는 deferred 상태다 — 호출 전에 ToolSearch로 스키마를 로드한다:
+
+```
+ToolSearch("select:mcp__brave-search__brave_web_search")
+ToolSearch("+brave search")   # 뉴스/로컬 등 다른 도구 탐색 시
+```
+
+## Path A — brave-search MCP 연결 시
+
+`brave_web_search`(일반), `brave_news_search`(뉴스/최신), `brave_local_search`(지역), `brave_summarizer`(요약). freshness 필터는 아래 표.
+
+## Path B — 미연결 시 폴백
+
+ToolSearch 결과가 비어 있으면 내장 WebSearch/WebFetch로 폴백하고 한 문장 고지한다 (freshness 필터 등 일부 기능 제한).
 
 ## 검색 전
 
