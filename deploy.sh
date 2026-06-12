@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Deploy this repo's Claude Code config into ~/.claude (macOS / Linux).
 # Windows: use deploy.ps1 instead.
-# Also merges mcp/servers.json into ~/.claude.json (user-scope MCP servers;
-# only the mcpServers key is touched, .bak written first).
-# Does NOT touch settings.json -- merge hooks/settings.global.json yourself.
+# Also merges mcp/servers.json into ~/.claude.json (user-scope MCP servers)
+# and hooks/settings.global.json (hooks + permissions) into ~/.claude/settings.json.
+# Both are key-scoped union merges: existing entries preserved, .bak written first.
 # Flags:
 #   --remove-stale      delete files obsoleted by the harness redesign
 #   --mcp-from <file>   import mcpServers (incl. secrets) from a .claude.json backup
@@ -64,6 +64,9 @@ else
   node "$REPO/mcp/merge-mcp.mjs" || echo "WARN: MCP merge failed -- ~/.claude.json untouched" >&2
 fi
 
+# settings: merge hooks + read-only permission allowlist into ~/.claude/settings.json
+node "$REPO/scripts/merge-settings.mjs" || echo "WARN: settings merge failed -- ~/.claude/settings.json untouched" >&2
+
 if [ "$REMOVE_STALE" -eq 1 ]; then
   for s in \
     hooks/pre-compact.sh hooks/post-compact.sh hooks/session-start.sh \
@@ -80,9 +83,8 @@ if [ "$REMOVE_STALE" -eq 1 ]; then
 fi
 
 echo ""
-echo "NEXT (manual):"
-echo "  1. Merge hooks/settings.global.json (hooks block) into ~/.claude/settings.json"
+echo "NEXT:"
+echo "  1. Run /hooks in Claude Code to confirm hook registration (settings merge is automatic now)"
 echo "  2. Ensure 'node' is on PATH (Claude Code ships Node)"
-echo "  3. Run /hooks in Claude Code to confirm registration"
-echo "  4. (optional) /plugin marketplace remove ho-gyu-lee/hello-claude-code"
-[ "$REMOVE_STALE" -eq 1 ] || echo "  5. Re-run with --remove-stale to delete obsoleted files"
+echo "  3. Review ~/.claude/settings.json permissions.allow (read-only auto-approve) -- remove entries you don't want"
+[ "$REMOVE_STALE" -eq 1 ] || echo "  4. Re-run with --remove-stale to delete obsoleted files"

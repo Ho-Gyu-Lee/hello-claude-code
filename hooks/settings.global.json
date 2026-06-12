@@ -1,5 +1,25 @@
 {
-  "_comment": "이 hooks 블록을 ~/.claude/settings.json의 hooks 키에 병합한다(파일 통째 교체 아님). 크로스플랫폼: 훅은 macOS/Linux에서 sh -c, Windows에서 Git Bash로 실행되며 'node'가 PATH에 있어야 한다. 배선법: hooks/README.md. 세션/메모리 지속은 훅이 아니라 Claude Code 네이티브 메모리를 쓴다.",
+  "_comment": "이 hooks/permissions 블록을 ~/.claude/settings.json의 같은 키에 병합한다(파일 통째 교체 아님). 크로스플랫폼: 훅은 macOS/Linux에서 sh -c, Windows에서 Git Bash로 실행되며 'node'가 PATH에 있어야 한다. 배선법: hooks/README.md. 세션/메모리 지속은 훅이 아니라 Claude Code 네이티브 메모리를 쓴다.",
+  "_comment_permissions": "읽기 전용 도구 자동 승인 — 로컬 읽기(Read/Glob/Grep) 전체, 검색 계열(WebSearch, brave, context7 — 서버 전체가 읽기 전용), serena는 읽기 도구만 개별 나열(쓰기/셸 도구 제외). WebFetch는 임의 URL 접근이라 제외(프롬프트 유지).",
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "WebSearch",
+      "mcp__brave-search",
+      "mcp__context7",
+      "mcp__oraios_serena__get_symbols_overview",
+      "mcp__oraios_serena__find_symbol",
+      "mcp__oraios_serena__find_referencing_symbols",
+      "mcp__oraios_serena__find_declaration",
+      "mcp__oraios_serena__find_implementations",
+      "mcp__oraios_serena__get_diagnostics_for_file",
+      "mcp__oraios_serena__read_memory",
+      "mcp__oraios_serena__list_memories",
+      "mcp__oraios_serena__initial_instructions"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {

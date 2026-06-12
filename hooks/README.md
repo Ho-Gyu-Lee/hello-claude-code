@@ -50,11 +50,12 @@
 { "env": { "CLAUDE_CS_FORMATTER": "csharpier" } }
 ```
 
-## 배선 (수동)
+## 배선
 
-1. `*.mjs`를 `~/.claude/hooks/`에 복사 — 레포 루트의 `deploy.sh`(macOS/Linux) 또는 `deploy.ps1`(Windows) 사용.
-2. `settings.global.json`의 `hooks` 블록을 `~/.claude/settings.json`의 `hooks` 키에 **병합**한다(파일 통째 교체 아님).
-3. Claude Code에서 `/hooks`로 등록 확인.
+1. 레포 루트의 `deploy.sh`(macOS/Linux) 또는 `deploy.ps1`(Windows) 실행 — `*.mjs` 복사와 `settings.global.json`(hooks + permissions) 병합까지 자동이다. 병합은 `scripts/merge-settings.mjs`가 수행: 키 단위 유니온 머지, 기존 항목 보존, `.bak` 백업, 깨진 타겟이면 중단.
+2. Claude Code에서 `/hooks`로 등록 확인.
+
+수동으로 하려면 `settings.global.json`의 `hooks`/`permissions` 블록을 `~/.claude/settings.json`의 같은 키에 병합한다(파일 통째 교체 아님). `permissions` 블록은 읽기 전용 도구 자동 승인이다 — 항목별 근거는 파일 내 `_comment_permissions` 참조.
 
 ## 크로스플랫폼 실행
 

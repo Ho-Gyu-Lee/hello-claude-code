@@ -38,6 +38,7 @@ hello-claude-code/
 ├── skills/         # 14개 스킬 — 수동 호출 + 자동 트리거
 ├── hooks/          # Node 기반 게이트 (.mjs) + 배선 스니펫 — 크로스플랫폼
 ├── mcp/            # 글로벌 MCP 서버 정의 + ~/.claude.json 머지 스크립트
+├── scripts/        # 배포 보조 — settings.json 머지 (레포 전용, 배포 안 함)
 ├── deploy.sh       # ~/.claude 로 배포 (macOS/Linux)
 ├── deploy.ps1      # ~/.claude 로 배포 (Windows)
 └── CLAUDE.md       # 글로벌 설정 (짧게 유지)
@@ -45,7 +46,7 @@ hello-claude-code/
 
 ## 설치
 
-전달 경로는 `~/.claude` 수동 배포로 단일화한다(플러그인 패키징 미사용). settings.json은 스크립트가 건드리지 않으니 직접 병합한다.
+전달 경로는 `~/.claude` 수동 배포로 단일화한다(플러그인 패키징 미사용).
 
 macOS / Linux:
 ```bash
@@ -66,9 +67,10 @@ cd hello-claude-code
 .\deploy.ps1 -McpFrom "$env:USERPROFILE\Desktop\.claude.json"
 ```
 
-MCP 서버(`mcp/servers.json`)는 배포 시 `~/.claude.json`의 `mcpServers` 키에 자동 머지된다(user scope = 전 프로젝트). 다른 키는 보존하고 쓰기 전 `.bak`을 남긴다. 레포에는 시크릿을 두지 않으므로 — API 키는 기존 설치값을 보존하거나 `--mcp-from`/`-McpFrom`으로 백업에서 가져온다. Windows에서는 stdio 명령에 `cmd /c` 래퍼를 머지 시점에 자동 적용한다.
+배포는 파일 복사 외에 두 가지를 자동 머지한다. 둘 다 키 단위 유니온 머지 — 기존 항목 보존, 쓰기 전 `.bak`, 타겟이 깨진 JSON이면 중단:
 
-훅 배선(수동): `hooks/settings.global.json`의 `hooks` 블록을 `~/.claude/settings.json`의 `hooks` 키에 병합. 상세는 `hooks/README.md`.
+- **MCP 서버** (`mcp/servers.json` → `~/.claude.json`의 `mcpServers`, user scope = 전 프로젝트). 레포에는 시크릿을 두지 않으므로 API 키는 기존 설치값을 보존하거나 `--mcp-from`/`-McpFrom`으로 백업에서 가져온다. Windows에서는 stdio 명령에 `cmd /c` 래퍼를 머지 시점에 자동 적용한다.
+- **settings** (`hooks/settings.global.json` → `~/.claude/settings.json`의 `hooks` + `permissions`). 훅 배선과 읽기 전용 도구 자동 승인(Read/Glob/Grep 전체, 검색 계열 MCP, serena 읽기 도구)이 포함된다 — 원치 않는 allow 항목은 배포 후 제거하면 재추가되지 않도록 `settings.global.json`에서도 빼면 된다. 상세는 `hooks/README.md`.
 
 요구사항: `node`(Claude Code와 함께 설치됨). Windows는 훅이 Git Bash로 실행되므로 Git for Windows 권장.
 

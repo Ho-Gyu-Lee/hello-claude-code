@@ -5,9 +5,9 @@
 .DESCRIPTION
   Copies rules / agents / skills / references / hooks(*.mjs) / CLAUDE.md into
   $env:USERPROFILE\.claude, then merges mcp/servers.json into ~/.claude.json
-  (user-scope MCP servers; only the mcpServers key is touched, .bak written).
-  Does NOT touch settings.json -- merge hooks/settings.global.json into
-  ~/.claude/settings.json yourself.
+  (user-scope MCP servers) and hooks/settings.global.json (hooks + permissions)
+  into ~/.claude/settings.json. Both merges are key-scoped union merges:
+  existing entries preserved, .bak written first, abort on invalid target JSON.
   Use -McpFrom <file> to import mcpServers (incl. secrets) from a .claude.json backup.
   Use -RemoveStale to also delete files obsoleted by the harness redesign.
   (ASCII-only on purpose: Windows PowerShell 5.1 misreads BOM-less UTF-8.)
@@ -62,6 +62,10 @@ $mcpScript = Join-Path $repo "mcp\merge-mcp.mjs"
 if ($McpFrom) { node $mcpScript --from $McpFrom } else { node $mcpScript }
 if ($LASTEXITCODE -ne 0) { Write-Warning "MCP merge failed (exit $LASTEXITCODE) -- ~/.claude.json untouched" }
 
+# settings: merge hooks + read-only permission allowlist into ~/.claude/settings.json
+node (Join-Path $repo "scripts\merge-settings.mjs")
+if ($LASTEXITCODE -ne 0) { Write-Warning "settings merge failed (exit $LASTEXITCODE) -- ~/.claude/settings.json untouched" }
+
 if ($RemoveStale) {
   $stale = @(
     "hooks\pre-compact.sh", "hooks\post-compact.sh", "hooks\session-start.sh",
@@ -80,11 +84,10 @@ if ($RemoveStale) {
 }
 
 Write-Host ""
-Write-Host "NEXT (manual):"
-Write-Host "  1. Merge hooks/settings.global.json (hooks block) into ~/.claude/settings.json"
+Write-Host "NEXT:"
+Write-Host "  1. Run /hooks in Claude Code to confirm hook registration (settings merge is automatic now)"
 Write-Host "  2. Ensure 'node' is available (Windows runs command hooks via Git Bash)"
-Write-Host "  3. Run /hooks in Claude Code to confirm registration"
-Write-Host "  4. (optional) /plugin marketplace remove ho-gyu-lee/hello-claude-code"
+Write-Host "  3. Review ~/.claude/settings.json permissions.allow (read-only auto-approve) -- remove entries you don't want"
 if (-not $RemoveStale) {
-  Write-Host "  5. Re-run with -RemoveStale to delete obsoleted files (.sh hooks, moved rules, ui-toolkit-design)"
+  Write-Host "  4. Re-run with -RemoveStale to delete obsoleted files (.sh hooks, moved rules, stale skills)"
 }
