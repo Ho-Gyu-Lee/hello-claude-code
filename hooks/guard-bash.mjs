@@ -1,7 +1,10 @@
 #!/usr/bin/env node
-// PreToolUse(Bash) safety gate — blocks destructive shell commands.
+// PreToolUse(Bash|PowerShell) safety gate — blocks destructive shell commands.
+// Covers bash/POSIX patterns and PowerShell/cmd equivalents (Remove-Item
+// -Recurse -Force, rd /s, Format-Volume ...) — Windows sessions route many
+// commands through the PowerShell tool, which bypassed the Bash-only matcher.
 // Cross-platform: pure Node, reads JSON from stdin (no bash/jq dependency).
-// Blocking mechanism: exit 2 + stderr, which reliably denies the Bash tool.
+// Blocking mechanism: exit 2 + stderr, which reliably denies the tool call.
 import { readFileSync } from "node:fs";
 
 let input;
@@ -30,6 +33,12 @@ const DANGER = [
   { re: /:\(\)\s*\{\s*:\s*\|\s*:\s*&\s*\}\s*;\s*:/, why: "fork bomb" },
   { re: /\bcurl\b[^\n]*\|\s*(sudo\s+)?(ba)?sh\b/i, why: "curl | sh (pipes remote code into a shell)" },
   { re: /\bwget\b[^\n]*\|\s*(sudo\s+)?(ba)?sh\b/i, why: "wget | sh (pipes remote code into a shell)" },
+  // PowerShell / cmd equivalents
+  { re: /\bRemove-Item\b[^\n]*(-Recurse\b[^\n]*-Force|-Force\b[^\n]*-Recurse)/i, why: "Remove-Item -Recurse -Force (recursive force delete)" },
+  { re: /\b(rd|rmdir)\b[^\n]*\/s\b/i, why: "rd /s (recursive directory delete)" },
+  { re: /\bdel\b[^\n]*\/[fq]\b[^\n]*\/s\b|\bdel\b[^\n]*\/s\b[^\n]*\/[fq]\b/i, why: "del /s with /f or /q (recursive force delete)" },
+  { re: /\b(Format-Volume|Format-Disk|Clear-Disk|Initialize-Disk)\b/i, why: "disk format/clear (destroys volume data)" },
+  { re: /\biex\b[^\n]*\b(iwr|Invoke-WebRequest|irm|Invoke-RestMethod)\b|\b(iwr|Invoke-WebRequest|irm|Invoke-RestMethod)\b[^\n]*\|\s*iex\b/i, why: "iex + web download (pipes remote code into PowerShell)" },
 ];
 
 const hit = DANGER.find((d) => d.re.test(cmd));

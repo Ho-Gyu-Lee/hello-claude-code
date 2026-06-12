@@ -15,7 +15,7 @@
 
 | 파일 | 이벤트 | 역할 | 차단 방식 |
 |------|--------|------|-----------|
-| `guard-bash.mjs` | PreToolUse(Bash) | rm -rf, push --force, DROP/TRUNCATE, fork bomb, `curl\|sh` 등 차단 | `exit 2` + stderr (Bash에 확실) |
+| `guard-bash.mjs` | PreToolUse(Bash\|PowerShell) | rm -rf, push --force, DROP/TRUNCATE, fork bomb, `curl\|sh` + PowerShell 등가물(`Remove-Item -Recurse -Force`, `rd /s`, `Format-Volume`, `iwr\|iex`) 차단 | `exit 2` + stderr |
 | `guard-files.mjs` | PreToolUse(Edit\|Write\|MultiEdit) | `.env`·credentials·`.pem`·`.ssh` 등 시크릿 파일 쓰기 차단 | JSON `permissionDecision:"deny"` (Write/Edit는 exit 2가 불안정) |
 | `post-format.mjs` | PostToolUse(Edit\|Write\|MultiEdit) | 프로젝트 타입 감지 후 해당 포맷터 실행 | 무음(성공) / 알림(실패) / 차단 안 함 |
 | `suggest-skills.mjs` | UserPromptSubmit | 프롬프트 키워드 매칭 → 자동 트리거 스킬 제안을 `additionalContext`로 주입 (description 매칭의 비결정성 보강) | 비차단(advisory), 비매칭 시 무음 |
