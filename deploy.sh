@@ -72,9 +72,11 @@ if [ "$REMOVE_STALE" -eq 1 ]; then
     rules/04-testing.md rules/06-ui-design.md rules/05-tool-usage.md; do
     if [ -e "$DEST/$s" ]; then rm -f "$DEST/$s"; echo "removed ~/.claude/$s"; fi
   done
-  if [ -d "$DEST/skills/ui-toolkit-design" ]; then
-    rm -rf "$DEST/skills/ui-toolkit-design"; echo "removed ~/.claude/skills/ui-toolkit-design/"
-  fi
+  for sk in ui-toolkit-design sequential-thinking; do
+    if [ -d "$DEST/skills/$sk" ]; then
+      rm -rf "$DEST/skills/$sk"; echo "removed ~/.claude/skills/$sk/"
+    fi
+  done
 fi
 
 echo ""

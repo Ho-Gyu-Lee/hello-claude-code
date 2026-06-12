@@ -73,8 +73,10 @@ if ($RemoveStale) {
     $p = Join-Path $dest $s
     if (Test-Path $p) { Remove-Item $p -Force; Write-Host "removed ~/.claude/$s" }
   }
-  $uiSkill = Join-Path $dest "skills\ui-toolkit-design"
-  if (Test-Path $uiSkill) { Remove-Item $uiSkill -Recurse -Force; Write-Host "removed ~/.claude/skills/ui-toolkit-design/" }
+  foreach ($sk in @("ui-toolkit-design", "sequential-thinking")) {
+    $p = Join-Path $dest "skills\$sk"
+    if (Test-Path $p) { Remove-Item $p -Recurse -Force; Write-Host "removed ~/.claude/skills/$sk/" }
+  }
 }
 
 Write-Host ""

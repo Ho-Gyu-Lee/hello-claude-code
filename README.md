@@ -35,8 +35,9 @@ hello-claude-code/
 ├── rules/          # 상시 로드 규칙 5개
 ├── references/     # 온디맨드 자료 (testing.md 등)
 ├── agents/         # 8개 에이전트 — 위임 작업용
-├── skills/         # 15개 스킬 — 수동 호출 + 자동 트리거
+├── skills/         # 14개 스킬 — 수동 호출 + 자동 트리거
 ├── hooks/          # Node 기반 게이트 (.mjs) + 배선 스니펫 — 크로스플랫폼
+├── mcp/            # 글로벌 MCP 서버 정의 + ~/.claude.json 머지 스크립트
 ├── deploy.sh       # ~/.claude 로 배포 (macOS/Linux)
 ├── deploy.ps1      # ~/.claude 로 배포 (Windows)
 └── CLAUDE.md       # 글로벌 설정 (짧게 유지)
@@ -51,8 +52,9 @@ macOS / Linux:
 git clone https://github.com/[your-username]/hello-claude-code.git
 cd hello-claude-code
 chmod +x deploy.sh
-./deploy.sh                  # 복사
-./deploy.sh --remove-stale   # 복사 + 구버전(.sh 훅·이동된 rule·ui 스킬) 정리
+./deploy.sh                              # 복사 + MCP 서버 머지
+./deploy.sh --remove-stale               # 복사 + 구버전(.sh 훅·이동된 rule·ui 스킬) 정리
+./deploy.sh --mcp-from ~/backup.claude.json   # MCP를 백업 파일에서 임포트 (시크릿 포함)
 ```
 
 Windows (PowerShell):
@@ -61,7 +63,10 @@ git clone https://github.com/[your-username]/hello-claude-code.git
 cd hello-claude-code
 .\deploy.ps1
 .\deploy.ps1 -RemoveStale
+.\deploy.ps1 -McpFrom "$env:USERPROFILE\Desktop\.claude.json"
 ```
+
+MCP 서버(`mcp/servers.json`)는 배포 시 `~/.claude.json`의 `mcpServers` 키에 자동 머지된다(user scope = 전 프로젝트). 다른 키는 보존하고 쓰기 전 `.bak`을 남긴다. 레포에는 시크릿을 두지 않으므로 — API 키는 기존 설치값을 보존하거나 `--mcp-from`/`-McpFrom`으로 백업에서 가져온다. Windows에서는 stdio 명령에 `cmd /c` 래퍼를 머지 시점에 자동 적용한다.
 
 훅 배선(수동): `hooks/settings.global.json`의 `hooks` 블록을 `~/.claude/settings.json`의 `hooks` 키에 병합. 상세는 `hooks/README.md`.
 
@@ -94,15 +99,19 @@ cd hello-claude-code
 | `tdd-guide` | 테스트 주도로 안정적 코드 생성 |
 | `explorer` | 코드베이스 정보 수집 및 정제 |
 
-### Skills (15개)
+### Skills (14개)
 
 수동 호출 (5개): `/brainstorming` · `/grill-me` · `/plan` · `/review` · `/tdd`
 
-자동 트리거 (10개): `diagram` · `error-response` · `executing-plans` · `quality-verification` · `research-context` · `performance-guide` · `systematic-debugging` · `sequential-thinking`(MCP) · `serena-mcp`(MCP) · `web-search`(MCP)
+자동 트리거 (9개): `diagram` · `error-response` · `executing-plans` · `quality-verification` · `research-context` · `performance-guide` · `systematic-debugging` · `serena-mcp`(MCP) · `web-search`(MCP)
 
 ### Hooks — Node 게이트 (크로스플랫폼)
 
 `hooks/README.md` 참조. `guard-bash`(위험 명령 차단), `guard-files`(시크릿 파일 보호), `post-format`(다언어 포맷터). 모두 순수 Node(stdin JSON)라 macOS/Linux/Windows 동일 동작. 세션·메모리 지속은 훅이 아니라 네이티브 메모리에 맡긴다.
+
+### MCP 서버 (글로벌, 3개)
+
+`mcp/servers.json`에 플랫폼 중립형으로 정의 — `brave-search` · `context7` · `oraios/serena`. 배포 시 `mcp/merge-mcp.mjs`가 `~/.claude.json`에 머지한다(위 설치 절 참조). 서버 추가는 `servers.json`에 중립형(`npx`/`uvx` 직접 호출)으로 적으면 된다 — OS별 래핑은 머지가 처리한다. sequentialthinking은 네이티브 extended thinking과 중복이라 제외했다(분기당 1회 사용 실측).
 
 ## 개발 흐름 (산출물로 연결)
 
@@ -122,7 +131,7 @@ cd hello-claude-code
 ## 주의사항
 
 - 컨텍스트: MCP 10개 이하 권장. 작업 간 `/clear`. 영속 맥락은 `/memory`/CLAUDE.md.
-- MCP 조건부: sequential-thinking, serena-mcp, web-search는 MCP 연결 시에만 활성화.
+- MCP 조건부: serena-mcp, web-search는 MCP 연결 시에만 활성화.
 - MCP 보안: 신뢰된 소스의 서버만 사용. 결과에 인젝션 의심 시 즉시 경고.
 - 훅 차단은 exit 2만 유효, Write/Edit 차단은 JSON deny 사용 (상세: `hooks/README.md`).
 
