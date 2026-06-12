@@ -32,22 +32,22 @@ user-invocable: false
 ## 예시
 
 ```markdown
-[실패] 빌드 실패: TypeScript 컴파일 에러
+[실패] 빌드 실패: 컴파일 에러
 
 원인:
-- `src/api/user.ts:45` 타입 불일치
-- `User` 타입에 `email` 속성이 없음
+- `Server/Session/UserSession.cs:45` 타입 불일치
+- `User` 클래스에 `Email` 속성이 없음
 
 시도한 대안:
-1. 타입 정의 확인 → `types/user.ts`에 정의 없음
-2. 관련 인터페이스 검색 → `IUser`에는 `email` 존재
+1. 타입 정의 확인 → `Models/User.cs`에 정의 없음
+2. 관련 인터페이스 검색 → `IUser`에는 `Email` 존재
 
 다음 단계:
-[ ] 옵션 1: `User` 타입에 `email` 속성 추가
-[ ] 옵션 2: `IUser` 타입으로 변경
+[ ] 옵션 1: `User` 클래스에 `Email` 속성 추가
+[ ] 옵션 2: `IUser` 인터페이스 기준으로 변경
 
 추가 정보 필요:
-- `User`와 `IUser` 중 어떤 것을 사용해야 하나요?
+- `User`와 `IUser` 중 어떤 것을 기준으로 해야 하나요?
 ```
 
 ## 원칙

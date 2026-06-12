@@ -35,10 +35,12 @@ REFACTOR: 코드 개선 (테스트 유지)
 
 ## 프로세스
 
+아래 예시는 의사코드다 — 실제 작성은 프로젝트 언어와 테스트 프레임워크 관용구를 따른다 (gtest/Catch2, go test, cargo test, xUnit/NUnit, pytest 등).
+
 ### 1단계: 인터페이스 정의
-```typescript
-// 함수 시그니처 먼저 정의
-function validateEmail(email: string): ValidationResult
+```
+// 함수 시그니처 먼저 정의 (프로젝트 언어로)
+ValidateEmail(email: string) -> ValidationResult { valid, error }
 ```
 
 ### 2단계: 테스트 케이스 도출
@@ -47,25 +49,22 @@ function validateEmail(email: string): ValidationResult
 - 경계값 (empty string, very long email)
 
 ### 3단계: RED - 첫 테스트 작성
-```typescript
-test('valid email returns success', () => {
-  expect(validateEmail('user@example.com').valid).toBe(true);
-});
+```
+test "valid email returns success":
+    result = ValidateEmail("user@example.com")
+    assert result.valid == true
 ```
 
 ### 4단계: GREEN - 최소 구현
-```typescript
-function validateEmail(email: string): ValidationResult {
-  return { valid: email.includes('@') };
-}
+```
+ValidateEmail(email):
+    return { valid: email contains "@" }
 ```
 
 ### 5단계: REFACTOR - 개선
-```typescript
-function validateEmail(email: string): ValidationResult {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return { valid: emailRegex.test(email) };
-}
+```
+ValidateEmail(email):
+    return { valid: EMAIL_REGEX matches email }
 ```
 
 ## 출력 예시
@@ -74,9 +73,7 @@ function validateEmail(email: string): ValidationResult {
 ## TDD 세션: 이메일 검증
 
 ### 인터페이스
-```typescript
-function validateEmail(email: string): { valid: boolean; error?: string }
-```
+ValidateEmail(email: string) -> { valid: bool, error?: string }
 
 ### 테스트 케이스
 - [x] 정상 이메일 → valid: true

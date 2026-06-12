@@ -78,12 +78,14 @@ user-invocable: false
 
 ### 주장별 검증 명령어
 
+프로젝트에 정의된 명령(Makefile, CMake 프리셋, 스크립트)이 있으면 그것이 우선. 아래는 언어별 기본값:
+
 | 주장 | 검증 명령어 |
 |------|------------|
-| 테스트 통과 | `npm test`, `pytest`, `go test`, `cargo test` |
-| 빌드 성공 | `npm run build`, `cargo build`, `go build`, `dotnet build` |
-| 린트 정상 | `eslint .`, `golangci-lint run`, `clippy` |
-| 타입 체크 | `tsc --noEmit`, `mypy .` |
+| 테스트 통과 | `ctest`, `go test ./...`, `cargo test`, `dotnet test`, `pytest`, `npm test` |
+| 빌드 성공 | `cmake --build`, `go build ./...`, `cargo build`, `dotnet build`, `npm run build` |
+| 린트 정상 | `clang-tidy`, `golangci-lint run`, `cargo clippy`, `dotnet format --verify-no-changes`, `ruff check`, `eslint .` |
+| 타입 체크 | `mypy .`, `tsc --noEmit` (동적 타입 언어만 해당) |
 
 ---
 

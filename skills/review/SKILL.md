@@ -82,8 +82,8 @@ gh pr diff $PR_NUMBER --name-only
 
 ```
 ## Verification Steps
-1. `npm test` — 전체 통과 확인
-2. `npm run build` — 빌드 성공 확인
+1. <프로젝트 테스트 명령> — 전체 통과 확인 (예: ctest, go test ./..., cargo test, dotnet test, pytest)
+2. <프로젝트 빌드 명령> — 빌드 성공 확인
 3. [발견별 재현 명령 또는 확인 경로]
 ```
 
