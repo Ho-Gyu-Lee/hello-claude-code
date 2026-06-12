@@ -20,7 +20,7 @@ import { tmpdir } from "node:os";
 
 let input;
 try {
-  input = JSON.parse(readFileSync(0, "utf-8"));
+  input = JSON.parse(readFileSync(0, "utf-8").replace(/^﻿/, "")); // strip UTF-8 BOM
 } catch {
   process.exit(0);
 }

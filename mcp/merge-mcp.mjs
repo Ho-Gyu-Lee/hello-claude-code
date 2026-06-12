@@ -28,17 +28,19 @@ const fromPath = opt('--from');
 const target = opt('--target') ?? path.join(os.homedir(), '.claude.json');
 
 const fail = (msg) => { console.error(`merge-mcp: ${msg}`); process.exit(1); };
+// strip UTF-8 BOM -- Windows editors (Notepad, PowerShell 5.1) add one and JSON.parse rejects it
+const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8').replace(/^﻿/, ''));
 
 const srcPath = fromPath ?? path.join(HERE, 'servers.json');
 if (!fs.existsSync(srcPath)) fail(`source not found: ${srcPath}`);
 let incoming;
-try { incoming = JSON.parse(fs.readFileSync(srcPath, 'utf8')).mcpServers; }
+try { incoming = readJson(srcPath).mcpServers; }
 catch (e) { fail(`cannot parse ${srcPath}: ${e.message}`); }
 if (!incoming || !Object.keys(incoming).length) fail(`no mcpServers in ${srcPath}`);
 
 let live = {};
 if (fs.existsSync(target)) {
-  try { live = JSON.parse(fs.readFileSync(target, 'utf8')); }
+  try { live = readJson(target); }
   catch (e) { fail(`target is not valid JSON, aborting without write: ${target} (${e.message})`); }
 }
 const installed = live.mcpServers ?? {};

@@ -6,7 +6,9 @@ import { readFileSync } from "node:fs";
 
 let input;
 try {
-  input = JSON.parse(readFileSync(0, "utf-8")); // fd 0 = stdin
+  // fd 0 = stdin; strip UTF-8 BOM — a BOM-prefixed payload would otherwise
+  // silently disarm this gate via the fail-open catch below
+  input = JSON.parse(readFileSync(0, "utf-8").replace(/^﻿/, ""));
 } catch {
   process.exit(0); // never block on our own parse failure
 }
