@@ -109,7 +109,7 @@ cd hello-claude-code
 
 ### Hooks — Node 게이트 (크로스플랫폼)
 
-`hooks/README.md` 참조. `guard-bash`(위험 명령 차단), `guard-files`(시크릿 파일 보호), `post-format`(다언어 포맷터). 모두 순수 Node(stdin JSON)라 macOS/Linux/Windows 동일 동작. 세션·메모리 지속은 훅이 아니라 네이티브 메모리에 맡긴다.
+`hooks/README.md` 참조. `guard-bash`(위험 명령 차단), `guard-files`(시크릿 파일 보호), `post-format`(다언어 포맷터), `suggest-skills`(프롬프트 키워드 기반 스킬 제안 — 자동 트리거의 결정화, advisory). 모두 순수 Node(stdin JSON)라 macOS/Linux/Windows 동일 동작. 세션·메모리 지속은 훅이 아니라 네이티브 메모리에 맡긴다.
 
 ### MCP 서버 (글로벌, 3개)
 

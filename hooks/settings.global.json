@@ -21,6 +21,11 @@
     ]
   },
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [{ "type": "command", "command": "node ~/.claude/hooks/suggest-skills.mjs", "timeout": 5 }]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Bash",
