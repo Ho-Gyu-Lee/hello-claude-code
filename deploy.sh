@@ -1,14 +1,26 @@
 #!/usr/bin/env bash
 # Deploy this repo's Claude Code config into ~/.claude (macOS / Linux).
 # Windows: use deploy.ps1 instead.
+# Also merges mcp/servers.json into ~/.claude.json (user-scope MCP servers;
+# only the mcpServers key is touched, .bak written first).
 # Does NOT touch settings.json -- merge hooks/settings.global.json yourself.
-# Pass --remove-stale to also delete files obsoleted by the harness redesign.
+# Flags:
+#   --remove-stale      delete files obsoleted by the harness redesign
+#   --mcp-from <file>   import mcpServers (incl. secrets) from a .claude.json backup
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEST="$HOME/.claude"
 REMOVE_STALE=0
-[ "${1:-}" = "--remove-stale" ] && REMOVE_STALE=1
+MCP_FROM=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --remove-stale) REMOVE_STALE=1 ;;
+    --mcp-from) MCP_FROM="${2:-}"; shift ;;
+    *) echo "unknown arg: $1" >&2; exit 1 ;;
+  esac
+  shift
+done
 
 mkdir -p "$DEST"
 
@@ -26,6 +38,7 @@ echo "copied  CLAUDE.md -> ~/.claude/CLAUDE.md"
 copy_tree rules
 copy_tree agents
 copy_tree references
+copy_tree mcp
 
 # skills: copy this repo's skills only (do NOT delete other skills in ~/.claude)
 # Use the "/." idiom (same as copy_tree) so contents land in skills/<name>/,
@@ -43,6 +56,13 @@ done
 mkdir -p "$DEST/hooks"
 cp "$REPO"/hooks/*.mjs "$DEST/hooks/"
 echo "copied  hooks/*.mjs -> ~/.claude/hooks/"
+
+# mcp: merge user-scope MCP servers into ~/.claude.json (Node script, .bak written)
+if [ -n "$MCP_FROM" ]; then
+  node "$REPO/mcp/merge-mcp.mjs" --from "$MCP_FROM" || echo "WARN: MCP merge failed -- ~/.claude.json untouched" >&2
+else
+  node "$REPO/mcp/merge-mcp.mjs" || echo "WARN: MCP merge failed -- ~/.claude.json untouched" >&2
+fi
 
 if [ "$REMOVE_STALE" -eq 1 ]; then
   for s in \

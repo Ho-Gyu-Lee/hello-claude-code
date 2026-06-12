@@ -4,16 +4,20 @@
   Deploy this repo's Claude Code config into ~/.claude (manual, single-track).
 .DESCRIPTION
   Copies rules / agents / skills / references / hooks(*.mjs) / CLAUDE.md into
-  $env:USERPROFILE\.claude. Does NOT touch settings.json -- merge
-  hooks/settings.global.json into ~/.claude/settings.json yourself.
+  $env:USERPROFILE\.claude, then merges mcp/servers.json into ~/.claude.json
+  (user-scope MCP servers; only the mcpServers key is touched, .bak written).
+  Does NOT touch settings.json -- merge hooks/settings.global.json into
+  ~/.claude/settings.json yourself.
+  Use -McpFrom <file> to import mcpServers (incl. secrets) from a .claude.json backup.
   Use -RemoveStale to also delete files obsoleted by the harness redesign.
   (ASCII-only on purpose: Windows PowerShell 5.1 misreads BOM-less UTF-8.)
 .EXAMPLE
   .\deploy.ps1
   .\deploy.ps1 -RemoveStale
+  .\deploy.ps1 -McpFrom "$env:USERPROFILE\Desktop\.claude.json"
 #>
 [CmdletBinding()]
-param([switch]$RemoveStale)
+param([switch]$RemoveStale, [string]$McpFrom)
 
 $ErrorActionPreference = "Stop"
 $repo = $PSScriptRoot
@@ -36,6 +40,7 @@ Write-Host "copied  CLAUDE.md -> ~/.claude/CLAUDE.md"
 Copy-Tree "rules"
 Copy-Tree "agents"
 Copy-Tree "references"
+Copy-Tree "mcp"
 
 # skills: copy this repo's skills only (do NOT delete other skills in ~/.claude)
 $skillsSrc = Join-Path $repo "skills"
@@ -51,6 +56,11 @@ $hooksDst = Join-Path $dest "hooks"
 New-Item -ItemType Directory -Force -Path $hooksDst | Out-Null
 Copy-Item (Join-Path $repo "hooks\*.mjs") -Destination $hooksDst -Force
 Write-Host "copied  hooks/*.mjs -> ~/.claude/hooks/"
+
+# mcp: merge user-scope MCP servers into ~/.claude.json (Node script, .bak written)
+$mcpScript = Join-Path $repo "mcp\merge-mcp.mjs"
+if ($McpFrom) { node $mcpScript --from $McpFrom } else { node $mcpScript }
+if ($LASTEXITCODE -ne 0) { Write-Warning "MCP merge failed (exit $LASTEXITCODE) -- ~/.claude.json untouched" }
 
 if ($RemoveStale) {
   $stale = @(
