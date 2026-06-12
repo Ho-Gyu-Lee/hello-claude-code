@@ -38,3 +38,6 @@ coverage/
 .claude/
 .serena/
 codex/
+
+# Local working docs (not for publishing)
+docs/
