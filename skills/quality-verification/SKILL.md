@@ -101,3 +101,4 @@ user-invocable: false
 
 테스트 작성 기준(네이밍/AAA/경계값/금지 사항)은 `references/testing.md` 참조.
 코드 리뷰 체크리스트는 review 스킬 참조.
+리뷰 맥락의 검증 순서는 review 스킬의 **평가 사다리**(기계적 $0 → 의미적 → 다중 관점 조건부)를 따른다 — 여기 Part 3의 검증 명령어가 Stage 1에 해당한다.
