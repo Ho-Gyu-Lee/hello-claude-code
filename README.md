@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-서버 개발자를 위한 Claude Code 설정. C/C++, Go, Rust, C#, Python 지원. Opus 4.8 / Sonnet 4.6 대응. macOS / Linux / Windows 동작.
+서버 개발자를 위한 Claude Code 설정. C/C++, Go, Rust, C#, Python 지원. 최신 Claude 모델 대응. macOS / Linux / Windows 동작.
 
 harness 엔지니어링 관점으로 구성한다: feedforward(가이드)는 짧게, feedback(검증·강제)은 실제로 배선한다.
 
@@ -50,7 +50,7 @@ hello-claude-code/
 
 macOS / Linux:
 ```bash
-git clone https://github.com/[your-username]/hello-claude-code.git
+git clone https://github.com/Ho-Gyu-Lee/hello-claude-code.git
 cd hello-claude-code
 chmod +x deploy.sh
 ./deploy.sh                              # 복사 + MCP 서버 머지
@@ -60,7 +60,7 @@ chmod +x deploy.sh
 
 Windows (PowerShell):
 ```powershell
-git clone https://github.com/[your-username]/hello-claude-code.git
+git clone https://github.com/Ho-Gyu-Lee/hello-claude-code.git
 cd hello-claude-code
 .\deploy.ps1
 .\deploy.ps1 -RemoveStale
