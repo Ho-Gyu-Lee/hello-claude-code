@@ -17,10 +17,10 @@
 
 ## 기여 가이드라인
 
-### Rules 추가
-- `rules/` 폴더에 `.md` 파일 추가 (상시 로드됨 — 짧고 broadly-applicable한 것만)
-- 가끔만 필요한 내용은 `references/`에 두고 스킬이 참조하게 한다
-- 파일명 형식: `XX-rule-name.md`
+### Rules 추가/수정
+- 규칙은 `CLAUDE.md`(정본)의 "규칙" 섹션에 직접 추가/수정한다 — 별도 `rules/` 디렉토리는 없다.
+- `AGENTS.md`(Codex)는 deploy가 `CLAUDE.md`에서 동기화하므로 직접 수정하지 않는다.
+- 상시 로드되니 짧고 broadly-applicable한 것만. 가끔만 필요한 내용은 `references/`에 두고 스킬이 참조하게 한다.
 
 ### Agents 추가
 - `agents/` 폴더에 `.md` 파일 추가

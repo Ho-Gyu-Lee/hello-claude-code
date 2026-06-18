@@ -66,4 +66,4 @@ tools: Read, Grep, Glob, Bash, Edit
 
 ## 막힘 처리
 
-테스트가 없어 동작 보존을 보장할 수 없으면 진행 전에 사용자에게 알리거나 tdd-guide에 선작성을 요청한다 (사다리: `rules/00-accuracy.md`).
+테스트가 없어 동작 보존을 보장할 수 없으면 진행 전에 사용자에게 알리거나 tdd-guide에 선작성을 요청한다 (사다리: `CLAUDE.md` "정확성 > 막힌 문제").

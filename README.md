@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-서버 개발자를 위한 Claude Code 설정. C/C++, Go, Rust, C#, Python 지원. 최신 Claude 모델 대응. macOS / Linux / Windows 동작.
+서버 개발자를 위한 Claude Code / Codex 설정. C/C++, Go, Rust, C#, Python 지원. 최신 Claude 모델 대응. macOS / Linux / Windows 동작. 규칙은 `CLAUDE.md`(Claude)와 `AGENTS.md`(Codex) 한 쌍에 인라인되어 두 도구에서 동일하게 적용된다.
 
 harness 엔지니어링 관점으로 구성한다: feedforward(가이드)는 짧게, feedback(검증·강제)은 실제로 배선한다.
 
@@ -21,7 +21,7 @@ harness 엔지니어링 관점으로 구성한다: feedforward(가이드)는 짧
 
 | 사분면 | 구현 |
 |--------|------|
-| 결정적 피드포워드 (가이드) | `CLAUDE.md`, `rules/` |
+| 결정적 피드포워드 (가이드) | `CLAUDE.md` / `AGENTS.md` (규칙 전문 인라인) |
 | 비결정적 피드포워드 (행동) | `skills/`, `agents/` |
 | 결정적 피드백 (기계적 차단) | `hooks/` (안전·포맷 게이트) |
 | 비결정적 피드백 (LLM 심판) | `evaluator` 에이전트, `/review` |
@@ -32,16 +32,16 @@ harness 엔지니어링 관점으로 구성한다: feedforward(가이드)는 짧
 
 ```
 hello-claude-code/
-├── rules/          # 상시 로드 규칙 5개
 ├── references/     # 온디맨드 자료 (testing.md 등)
 ├── agents/         # 8개 에이전트 — 위임 작업용
 ├── skills/         # 14개 스킬 — 수동 호출 + 자동 트리거
 ├── hooks/          # Node 기반 게이트 (.mjs) + 배선 스니펫 — 크로스플랫폼
 ├── mcp/            # 글로벌 MCP 서버 정의 + ~/.claude.json 머지 스크립트
 ├── scripts/        # 배포 보조 — settings.json 머지 (레포 전용, 배포 안 함)
-├── deploy.sh       # ~/.claude 로 배포 (macOS/Linux)
-├── deploy.ps1      # ~/.claude 로 배포 (Windows)
-└── CLAUDE.md       # 글로벌 설정 (짧게 유지)
+├── deploy.sh       # ~/.claude + ~/.codex 로 배포 (macOS/Linux)
+├── deploy.ps1      # ~/.claude + ~/.codex 로 배포 (Windows)
+├── CLAUDE.md       # 글로벌 설정 정본 (규칙 전문 인라인)
+└── AGENTS.md       # Codex용 — deploy가 CLAUDE.md에서 동기화
 ```
 
 ## 설치
@@ -53,8 +53,8 @@ macOS / Linux:
 git clone https://github.com/Ho-Gyu-Lee/hello-claude-code.git
 cd hello-claude-code
 chmod +x deploy.sh
-./deploy.sh                              # 복사 + MCP 서버 머지
-./deploy.sh --remove-stale               # 복사 + 구버전(.sh 훅·이동된 rule·ui 스킬) 정리
+./deploy.sh                              # 복사 + AGENTS.md 동기화 + MCP 서버 머지
+./deploy.sh --remove-stale               # 복사 + 구버전(.sh 훅·옛 rules/ 디렉토리·ui 스킬) 정리
 ./deploy.sh --mcp-from ~/backup.claude.json   # MCP를 백업 파일에서 임포트 (시크릿 포함)
 ```
 
@@ -67,7 +67,7 @@ cd hello-claude-code
 .\deploy.ps1 -McpFrom "$env:USERPROFILE\Desktop\.claude.json"
 ```
 
-배포는 파일 복사 외에 두 가지를 자동 머지한다. 둘 다 키 단위 유니온 머지 — 기존 항목 보존, 쓰기 전 `.bak`, 타겟이 깨진 JSON이면 중단:
+`CLAUDE.md`는 `~/.claude`에, 그것과 동기화된 `AGENTS.md`는 `~/.codex`에 복사된다(Codex 글로벌 지시 파일). 배포는 이 복사 외에 두 가지를 자동 머지한다. 둘 다 키 단위 유니온 머지 — 기존 항목 보존, 쓰기 전 `.bak`, 타겟이 깨진 JSON이면 중단:
 
 - **MCP 서버** (`mcp/servers.json` → `~/.claude.json`의 `mcpServers`, user scope = 전 프로젝트). 레포에는 시크릿을 두지 않으므로 API 키는 기존 설치값을 보존하거나 `--mcp-from`/`-McpFrom`으로 백업에서 가져온다. Windows에서는 stdio 명령에 `cmd /c` 래퍼를 머지 시점에 자동 적용한다.
 - **settings** (`hooks/settings.global.json` → `~/.claude/settings.json`의 `hooks` + `permissions`). 훅 배선과 읽기 전용 도구 자동 승인(Read/Glob/Grep 전체, 검색 계열 MCP, serena 읽기 도구)이 포함된다 — 원치 않는 allow 항목은 배포 후 제거하면 재추가되지 않도록 `settings.global.json`에서도 빼면 된다. 상세는 `hooks/README.md`.
@@ -76,17 +76,19 @@ cd hello-claude-code
 
 ## 구성 요소
 
-### Rules (5개)
+### Rules (5개 — CLAUDE.md / AGENTS.md에 인라인)
 
-| 파일 | 용도 | 로드 |
-|------|------|------|
-| `00-accuracy.md` | 정확성, 환각 방지, 응답 전 체크 | 상시 |
-| `01-response-principles.md` | 앵커링, 범위 제한, 커뮤니케이션 스타일 | 상시 |
-| `02-security.md` | 보안 즉시 경고, 취약점 체크리스트 | 상시 |
-| `03-coding-style.md` | 간결성, 네이밍 컨벤션, 서버 특화 | 코드 파일 작업 시 (`paths:`) |
-| `04-tool-usage.md` | 도구 자율 사용, MCP 우선순위, 서브에이전트 위임 | 상시 |
+규칙은 별도 `rules/` 디렉토리가 아니라 `CLAUDE.md`(정본)와 `AGENTS.md`(Codex)의 "규칙" 섹션에 전문 인라인된다. Codex는 `paths:` 같은 조건부 로딩이 없고 디렉토리/전문 로드(글로벌 `~/.codex/AGENTS.md` → 레포 루트 → 작업 디렉토리, 32 KiB 상한)만 지원하므로, 범용성을 위해 한 파일로 통합했다.
 
-테스트 기준은 상시 로드에서 빼 `references/testing.md`(온디맨드)로 옮겼고, 코딩스타일은 `paths:` 프론트매터로 코드 파일을 읽을 때만 로드된다 — 상시 컨텍스트 절감.
+| 섹션 | 용도 |
+|------|------|
+| 정확성 (Accuracy) | 정확성, 환각 방지, 응답 전 체크 |
+| 응답 원칙 (Response Principles) | 앵커링, 범위 제한, 커뮤니케이션 스타일 |
+| 보안 (Security) | 보안 즉시 경고, 취약점 체크리스트 |
+| 코딩 스타일 (Coding Style) | 간결성, 네이밍 컨벤션, 서버 특화 |
+| 도구 사용 (Tool Usage) | 도구 자율 사용, MCP 우선순위, 서브에이전트 위임 |
+
+테스트 기준은 상시 로드에서 빼 `references/testing.md`(온디맨드)로 둔다. 코딩 스타일은 과거 `paths:` 프론트매터로 코드 파일 작업 시에만 로드했지만, 인라인/Codex 환경은 조건부 로딩이 없어 상시 포함된다 — 컨텍스트 비용과 범용성의 트레이드오프다(합산 약 20 KiB로 Codex 32 KiB 상한 이내).
 
 ### Agents (8개) — 미션 기반
 
@@ -126,7 +128,7 @@ cd hello-claude-code
 
 ## 커스터마이징
 
-- 규칙: `rules/`에서 직접 수정. 상시 로드가 길어지면 지켜지지 않으니, 가끔 필요한 내용은 `references/`로 내리고 스킬이 참조하게 한다.
+- 규칙: `CLAUDE.md`(정본)의 "규칙" 섹션에서 직접 수정 — `AGENTS.md`는 deploy가 동기화한다. 상시 로드가 길어지면 지켜지지 않으니, 가끔 필요한 내용은 `references/`로 내리고 스킬이 참조하게 한다.
 - 에이전트/스킬: 각각 `agents/`, `skills/[name]/SKILL.md` 추가. 프론트매터 형식은 CONTRIBUTING.md.
 - 훅: `hooks/`에 `.mjs` 추가 후 `settings.global.json`에 등록. 반드시 매번 일어나야 하는 것만 훅으로.
 

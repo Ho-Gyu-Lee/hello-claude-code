@@ -3,8 +3,9 @@
 .SYNOPSIS
   Deploy this repo's Claude Code config into ~/.claude (manual, single-track).
 .DESCRIPTION
-  Copies rules / agents / skills / references / hooks(*.mjs) / CLAUDE.md into
-  $env:USERPROFILE\.claude, then merges mcp/servers.json into ~/.claude.json
+  Copies agents / skills / references / hooks(*.mjs) / CLAUDE.md into
+  $env:USERPROFILE\.claude, syncs AGENTS.md from CLAUDE.md (canonical) and
+  deploys it to $env:USERPROFILE\.codex (Codex), then merges mcp/servers.json into ~/.claude.json
   (user-scope MCP servers) and hooks/settings.global.json (hooks + permissions)
   into ~/.claude/settings.json. Both merges are key-scoped union merges:
   existing entries preserved, .bak written first, abort on invalid target JSON.
@@ -22,6 +23,7 @@ param([switch]$RemoveStale, [string]$McpFrom)
 $ErrorActionPreference = "Stop"
 $repo = $PSScriptRoot
 $dest = Join-Path $env:USERPROFILE ".claude"
+$codexDest = Join-Path $env:USERPROFILE ".codex"
 New-Item -ItemType Directory -Force -Path $dest | Out-Null
 
 function Copy-Tree($name) {
@@ -37,7 +39,13 @@ function Copy-Tree($name) {
 Copy-Item (Join-Path $repo "CLAUDE.md") (Join-Path $dest "CLAUDE.md") -Force
 Write-Host "copied  CLAUDE.md -> ~/.claude/CLAUDE.md"
 
-Copy-Tree "rules"
+# AGENTS.md (Codex): CLAUDE.md is canonical -- regenerate AGENTS.md from it so they
+# never drift, then deploy to ~/.codex (Codex's global instruction file).
+Copy-Item (Join-Path $repo "CLAUDE.md") (Join-Path $repo "AGENTS.md") -Force
+New-Item -ItemType Directory -Force -Path $codexDest | Out-Null
+Copy-Item (Join-Path $repo "AGENTS.md") (Join-Path $codexDest "AGENTS.md") -Force
+Write-Host "synced  AGENTS.md <- CLAUDE.md; copied -> ~/.codex/AGENTS.md"
+
 Copy-Tree "agents"
 Copy-Tree "references"
 Copy-Tree "mcp"
@@ -81,6 +89,9 @@ if ($RemoveStale) {
     $p = Join-Path $dest "skills\$sk"
     if (Test-Path $p) { Remove-Item $p -Recurse -Force; Write-Host "removed ~/.claude/skills/$sk/" }
   }
+  # rules/ is now inlined into CLAUDE.md/AGENTS.md -- drop the obsolete deployed dir
+  $rulesDir = Join-Path $dest "rules"
+  if (Test-Path $rulesDir) { Remove-Item $rulesDir -Recurse -Force; Write-Host "removed ~/.claude/rules/" }
 }
 
 Write-Host ""
@@ -88,6 +99,7 @@ Write-Host "NEXT:"
 Write-Host "  1. Run /hooks in Claude Code to confirm hook registration (settings merge is automatic now)"
 Write-Host "  2. Ensure 'node' is available (Windows runs command hooks via Git Bash)"
 Write-Host "  3. Review ~/.claude/settings.json permissions.allow (read-only auto-approve) -- remove entries you don't want"
+Write-Host "  4. Codex picks up ~/.codex/AGENTS.md automatically (global scope)"
 if (-not $RemoveStale) {
-  Write-Host "  4. Re-run with -RemoveStale to delete obsoleted files (.sh hooks, moved rules, stale skills)"
+  Write-Host "  5. Re-run with -RemoveStale to delete obsoleted files (.sh hooks, old ~/.claude/rules/, stale skills)"
 }

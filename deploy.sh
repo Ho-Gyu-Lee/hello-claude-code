@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Deploy this repo's Claude Code config into ~/.claude (macOS / Linux).
+# Also syncs AGENTS.md from CLAUDE.md (canonical) and deploys it to ~/.codex (Codex).
 # Windows: use deploy.ps1 instead.
 # Also merges mcp/servers.json into ~/.claude.json (user-scope MCP servers)
 # and hooks/settings.global.json (hooks + permissions) into ~/.claude/settings.json.
@@ -11,6 +12,7 @@ set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEST="$HOME/.claude"
+CODEX_DEST="$HOME/.codex"
 REMOVE_STALE=0
 MCP_FROM=""
 while [ $# -gt 0 ]; do
@@ -35,7 +37,13 @@ copy_tree() {
 cp "$REPO/CLAUDE.md" "$DEST/CLAUDE.md"
 echo "copied  CLAUDE.md -> ~/.claude/CLAUDE.md"
 
-copy_tree rules
+# AGENTS.md (Codex): CLAUDE.md is canonical -- regenerate AGENTS.md from it so they
+# never drift, then deploy to ~/.codex (Codex's global instruction file).
+cp "$REPO/CLAUDE.md" "$REPO/AGENTS.md"
+mkdir -p "$CODEX_DEST"
+cp "$REPO/AGENTS.md" "$CODEX_DEST/AGENTS.md"
+echo "synced  AGENTS.md <- CLAUDE.md; copied -> ~/.codex/AGENTS.md"
+
 copy_tree agents
 copy_tree references
 copy_tree mcp
@@ -80,6 +88,10 @@ if [ "$REMOVE_STALE" -eq 1 ]; then
       rm -rf "$DEST/skills/$sk"; echo "removed ~/.claude/skills/$sk/"
     fi
   done
+  # rules/ is now inlined into CLAUDE.md/AGENTS.md -- drop the obsolete deployed dir
+  if [ -d "$DEST/rules" ]; then
+    rm -rf "$DEST/rules"; echo "removed ~/.claude/rules/"
+  fi
 fi
 
 echo ""
@@ -87,4 +99,5 @@ echo "NEXT:"
 echo "  1. Run /hooks in Claude Code to confirm hook registration (settings merge is automatic now)"
 echo "  2. Ensure 'node' is on PATH (Claude Code ships Node)"
 echo "  3. Review ~/.claude/settings.json permissions.allow (read-only auto-approve) -- remove entries you don't want"
-[ "$REMOVE_STALE" -eq 1 ] || echo "  4. Re-run with --remove-stale to delete obsoleted files"
+echo "  4. Codex picks up ~/.codex/AGENTS.md automatically (global scope)"
+[ "$REMOVE_STALE" -eq 1 ] || echo "  5. Re-run with --remove-stale to delete obsoleted files (incl. old ~/.claude/rules/)"
