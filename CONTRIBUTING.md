@@ -18,8 +18,7 @@
 ## 기여 가이드라인
 
 ### Rules 추가/수정
-- 규칙은 `CLAUDE.md`(정본)의 "규칙" 섹션에 직접 추가/수정한다 — 별도 `rules/` 디렉토리는 없다.
-- `AGENTS.md`(Codex)는 deploy가 `CLAUDE.md`에서 동기화하므로 직접 수정하지 않는다.
+- 규칙은 `CLAUDE.md`의 "규칙" 섹션에 직접 추가/수정한다 — 별도 `rules/` 디렉토리는 없다.
 - 상시 로드되니 짧고 broadly-applicable한 것만. 가끔만 필요한 내용은 `references/`에 두고 스킬이 참조하게 한다.
 
 ### Agents 추가
@@ -32,14 +31,22 @@
   tools: Read, Grep, Glob, Bash
   ---
   ```
-- 선택 필드:
+- 선택 필드 (전체·최신은 공식 subagents 문서 기준):
   | 필드 | 설명 | 예시 |
   |------|------|------|
-  | `model` | 모델 지정 | `sonnet`, `opus`, `haiku` |
-  | `skills` | 연결할 스킬 | `review`, `tdd` |
-  | `permissionMode` | 권한 모드 | `bypassPermissions`, `plan`, `default` |
+  | `model` | 모델 지정 | `sonnet`, `opus`, `haiku`, `fable`, 모델 ID, `inherit` |
+  | `skills` | 시작 시 프리로드할 스킬 | `review`, `tdd` |
+  | `memory` | 영속 메모리 스코프 | `user`, `project`, `local` |
+  | `permissionMode` | 권한 모드 | `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions`, `plan` |
   | `maxTurns` | 최대 턴 수 | `10`, `25` |
   | `isolation` | 격리 모드 | `worktree` |
+  | `disallowedTools` | 차단할 도구 | `Bash`, `Write` |
+  | `mcpServers` | 사용할 MCP 서버 | 서버 이름 목록 |
+  | `hooks` | 에이전트 전용 훅 | 훅 정의 |
+  | `background` | 백그라운드 실행 | `true` |
+  | `effort` | 추론 강도 | `low`, `high` |
+  | `color` | 표시 색상 | `blue` |
+  | `initialPrompt` | 초기 프롬프트 | 문자열 |
 
 ### Skills 추가
 - `skills/` 폴더에 새 폴더 및 `SKILL.md` 파일 추가
