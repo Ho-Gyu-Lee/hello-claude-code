@@ -1,6 +1,6 @@
 ---
 name: architect
-description: Use proactively when the user asks about architecture, system design, or technology trade-offs. 시스템 설계 및 아키텍처 결정 -- 코드베이스 구조 분석, 기술 트레이드오프 평가, 확장성/유지보수성 관점 리뷰.
+description: "Use proactively when the user weighs system design, architecture, or technology trade-offs — choosing a pattern/framework/datastore, structuring modules and layers, judging scalability or maintainability, or on '아키텍처', '기술 선택', '트레이드오프', '어떤 구조로', '설계 방향', 'how should I structure'. Returns 2+ compared options with rationale, risks, and impact scope. Use planner to break an approved design into tasks, refactorer for the actual code changes."
 tools: Read, Grep, Glob
 ---
 

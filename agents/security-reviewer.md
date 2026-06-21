@@ -1,6 +1,6 @@
 ---
 name: security-reviewer
-description: Use proactively when reviewing auth, payment, or security-critical code. 보안 취약점 분석 전문 -- OWASP Top 10 기반 분류, CVSS 위험도 평가, 완화 방안 제시.
+description: "Use proactively when reviewing auth, payment, sessions, permissions, crypto, or input handling — any code crossing a trust boundary — with OWASP Top 10 classification, CVSS severity, and concrete mitigations. Trigger on '보안 점검', '취약점', '인증/결제 코드 검토', or any change to a trust boundary. Deeper and security-only versus code-reviewer, which covers general quality and performance."
 tools: Read, Grep, Glob, Bash
 ---
 

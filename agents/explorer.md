@@ -1,6 +1,6 @@
 ---
 name: explorer
-description: Use proactively when investigating unfamiliar code, tracing dependencies, or exploring codebase structure. 메인 컨텍스트 오염 없이 결과만 반환.
+description: "Use proactively when investigating unfamiliar code, tracing dependencies or call paths, or mapping codebase structure — broad searches needing 3+ probes. Trigger on '어디에 있어', '어떻게 동작해', '구조 파악', '추적해줘', '의존성', or whenever a search would flood the main context. Returns only the findings (file:line + summary), keeping the main context clean. Single-file or single-symbol lookups stay with the main agent via Grep/Glob."
 tools: Read, Grep, Glob
 memory: project
 ---

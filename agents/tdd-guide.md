@@ -1,6 +1,6 @@
 ---
 name: tdd-guide
-description: Use proactively when the user wants TDD workflow or asks to write tests first. RED-GREEN-REFACTOR 사이클을 엄격히 준수하며 테스트 먼저 작성.
+description: "Use proactively when the user wants a TDD workflow or to write tests before implementing new logic — strict RED-GREEN-REFACTOR. Trigger on '테스트 먼저', 'TDD로', '테스트 주도', 'RED-GREEN'. Defines the interface, writes a failing test, then implements the minimum to pass. Use refactorer instead for structure-only improvements to existing code with no new behavior."
 tools: Read, Grep, Glob, Bash, Edit
 skills: tdd
 ---

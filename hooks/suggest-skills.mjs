@@ -57,6 +57,19 @@ const RULES = [
       /요즘|뉴스|새로\s*나온|트렌드|trend/i,
     ],
   },
+  {
+    skill: "unity-mobile-ui",
+    res: [
+      /유니티\s*(ui|화면|레이아웃|팝업|버튼|캔버스)|unity\s*(ui|canvas|layout|popup)/i,
+      /ugui|uGui|rectransform|rect\s*transform|canvas\s*scaler/i,
+      /모바일\s*(ui|화면|인터페이스)|mobile\s*(ui|interface|screen)/i,
+      /앵커|anchormin|anchormax|anchoredposition|sizedelta/i,
+      /safe\s*area|노치|세이프\s*에어리어/i,
+      /폰트\s*크기|fontSize|텍스트\s*크기|text\s*size/i,
+      /ui\s*(겹침|정렬|배치|크기)|ui\s*(overlap|align|layout|size)/i,
+      /localscale.*ui|ui.*localscale|스케일.*ui|ui.*스케일/i,
+    ],
+  },
 ];
 
 const scored = RULES.map((r) => ({

@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: Use proactively after code changes to review quality, security, and maintainability. 전체 검토 후 파일별로 이슈 보고.
+description: "Use proactively after writing or changing code to review quality, security, and maintainability — when a feature or fix is finished, before a commit or PR, or on '리뷰해줘', '코드 검토', 'PR 봐줘', '검토해줘'. Reviews the whole change, then reports issues per file. Use security-reviewer for auth/payment/trust-boundary code, evaluator for an independent pass/fail verdict on just-generated code."
 tools: Read, Grep, Glob, Bash
 skills: review
 memory: project

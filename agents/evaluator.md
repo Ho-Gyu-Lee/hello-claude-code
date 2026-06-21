@@ -1,6 +1,6 @@
 ---
 name: evaluator
-description: Use proactively after code generation to independently evaluate quality. 생성-평가 분리 -- 생성자 컨텍스트와 독립적으로 품질 평가, 긍정 편향 방지.
+description: "Use proactively right after generating code to judge its quality independently of the author's context, countering positive bias — an accept or reject verdict on whether the output meets the bar, what is missing, and what to fix. Trigger when code was just produced and needs a fresh-context check before declaring done. Use code-reviewer for line-level review of an existing change, security-reviewer for a security-focused evaluation."
 tools: Read, Grep, Glob, Bash
 ---
 

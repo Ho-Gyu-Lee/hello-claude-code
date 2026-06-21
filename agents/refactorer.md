@@ -1,6 +1,6 @@
 ---
 name: refactorer
-description: Use proactively when the user asks to refactor, clean up, or reduce complexity. 중복 제거, 복잡도 감소, 가독성 개선 -- 테스트 확인 후 작은 단위로 변경.
+description: "Use proactively when the user asks to refactor, clean up, or reduce complexity — removing duplication, lowering complexity, improving readability with no behavior change. Trigger on '리팩토링', '정리해줘', '중복 제거', '복잡도 줄여', 'clean up'. Changes in small steps and confirms tests exist first, delegating to tdd-guide to write them if missing. Adding new behavior is out of scope."
 tools: Read, Grep, Glob, Bash, Edit
 ---
 

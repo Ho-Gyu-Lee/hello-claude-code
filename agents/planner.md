@@ -1,6 +1,6 @@
 ---
 name: planner
-description: Use proactively when the user requests a complex feature or multi-step implementation. 구현 계획 수립 및 작업 분해 -- 요구사항 분석, 작업 분해, 의존성 매핑, 리스크 식별.
+description: "Use proactively when the user requests a complex or multi-step feature and needs it broken into an executable plan — requirements analysis, task decomposition, dependency mapping, risk identification. Trigger on '계획 세워줘', '구현 계획', '단계별로', '작업 분해', or any feature spanning multiple files or components. Use architect to decide the design itself; skip planning for a single simple edit."
 tools: Read, Grep, Glob, Bash
 skills: plan
 ---

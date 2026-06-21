@@ -38,12 +38,20 @@
       {
         "matcher": "Edit|Write|MultiEdit",
         "hooks": [{ "type": "command", "command": "node ~/.claude/hooks/guard-files.mjs" }]
+      },
+      {
+        "matcher": "mcp__",
+        "hooks": [{ "type": "command", "command": "node ~/.claude/hooks/guard-unity-scale.mjs", "timeout": 5 }]
       }
     ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write|MultiEdit",
         "hooks": [{ "type": "command", "command": "node ~/.claude/hooks/post-format.mjs" }]
+      },
+      {
+        "matcher": "mcp__",
+        "hooks": [{ "type": "command", "command": "node ~/.claude/hooks/post-unity-verify.mjs", "timeout": 5 }]
       }
     ]
   }
