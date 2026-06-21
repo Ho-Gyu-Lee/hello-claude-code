@@ -2,7 +2,7 @@
 # Deploy this repo's Claude Code config into ~/.claude (macOS / Linux).
 # Windows: use deploy.ps1 instead.
 # Also merges mcp/servers.json into ~/.claude.json (user-scope MCP servers)
-# and hooks/settings.global.json (hooks + permissions) into ~/.claude/settings.json.
+# and hooks/settings.global.json (hooks + permissions + env) into ~/.claude/settings.json.
 # Both are key-scoped union merges: existing entries preserved, .bak written first.
 # Flags:
 #   --remove-stale      delete files obsoleted by the harness redesign
@@ -63,7 +63,7 @@ else
   node "$REPO/mcp/merge-mcp.mjs" || echo "WARN: MCP merge failed -- ~/.claude.json untouched" >&2
 fi
 
-# settings: merge hooks + read-only permission allowlist into ~/.claude/settings.json
+# settings: merge hooks + read-only permission allowlist + env into ~/.claude/settings.json
 node "$REPO/scripts/merge-settings.mjs" || echo "WARN: settings merge failed -- ~/.claude/settings.json untouched" >&2
 
 if [ "$REMOVE_STALE" -eq 1 ]; then

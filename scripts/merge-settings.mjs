@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Merge hooks/settings.global.json (hooks + permissions) into ~/.claude/settings.json.
+// Merge hooks/settings.global.json (hooks + permissions + env) into ~/.claude/settings.json.
 // Called by deploy.ps1 / deploy.sh after file copy; also runnable standalone.
 //
 // Usage:
@@ -7,9 +7,11 @@
 //   node merge-settings.mjs --target <file>  # write elsewhere (tests)
 //
 // Guarantees:
-//   - touches only the `hooks` and `permissions` keys; everything else is preserved
+//   - touches only the `hooks`, `permissions`, and `env` keys; everything else is preserved
 //   - union merge, never removes: existing permission rules / hook entries are kept,
 //     duplicates are not re-added (idempotent re-runs)
+//   - env: object merge -- declared keys set to source value (overwritten if changed),
+//     other existing env keys preserved
 //   - writes <target>.bak before modifying; aborts without writing if target is invalid JSON
 import fs from 'node:fs';
 import os from 'node:os';
@@ -57,6 +59,20 @@ if (src.permissions) {
     }
   }
   if (Object.keys(perms).length) live.permissions = perms;
+}
+
+// env: object merge -- declared keys set to source value (overwrite if changed), others preserved
+if (src.env && typeof src.env === 'object') {
+  const env = live.env ?? {};
+  for (const [k, v] of Object.entries(src.env)) {
+    if (env[k] !== v) {
+      const action = k in env ? 'overwrote' : 'added';
+      env[k] = v;
+      changes++;
+      console.log(`merged  env.${k} (${action})`);
+    }
+  }
+  if (Object.keys(env).length) live.env = env;
 }
 
 // hooks: dedup by (event, matcher, hook-entry JSON)

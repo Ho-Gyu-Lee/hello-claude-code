@@ -5,7 +5,7 @@
 .DESCRIPTION
   Copies agents / skills / references / hooks(*.mjs) / CLAUDE.md into
   $env:USERPROFILE\.claude, then merges mcp/servers.json into ~/.claude.json
-  (user-scope MCP servers) and hooks/settings.global.json (hooks + permissions)
+  (user-scope MCP servers) and hooks/settings.global.json (hooks + permissions + env)
   into ~/.claude/settings.json. Both merges are key-scoped union merges:
   existing entries preserved, .bak written first, abort on invalid target JSON.
   Use -McpFrom <file> to import mcpServers (incl. secrets) from a .claude.json backup.
@@ -61,7 +61,7 @@ $mcpScript = Join-Path $repo "mcp\merge-mcp.mjs"
 if ($McpFrom) { node $mcpScript --from $McpFrom } else { node $mcpScript }
 if ($LASTEXITCODE -ne 0) { Write-Warning "MCP merge failed (exit $LASTEXITCODE) -- ~/.claude.json untouched" }
 
-# settings: merge hooks + read-only permission allowlist into ~/.claude/settings.json
+# settings: merge hooks + read-only permission allowlist + env into ~/.claude/settings.json
 node (Join-Path $repo "scripts\merge-settings.mjs")
 if ($LASTEXITCODE -ne 0) { Write-Warning "settings merge failed (exit $LASTEXITCODE) -- ~/.claude/settings.json untouched" }
 
