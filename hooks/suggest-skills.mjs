@@ -59,6 +59,7 @@ const RULES = [
   },
   {
     skill: "unity-mobile-ui",
+    hint: "작업 시작 전 참고 레퍼런스 스크린샷이 있는지 사용자에게 먼저 확인하라 — 있으면 그대로 재현, 없으면 명시적 지시에만 따른다.",
     res: [
       /유니티\s*(ui|화면|레이아웃|팝업|버튼|캔버스)|unity\s*(ui|canvas|layout|popup)/i,
       /ugui|uGui|rectransform|rect\s*transform|canvas\s*scaler/i,
@@ -80,11 +81,16 @@ const scored = RULES.map((r) => ({
 if (!scored.length) process.exit(0);
 scored.sort((a, b) => b.hits - a.hits);
 
+const top = scored[0];
+const hint = RULES.find((r) => r.skill === top.skill)?.hint;
+let msg = `[suggest-skills] 이 요청은 '${top.skill}' 스킬 대상일 수 있다 — 해당 SKILL.md 지침 적용을 검토하라.`;
+if (hint) msg += ` ${hint}`;
+
 process.stdout.write(
   JSON.stringify({
     hookSpecificOutput: {
       hookEventName: "UserPromptSubmit",
-      additionalContext: `[suggest-skills] 이 요청은 '${scored[0].skill}' 스킬 대상일 수 있다 — 해당 SKILL.md 지침 적용을 검토하라.`,
+      additionalContext: msg,
     },
   })
 );
